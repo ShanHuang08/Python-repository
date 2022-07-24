@@ -210,6 +210,44 @@ def test():
         sum=sum+min
     print(f'sum2= {sum}')
 
+from openpyxl import Workbook
+def CreateSheet():
+    wb=Workbook()
+    ws1=wb.active
+    ws1.title='sheet1'
+    wb.create_sheet('sheet2')
+    wb.create_sheet('sheet3')
+    wb.create_sheet('sheet4')
+    print(wb.sheetnames)
+
+    ws1=wb['sheet1']
+    ws1.append(['工作表100','工作表101'])
+    ws1.append(['工作表110','工作表111'])
+
+    ws2=wb['sheet2']
+    ws2.append(['工作表200','工作表201'])
+    ws2.append(['工作表210','工作表211'])
+
+    ws3=wb['sheet3']
+    ws3.append(['工作表300','工作表301'])
+    ws3.append(['工作表310','工作表311'])
+
+    wb.save('test.xlsx')
+
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC 
+def Element_isclickable(xpath):
+    driver = webdriver.Chrome()
+    driver.get('https://www.bing.com/')
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, xpath)))
+        return True
+    except :
+        return False
 
 
 def functions():
@@ -226,5 +264,7 @@ def functions():
     PrimeNumber()
     PrimeNumber2()
     scissors()
-test()
+    CreateSheet()
+    Element_isclickable(xpath)
+While_Bingo()
 
