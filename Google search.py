@@ -15,10 +15,9 @@ def Google_Mutiple_pages_title():
     keyword=input('Google搜尋關鍵字= ')
     pages=int(input('要搜尋幾頁(整數)? '))
     
-    SheetTitle=['連結','標題']
     wb=Workbook()
     ws=wb.active
-    ws.append(SheetTitle)
+    ws.append(['連結','標題'])
     
     browser=webdriver.Chrome(PATH, options=options)
     browser.get(url)
