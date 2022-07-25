@@ -1,4 +1,3 @@
-from ast import keyword
 from openpyxl import Workbook
 from selenium import webdriver
 from selenium.webdriver.common.by import By
