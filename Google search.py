@@ -22,6 +22,8 @@ def Google_Mutiple_pages_title():
     browser=webdriver.Chrome(PATH, options=options)
     browser.get(url)
     browser.find_element(By.XPATH, value='//input[@name="q"]').send_keys(keyword, Keys.RETURN)
+    # browser.find_element(By.XPATH,value='//a[contains(text(),"新聞")]').click() #Google新聞
+    # browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').click() #Google圖片
 
     i=1
     while i<=pages:
