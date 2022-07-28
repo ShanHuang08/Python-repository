@@ -30,6 +30,7 @@ try:
     element = WebDriverWait(browser, 2).until(
         EC.presence_of_element_located(((By.XPATH,'//a[contains(text(),"123")]'))
     ))
+    print('Element is available')
     if browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').is_enabled(): #Element能定位到的前提之下
         print('Element is enbled')
     else:
