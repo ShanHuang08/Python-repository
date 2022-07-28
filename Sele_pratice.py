@@ -26,16 +26,14 @@ browser.get(url)
 print(browser.title)
 browser.find_element(By.NAME, value='q').send_keys('pixel 7', Keys.RETURN)
 
+# try except判斷元素是否存在
 try:
     element = WebDriverWait(browser, 2).until(
-        EC.presence_of_element_located(((By.XPATH,'//a[contains(text(),"123")]'))
+        EC.presence_of_element_located(((By.XPATH,'//a[contains(text(),"圖片")]'))
     ))
     print('Element is available')
-    if browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').is_enabled(): #Element能定位到的前提之下
-        print('Element is enbled')
-    else:
-        print('Element is disable')
-    browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').click()
+    # browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').click()
+    element.click()
 except:
     print('Element is unavailable')
     browser.quit()
