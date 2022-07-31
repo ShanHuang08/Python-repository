@@ -22,7 +22,6 @@ ws.append(['動物編號','入園日期','品種','性別','來源地點'])
 
 url='https://taw.tycg.gov.tw/X16_FResults.aspx'
 browser.get(url)
-browser.maximize_window()
 
 element = WebDriverWait(browser, 10).until(
     EC.presence_of_element_located(((By.ID,'ddlCategory'))
@@ -32,7 +31,7 @@ browser.find_element(By.XPATH,value='//option[@value="1"]').click()
 browser.find_element_by_id('btnSearch').click()
 
 i=1
-while i<30:
+while i<5:
     time.sleep(1) #To solve Message: stale element reference: element is not attached to the page document
     DogList=browser.find_elements(By.XPATH,value='//div[@style="padding: 9px; color: #333;"]/h5')
     List=[]
@@ -53,7 +52,7 @@ while i<30:
         ws.append(List2)
         j+=1
         
-    time.sleep(3)
+    time.sleep(1)
     browser.find_element(By.XPATH,value='//a[contains(text(),"»")]').click()
     i+=1
 
