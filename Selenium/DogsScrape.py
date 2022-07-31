@@ -9,10 +9,10 @@ from openpyxl import Workbook
 
 SelectBrowser='Chrome'
 if SelectBrowser=='Chrome':
-    PATH='C:/Users/Shan/Workspace2/chromedriver.exe'
+    PATH='./chromedriver.exe'
     browser=webdriver.Chrome(PATH)
 elif SelectBrowser=='Edge':
-    PATH='C:/Users/Shan/Workspace2/msedgedriver.exe'
+    PATH='./msedgedriver.exe'
     browser=webdriver.Edge(PATH)
 
 wb=Workbook()
