@@ -9,10 +9,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 SelectBrowser='Chrome'
 if SelectBrowser=='Chrome':
-    PATH='C:/Users/shan_huang/Python/chromedriver.exe'
+    PATH='C:/Users/Shan/Workspace2/chromedriver.exe'
     browser=webdriver.Chrome(PATH)
 elif SelectBrowser=='Edge':
-    PATH='C:/Users/shan_huang/Python/msedgedriver.exe'
+    PATH='C:/Users/Shan/Workspace2/msedgedriver.exe'
     browser=webdriver.Edge(PATH)
 
 url='https://www.google.com'
@@ -36,6 +36,8 @@ try:
     element.click()
 except IndexError:
     print('Loop is out of range')
+except PermissionError:
+    print('[Errno 13] Permission denied: "file.xlsx"') 
 except:
     print('Element is unavailable')
     browser.quit()
