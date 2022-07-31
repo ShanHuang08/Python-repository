@@ -34,6 +34,8 @@ try:
     print('Element is available')
     # browser.find_element(By.XPATH,value='//a[contains(text(),"圖片")]').click()
     element.click()
+except IndexError:
+    print('Loop is out of range')
 except:
     print('Element is unavailable')
     browser.quit()
