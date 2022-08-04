@@ -12,8 +12,8 @@ def WebLogin(url,browser):
     # 關閉平台公告
     browser.implicitly_wait(5)
     browser.find_element(By.XPATH,value='//div[@class="img"]/div[@class="btn_close"]').click()
-    browser.find_element(By.NAME,value='name').send_keys('cmtest005')
-    browser.find_element(By.ID,value='nzc-header-password').send_keys('Heaven@4394')
+    browser.find_element(By.NAME,value='name').send_keys('5')
+    browser.find_element(By.ID,value='nzc-header-password').send_keys('H')
     browser.find_element(By.ID,value='nzc-header-captcha').send_keys('1',Keys.RETURN)
     # 關閉帳戶安全
     time.sleep(2) #Message: stale element reference: element is not attached to the page document
@@ -111,14 +111,14 @@ def main():
     PATH='./chromedriver.exe'
     channel='bh' #bh,sc
     branch='uat'
-    url='https://'+channel+'-web-'+branch+'.paradise-soft.com.tw/'
+    url='https://'
     browser=webdriver.Chrome(PATH)
     WebLogin(url,browser)
     browser.find_element(By.ID,value='nzc-nav-lottery').click()
     Jisu11x5Any(browser,1)
     BetOrderRecord(browser)
     time.sleep(1)
-    browser.get('https://'+channel+'-web-'+branch+'.paradise-soft.com.tw/lottery')
+    browser.get('https://')
     Jisu11x5Sum(browser,2)
     BetOrderRecord(browser)
     time.sleep(5)
