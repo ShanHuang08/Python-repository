@@ -51,37 +51,4 @@ time.sleep(5)
 # browser.close() #關閉Tab
 browser.quit() #關閉Web browser
 
-key_list = ['name', 'age', 'address']
-value_list = ['Johnny', '27', 'New York']
-
-dict_from_list = dict(zip(key_list, value_list))
-print(dict_from_list)
-
-key_list = ['name', 'age', 'address']
-value_list = ['Johnny', '27', 'New York']
-
-dict_from_list = {key_list[i]: value_list[i] for i in range(len(key_list))}
-print(dict_from_list)
-
-key_list = ['name', 'age', 'address']
-value_list = ['Johnny', '27', 'New York']
-
-dict_from_list = {}
-for key in key_list:
-  for value in value_list:
-    dict_from_list[key] = value
-    value_list.remove(value)
-    break
-
-print(dict_from_list)
-
-key_list = ['name', 'age', 'address']
-value_list = ['Johnny', '27', 'New York']
-
-dict_from_list = {}
-for i in range(len(key_list)):
-  dict_from_list[key_list[i]] = value_list[i]
-
-print(dict_from_list)
-
 
