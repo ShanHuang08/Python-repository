@@ -1,13 +1,13 @@
 #coding=utf-8
-from tokenize import String
 from selenium import webdriver
-import time
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
+from openpyxl import Workbook
 
+wb=Workbook()
+ws=wb.active
+ws.title='世界國家排名'
+ws.append(['名次','國家','人口'])
 options=Options()
 options.add_argument('--headless')
 PATH='./chromedriver.exe'
@@ -16,19 +16,12 @@ browser.get('https://www.ifreesite.com/population/')
 
 Countries=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@width="50%"]/div')
 
-Scraping_result=[]
-for country in Countries:
-#     print(country.text)
-    Scraping_result.append(country.text)
-# print(len(Scraping_result))
-
 AllList=[]
-for i in range(len(Scraping_result)):
-    StringText=Scraping_result[i]
-    AllList.append(StringText)
+for country in Countries:
+    AllList.append(country.text)
 # print(AllList)
 
-# 刪除空字串
+# 刪除空陣列
 AllList.pop(235)
 AllList.pop(211)
 AllList.pop(109)
@@ -54,8 +47,8 @@ for i in range(len(AllList)):
     elif len(PopulationText)==4:
         PopulationText=PopulationText[0]+PopulationText[1]+PopulationText[2]+PopulationText[3]
     # print(PopulationText) #str
-    PopulationText=int(PopulationText)
-    Population.append(PopulationText)
+    PopulationNum=int(PopulationText)
+    Population.append(PopulationNum)
     ChnCountryList.append(StringText3[1])
 # print(Population)
 
@@ -68,13 +61,22 @@ dictList={EngCountryList[i]:Population[i] for i in range(len(Population))}
 PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
 # print(PopulationCompare)
 
+
+
 ResultList=[]
 for i in range(len(Population)-1,-1,-1):
     for j in range(2):
         ResultList.append(PopulationCompare[i][j])
 # print(ResultList[0:6])
 
-for i in range(len(ResultList)//2):
-    print(f'NO.{i+1}. {ResultList[0+2*i]}:{ResultList[1+2*i]}')
+# 人口加逗號
 
+for i in range(len(ResultList)//2):
+    # print(f'NO.{i+1}. {ResultList[0+2*i]}:{ResultList[1+2*i]}')
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(ResultList[0+2*i])
+    res.append(ResultList[1+2*i])
+    ws.append(res)
+wb.save('WorldPopulation.xlsx')
 browser.quit()
