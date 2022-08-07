@@ -44,7 +44,6 @@ for i in range(len(AllList)):
     StringText3=StringText2[1].split('\n')
     # print(StringText3)
     PopulationText=StringText3[0][1:].split(',')
-    
     # print(PopulationText) #len=1,2,3,4
     if len(PopulationText)==1:
         PopulationText=PopulationText[0]
@@ -56,14 +55,9 @@ for i in range(len(AllList)):
         PopulationText=PopulationText[0]+PopulationText[1]+PopulationText[2]+PopulationText[3]
     # print(PopulationText) #str
     PopulationText=int(PopulationText)
-    # print(PopulationText)
-    # print(type(PopulationText))
     Population.append(PopulationText)
     ChnCountryList.append(StringText3[1])
 # print(Population)
-# print(len(EngCountryList))
-# print((len(Population)))
-# print(len(ChnCountryList))
 
 for i in range(len(Population)):
     EngCountryList[i]=EngCountryList[i]+'('+ChnCountryList[i]+')'
@@ -71,7 +65,6 @@ for i in range(len(Population)):
 
 dictList={EngCountryList[i]:Population[i] for i in range(len(Population))}
 # print(dictList)
-
 PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
 # print(PopulationCompare)
 
@@ -84,5 +77,4 @@ for i in range(len(Population)-1,-1,-1):
 for i in range(len(ResultList)//2):
     print(f'NO.{i+1}. {ResultList[0+2*i]}:{ResultList[1+2*i]}')
 
-time.sleep(5)
 browser.quit()
