@@ -61,8 +61,6 @@ dictList={EngCountryList[i]:Population[i] for i in range(len(Population))}
 PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
 # print(PopulationCompare)
 
-
-
 ResultList=[]
 for i in range(len(Population)-1,-1,-1):
     for j in range(2):
@@ -70,6 +68,29 @@ for i in range(len(Population)-1,-1,-1):
 # print(ResultList[0:6])
 
 # 人口加逗號
+b=[]
+for i in range(len(ResultList)//2):
+    s=''.join(str(ResultList[1+2*i]))
+    b.append(s)
+# print(b)
+
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        ResultList.pop(1+2*i)
+        ResultList.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        ResultList.pop(1+2*i)
+        ResultList.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        ResultList.pop(1+2*i)
+        ResultList.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        ResultList.pop(1+2*i)
+        ResultList.insert(1+2*i,b[i][0:3])
 
 for i in range(len(ResultList)//2):
     # print(f'NO.{i+1}. {ResultList[0+2*i]}:{ResultList[1+2*i]}')
