@@ -28,7 +28,7 @@ for i in range(len(Scraping_result)):
     AllList.append(StringText)
 # print(AllList)
 
-# 刪除空集合
+# 刪除空字串
 AllList.pop(235)
 AllList.pop(211)
 AllList.pop(109)
