@@ -6,7 +6,7 @@ from openpyxl import Workbook
 
 wb=Workbook()
 ws=wb.active
-ws.title='世界國家排名'
+ws.title='世界人口排名'
 ws.append(['名次','國家','人口'])
 options=Options()
 options.add_argument('--headless')
