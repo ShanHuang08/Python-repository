@@ -52,7 +52,7 @@ for i in range(len(AllList)):
     ChnCountryList.append(StringText3[1])
 # print(Population)
 
-for i in range(len(Population)):
+for i in range(len(EngCountryList)):
     EngCountryList[i]=EngCountryList[i]+'('+ChnCountryList[i]+')'
 # print(EngCountryList[0:3])
 
