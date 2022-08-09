@@ -14,11 +14,11 @@ PATH='./chromedriver.exe'
 browser=webdriver.Chrome(PATH,options=options)
 browser.get('https://www.ifreesite.com/population/')
 
-Territories=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@class="if_table starj taggllj"]')
+Continents=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@class="if_table starj taggllj"]')
 Countries=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@width="50%"]/div')
 
 TerrList=[]
-for terr in Territories:
+for terr in Continents:
     TerrList.append(terr.text)
 # print(len(TerrList)) #len=12
 
@@ -35,7 +35,8 @@ for i in range(len(ChnTerr)):
 AllList=[]
 for country in Countries:
     AllList.append(country.text)
-# print(AllList)
+
+
 
 # 刪除空陣列
 AllList.pop(235)
@@ -46,7 +47,7 @@ AllList.pop(109)
 # print(len(AllList[109:157])) #歐洲(EUROPE) len=48
 # print(len(AllList[157:205])) #拉美和加勒比 len=48
 # print(len(AllList[205:210])) #北美 len=5
-# print(len(AllList[210:233])) #大洋洲 len=23
+# print(len(AllList[210:233])) #大洋洲 len=23 
 
 EngCountryList=[]
 Population=[]
@@ -77,23 +78,79 @@ for i in range(len(EngCountryList)):
     EngCountryList[i]=EngCountryList[i]+'('+ChnCountryList[i]+')'
 # print(EngCountryList[0:3])
 
-dictList={EngCountryList[i]:Population[i] for i in range(len(Population))}
-# print(dictList)
+# 六次字典
+# 1
+dictList={EngCountryList[i]:Population[i] for i in range(0,len(AllList[0:58]))}
 PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
 # print(PopulationCompare)
 
-ResultList=[]
-for i in range(len(Population)-1,-1,-1):
+AFR_Result=[]
+for i in range(len(AllList[0:58])-1,-1,-1):
     for j in range(2):
-        ResultList.append(PopulationCompare[i][j])
-# print(ResultList[0:6])
+        AFR_Result.append(PopulationCompare[i][j])
+# print(AFR_Result)
+
+# 2
+dictList={EngCountryList[i]:Population[i] for i in range(len(AllList[0:58]),len(AllList[0:58])+len(AllList[58:109]))} #For loop範圍不對
+PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
+# print(PopulationCompare)
+
+ASIA_Result=[]
+for i in range(len(AllList[58:109])-1,-1,-1):
+    for j in range(2):
+        ASIA_Result.append(PopulationCompare[i][j])
+# print(ASIA_Result) 
+
+# 3
+dictList={EngCountryList[i]:Population[i] for i in range(len(AllList[0:58])+len(AllList[58:109]),len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157]))}
+PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
+# print(PopulationCompare)
+
+EUR_Result=[]
+for i in range(len(AllList[109:157])-1,-1,-1):
+    for j in range(2):
+        EUR_Result.append(PopulationCompare[i][j])
+# print(EUR_Result[0:6])
+
+# 4
+dictList={EngCountryList[i]:Population[i] for i in range(len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157]),len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157])+len(AllList[157:205]))}
+PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
+# print(PopulationCompare)
+
+LATIN_Result=[]
+for i in range(len(AllList[157:205])-1,-1,-1):
+    for j in range(2):
+        LATIN_Result.append(PopulationCompare[i][j])
+# print(LATIN_Result[0:6])
+
+# 5
+dictList={EngCountryList[i]:Population[i] for i in range(len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157])+len(AllList[157:205]),len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157])+len(AllList[157:205])+len(AllList[205:210]))}
+PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
+# print(PopulationCompare)
+
+NA_Result=[]
+for i in range(len(AllList[205:210])-1,-1,-1):
+    for j in range(2):
+        NA_Result.append(PopulationCompare[i][j])
+# print(NA_Result)
+
+# 6
+dictList={EngCountryList[i]:Population[i] for i in range(len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157])+len(AllList[157:205])+len(AllList[205:210]),len(AllList[0:58])+len(AllList[58:109])+len(AllList[109:157])+len(AllList[157:205])+len(AllList[205:210])+len(AllList[210:233]))}
+PopulationCompare=sorted(dictList.items(),key=lambda s:s[1])
+# print(PopulationCompare)
+
+OCE_Result=[]
+for i in range(len(AllList[210:233])-1,-1,-1):
+    for j in range(2):
+        OCE_Result.append(PopulationCompare[i][j])
+# print(OCE_Result)
 
 # 人口加逗號
+# 1
 b=[]
-for i in range(len(ResultList)//2):
-    s=''.join(str(ResultList[1+2*i]))
+for i in range(len(AFR_Result)//2):
+    s=''.join(str(AFR_Result[1+2*i]))
     b.append(s)
-# print(b)
 
 for i in range(len(b)):
     length=0
@@ -101,24 +158,181 @@ for i in range(len(b)):
         length+=1
     # print(f'a={length}') #10
     if length==10:
-        ResultList.pop(1+2*i)
-        ResultList.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+        AFR_Result.pop(1+2*i)
+        AFR_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
     elif length>=7 and length<=9:
-        ResultList.pop(1+2*i)
-        ResultList.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+        AFR_Result.pop(1+2*i)
+        AFR_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
     elif length>=4 and length<=6:
-        ResultList.pop(1+2*i)
-        ResultList.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+        AFR_Result.pop(1+2*i)
+        AFR_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
     else:    
-        ResultList.pop(1+2*i)
-        ResultList.insert(1+2*i,b[i][0:3])
+        AFR_Result.pop(1+2*i)
+        AFR_Result.insert(1+2*i,b[i][0:3])
+# 2
+b=[]
+for i in range(len(ASIA_Result)//2):
+    s=''.join(str(ASIA_Result[1+2*i]))
+    b.append(s)
 
-for i in range(len(ResultList)//2):
-    # print(f'NO.{i+1}. {ResultList[0+2*i]}:{ResultList[1+2*i]}')
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        ASIA_Result.pop(1+2*i)
+        ASIA_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        ASIA_Result.pop(1+2*i)
+        ASIA_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        ASIA_Result.pop(1+2*i)
+        ASIA_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        ASIA_Result.pop(1+2*i)
+        ASIA_Result.insert(1+2*i,b[i][0:3])  
+# 3
+b=[]
+for i in range(len(EUR_Result)//2):
+    s=''.join(str(EUR_Result[1+2*i]))
+    b.append(s)
+
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        EUR_Result.pop(1+2*i)
+        EUR_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        EUR_Result.pop(1+2*i)
+        EUR_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        EUR_Result.pop(1+2*i)
+        EUR_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        EUR_Result.pop(1+2*i)
+        EUR_Result.insert(1+2*i,b[i][0:3])  
+# 4
+b=[]
+for i in range(len(LATIN_Result)//2):
+    s=''.join(str(LATIN_Result[1+2*i]))
+    b.append(s)
+
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        LATIN_Result.pop(1+2*i)
+        LATIN_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        LATIN_Result.pop(1+2*i)
+        LATIN_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        LATIN_Result.pop(1+2*i)
+        LATIN_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        LATIN_Result.pop(1+2*i)
+        LATIN_Result.insert(1+2*i,b[i][0:3])  
+# 5
+b=[]
+for i in range(len(NA_Result)//2):
+    s=''.join(str(NA_Result[1+2*i]))
+    b.append(s)
+
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        NA_Result.pop(1+2*i)
+        NA_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        NA_Result.pop(1+2*i)
+        NA_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        NA_Result.pop(1+2*i)
+        NA_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        NA_Result.pop(1+2*i)
+        NA_Result.insert(1+2*i,b[i][0:3])  
+# 6
+b=[]
+for i in range(len(OCE_Result)//2):
+    s=''.join(str(OCE_Result[1+2*i]))
+    b.append(s)
+
+for i in range(len(b)):
+    length=0
+    for j in b[i]:
+        length+=1
+    # print(f'a={length}') #10
+    if length==10:
+        OCE_Result.pop(1+2*i)
+        OCE_Result.insert(1+2*i,b[i][0:1]+','+b[i][1:4]+','+b[i][4:7]+','+b[i][7:10])
+    elif length>=7 and length<=9:
+        OCE_Result.pop(1+2*i)
+        OCE_Result.insert(1+2*i,b[i][0:length-6]+','+b[i][length-6:length-3]+','+b[i][length-3:length])
+    elif length>=4 and length<=6:
+        OCE_Result.pop(1+2*i)
+        OCE_Result.insert(1+2*i,b[i][0:length-3]+','+b[i][length-3:length])
+    else:    
+        OCE_Result.pop(1+2*i)
+        OCE_Result.insert(1+2*i,b[i][0:3])  
+
+# 1
+ws.append(['Continent',ChnTerr[0]])
+for i in range(len(AFR_Result)//2):
     res=[]
     res.append('NO.'+str(i+1))
-    res.append(ResultList[0+2*i])
-    res.append(ResultList[1+2*i])
+    res.append(AFR_Result[0+2*i])
+    res.append(AFR_Result[1+2*i])
     ws.append(res)
+# 2
+ws.append(['Continent',ChnTerr[1]])
+for i in range(len(ASIA_Result)//2):
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(ASIA_Result[0+2*i])
+    res.append(ASIA_Result[1+2*i])
+    ws.append(res)
+# 3
+ws.append(['Continent',ChnTerr[2]])
+for i in range(len(EUR_Result)//2):
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(EUR_Result[0+2*i])
+    res.append(EUR_Result[1+2*i])
+    ws.append(res)
+# 4
+ws.append(['Continent',ChnTerr[3]])
+for i in range(len(LATIN_Result)//2):
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(LATIN_Result[0+2*i])
+    res.append(LATIN_Result[1+2*i])
+    ws.append(res)    
+# 5
+ws.append('Continent',[ChnTerr[4]])
+for i in range(len(NA_Result)//2):
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(NA_Result[0+2*i])
+    res.append(NA_Result[1+2*i])
+    ws.append(res)
+# 6
+ws.append(['Continent',ChnTerr[5]])
+for i in range(len(OCE_Result)//2):
+    res=[]
+    res.append('NO.'+str(i+1))
+    res.append(OCE_Result[0+2*i])
+    res.append(OCE_Result[1+2*i])
+    ws.append(res)
+
 wb.save('WorldPopulation.xlsx')
 browser.quit()
