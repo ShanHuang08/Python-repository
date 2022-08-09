@@ -17,16 +17,16 @@ browser.get('https://www.ifreesite.com/population/')
 Continents=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@class="if_table starj taggllj"]')
 Countries=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@width="50%"]/div')
 
-TerrList=[]
-for terr in Continents:
-    TerrList.append(terr.text)
+CtnsList=[]
+for ctns in Continents:
+    CtnsList.append(ctns.text)
 # print(len(TerrList)) #len=12
 
 EngTerr=[]
 ChnTerr=[]
-for i in range(len(TerrList)//2):
-    ChnTerr.append(TerrList[0+2*i])
-    EngTerr.append(TerrList[1+2*i])
+for i in range(len(CtnsList)//2):
+    ChnTerr.append(CtnsList[0+2*i])
+    EngTerr.append(CtnsList[1+2*i])
 
 for i in range(len(ChnTerr)):
     ChnTerr[i]=ChnTerr[i]+'('+EngTerr[i]+')'
