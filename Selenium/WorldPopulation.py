@@ -41,7 +41,12 @@ for country in Countries:
 AllList.pop(235)
 AllList.pop(211)
 AllList.pop(109)
-# print(AllList) 
+# print(len(AllList[0:58])) #非洲(AFRICA) len=58
+# print(len(AllList[58:109])) #亞洲(ASIA) len=51
+# print(len(AllList[109:157])) #歐洲(EUROPE) len=48
+# print(len(AllList[157:205])) #拉美和加勒比 len=48
+# print(len(AllList[205:210])) #北美 len=5
+# print(len(AllList[210:233])) #大洋洲 len=23
 
 EngCountryList=[]
 Population=[]
