@@ -318,7 +318,7 @@ for i in range(len(LATIN_Result)//2):
     res.append(LATIN_Result[1+2*i])
     ws.append(res)    
 # 5
-ws.append('Continent',[ChnTerr[4]])
+ws.append(['Continent',ChnTerr[4]])
 for i in range(len(NA_Result)//2):
     res=[]
     res.append('NO.'+str(i+1))
