@@ -1,5 +1,4 @@
 #coding=utf-8
-import ssl
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -8,7 +7,7 @@ from openpyxl import Workbook
 wb=Workbook()
 ws=wb.active
 ws.title='世界人口排名'
-ws.append(['名次','國家','人口'])
+ws.append(['洲名','國家','人口'])
 options=Options()
 options.add_argument('--headless')
 PATH='./chromedriver.exe'
@@ -34,19 +33,21 @@ for i in range(len(ChnTerr)):
 # print(ChnTerr) #['非洲(AFRICA)', '亞洲(ASIA)', '歐洲(EUROPE)', '拉美和加勒比(LATIN AMERICA AND THE CARIBBEAN)', '北美(NORTHERN AMERICA)', '大洋洲(OCEANIA)']
 AllList=[]
 for country in Countries:
-    AllList.append(country.text)
-
-# 刪除空陣列
-AllList.pop(235)
-AllList.pop(211)
-AllList.pop(109)
+    GetData=[]
+    GetData.append(country.text)
+    # 把['']變成空陣列
+    if GetData==['']:
+        GetData.pop(0)
+    # print(len(GetData),GetData)
+    if len(GetData)==1:
+        AllList.append(GetData[0])
 
 EngCountryList=[]
 Population=[]
 ChnCountryList=[]
 for i in range(len(AllList)):
     StringText2=AllList[i].split('|')
-    EngCountryList.append(StringText2[0])
+    EngCountryList.append(StringText2[0][0:-1]) #[0:-1] 去掉最後一位的空格
     # print(StringText2)
     StringText3=StringText2[1].split('\n')
     # print(StringText3)
@@ -114,13 +115,14 @@ for s in range(len(leng)):
             CTN_Result.pop(1+2*i)
             CTN_Result.insert(1+2*i,b[i][0:3])
 
-    ws.append(['Continent',ChnTerr[s]]) 
+    ws.append([ChnTerr[s]]) 
     for i in range(len(CTN_Result)//2):
         res=[]
-        res.append('NO.'+str(i+1))
+        res.append('')
         res.append(CTN_Result[0+2*i])
         res.append(CTN_Result[1+2*i])
         ws.append(res)
+
 
 wb.save('WorldPopulation.xlsx')
 browser.quit()
