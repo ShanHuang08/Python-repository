@@ -5,16 +5,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 PATH='./chromedriver.exe'
-channel='bh'
-branch='uat'
-NewAccount='stest040'
-url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
+channel=''
+branch=''
+NewAccount='st'
+url='https://'
 browser=webdriver.Chrome(PATH)
 
 browser.get(url)
 browser.maximize_window()
-browser.find_element(By.ID,value='login').send_keys('shanbot') 
-browser.find_element(By.ID,value='password').send_keys('shan612283')
+browser.find_element(By.ID,value='login').send_keys('') 
+browser.find_element(By.ID,value='password').send_keys('')
 if branch=='uat':
     browser.find_element(By.NAME,value='otp').send_keys('1', Keys.RETURN)
 elif branch=='stage':
