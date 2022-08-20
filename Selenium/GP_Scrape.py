@@ -1,6 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 from openpyxl import Workbook
 import time
 
@@ -60,7 +64,7 @@ Titles2_2nd=browser.find_elements(By.XPATH,value='//*[@id="app_article_browse"]/
 Get_CreatedTime2=[]
 for times in CreatedTime2:
     Time=times.get_attribute('datetime')
-    Get_CreatedTime2.append(times.text)
+    Get_CreatedTime2.append(Time)
 # print(len(Get_CreatedTime2))
 
 Get_Links2=[]
@@ -85,6 +89,64 @@ for i in range(len(Get_CreatedTime2)):
     Result.append(Get_Links2[i])
     Result.append(Get_Titles2[i])
     ws2.append(Result)
+
+# TheRace
+wb.create_sheet('TheRace')
+ws3=wb['TheRace']
+ws3.append(['The-Race News'])
+ws3.append(['連結','標題'])
+
+browser.get('https://the-race.com/category/motogp/')
+browser.maximize_window()
+element = WebDriverWait(browser, 2).until(
+        EC.presence_of_element_located(((By.ID,'qc-cmp2-ui'))
+    ))
+browser.find_element(By.XPATH,value='//*[@id="qc-cmp2-ui"]/div[2]/div/button[2]').click()
+time.sleep(3)
+browser.find_element(By.XPATH,value='//*[@id="TheRaceBody"]/div[4]/div[1]/div[1]/button[1]/img').click()
+body=browser.find_element(By.XPATH,value='/html/body').click()
+for i in range(3):
+    ActionChains(browser).send_keys(Keys.PAGE_DOWN).perform()
+
+for i in range(5):
+    browser.find_element(By.XPATH,value='//*[@id="therace_related_a"]/div/div[2]/div[2]/span/a').click()
+    time.sleep(4)
+    if browser.find_element(By.XPATH,value='//*[@id="therace_related_a"]/div/div[2]/div[2]/span/a').is_displayed()==False:
+        ActionChains(browser).send_keys(Keys.PAGE_DOWN).perform()
+
+H1Title=browser.find_elements(By.XPATH,value='//*[@id="content"]/div/div[1]/div[2]/div[2]/h1/a')
+H2Title=browser.find_elements(By.XPATH,value='//*[@id="content"]/div/div[2]/div/div[@class="post-group"]/div/h2/a')
+H3Title_1st=browser.find_elements(By.XPATH,value='//*[@id="therace_related_b"]/div/div/div[@class="col-md-4 related_group"]/h3/a')
+H3Title_2nd=browser.find_elements(By.XPATH,value='//*[@id="therace_related_a"]/div/div[1]/div[@class="col-md-4 related_group"]/h3/a')
+
+Get_Linsk3=[]
+Get_Titles3=[]
+
+for i in H1Title:
+    Link=i.get_attribute('href')
+    Get_Linsk3.append(Link)
+    Get_Titles3.append(i.text)
+for i in H2Title:
+    Link=i.get_attribute('href')
+    Get_Linsk3.append(Link)
+    Get_Titles3.append(i.text)
+for i in H3Title_1st:
+    Link=i.get_attribute('href')
+    Get_Linsk3.append(Link)
+    Get_Titles3.append(i.text)
+for i in H3Title_2nd:
+    Link=i.get_attribute('href')
+    Get_Linsk3.append(Link)
+    Get_Titles3.append(i.text)
+# print(Get_Titles3)
+# print(len(Get_Lins3))
+# print(len(Get_Titles3))
+
+for i in range(len(Get_Titles3)):
+    Result=[]
+    Result.append(Get_Linsk3[i])
+    Result.append(Get_Titles3[i])
+    ws3.append(Result)
 
 wb.save('test.xlsx')
 # time.sleep(5)
