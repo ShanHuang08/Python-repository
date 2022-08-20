@@ -9,7 +9,8 @@ wb=Workbook()
 # Crash.Net scrape
 ws=wb.active
 ws.title='Crash.Net'
-ws.append(['Created time','Link','Title'])
+ws.append(['Crash.Net MotoGP News'])
+ws.append(['時間','連結','標題'])
 
 options=Options()
 options.add_argument('--headless')
@@ -34,6 +35,7 @@ while page<=2:
         Links=i.get_attribute('href')
         Get_Links.append(Links)
         Get_Titles.append(i.text)
+
     for i in range(len(Get_CreatedTime)):
         Result=[]
         Result.append(Get_CreatedTime[i])
@@ -47,8 +49,43 @@ while page<=2:
 # Motorsport
 wb.create_sheet('Motorsport')
 ws2=wb['Motorsport']
-ws2.append(['Created time','Link','Title'])
+ws2.append(['Motorsport MotoGP News'])
+ws2.append(['時間','連結','標題'])
+
+browser.get('https://www.motorsport.com/motogp/news/')
+CreatedTime2=browser.find_elements(By.XPATH,value='//time[@class="ms-item_date-value"]')
+Title2_1st=browser.find_elements(By.XPATH,value='//*[@id="app_article_browse"]/div[4]/div[3]/div[3]/div/div[1]/div/div[3]/div[@class="ms-item--art "]/div[@class="ms-item_info"]/p/a')
+Titles2_2nd=browser.find_elements(By.XPATH,value='//*[@id="app_article_browse"]/div[4]/div[3]/div[3]/div/div[1]/div/div[1]/div[@class="ms-item--art "]/div[@class="ms-item_info"]/p/a')
+
+Get_CreatedTime2=[]
+for times in CreatedTime2:
+    Time=times.get_attribute('datetime')
+    Get_CreatedTime2.append(times.text)
+# print(len(Get_CreatedTime2))
+
+Get_Links2=[]
+for link in Title2_1st:
+    Link=link.get_attribute('href')
+    Get_Links2.append(Link)
+for link in Titles2_2nd:
+    Link=link.get_attribute('href')
+    Get_Links2.append(Link)
+# print(len(Get_Links2))
+
+Get_Titles2=[]
+for title in Title2_1st:
+    Get_Titles2.append(title.text)
+for title in Titles2_2nd:
+    Get_Titles2.append(title.text)
+# print(len(Get_Titles2))
+
+for i in range(len(Get_CreatedTime2)):
+    Result=[]
+    Result.append(Get_CreatedTime2[i])
+    Result.append(Get_Links2[i])
+    Result.append(Get_Titles2[i])
+    ws2.append(Result)
 
 wb.save('test.xlsx')
-time.sleep(5)
+# time.sleep(5)
 browser.quit()
