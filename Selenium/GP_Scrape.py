@@ -41,6 +41,7 @@ def CrashNet(wb,browser):
         if page<2:
             browser.get('https://www.crash.net/motogp/news?page=1')
         page+=1
+    print(f'CrashNet OK')
 
 # Motorsport
 def Motorsport(wb,browser):
@@ -82,6 +83,7 @@ def Motorsport(wb,browser):
         Result.append(Get_Links2[i])
         Result.append(Get_Titles2[i])
         ws2.append(Result)
+    print(f'Motorsport OK')
 
 # TheRace
 def TheRace(wb,browser):
@@ -132,15 +134,17 @@ def TheRace(wb,browser):
         Link=i.get_attribute('href')
         Get_Linsk3.append(Link)
         Get_Titles3.append(i.text)
-    # print(Get_Titles3)
-    # print(len(Get_Lins3))
-    # print(len(Get_Titles3))
+    for i in range(1,len(Get_Titles3)):
+        Data=Get_Titles3[i].lower()
+        Get_Titles3.pop(i)
+        Get_Titles3.insert(i,Data)
 
     for i in range(len(Get_Titles3)):
         Result=[]
         Result.append(Get_Linsk3[i])
         Result.append(Get_Titles3[i])
         ws3.append(Result)
+    print(f'TheRace OK')
 
 def main():
     wb=Workbook()
