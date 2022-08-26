@@ -31,25 +31,91 @@ jdata.append(data)
 # print(jdata[0][135:149]) #a10
 # print(jdata[0][149:166]) #a11
 # print(jdata[0][166:178-1]) #"a12":"新聞稿發佈新增確診數"
-# print(jdata[0][1:178]) #237
-# print(jdata[0][179:356]) #236
 
-# for i in range(20,30):
-#     count=0
-#     if jdata[0][90*i] in ['0','1','2','3','4','5','6','7','8','9']:
-#         count+=1
-#     else:
-#         count=0
-#     print(jdata[0][1+178*i:178*(i+1)+count])
+count=0
+num=100 #0-103 OK
+for i in range(0,110):
+    b=True
+    # a06
+    if jdata[0][178*i+89+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        if jdata[0][178*i+89+count] in ['0','1','2','3','4','5','6','7','8','9']:
+            count+=1
+            b=False
+            print('a06:'+str(b)+' i='+str(i))
+        elif jdata[0][178*i+89+count] in ['0','1','2','3','4','5','6','7','8','9'] and jdata[0][178*i+90+count] in ['0','1','2','3','4','5','6','7','8','9']:
+            count+=2
+            b==False
+            print('a06:'+str(b)+' i='+str(i))
+        elif jdata[0][178*i+89+count] in ['0','1','2','3','4','5','6','7','8','9'] and jdata[0][178*i+90+count] in ['0','1','2','3','4','5','6','7','8','9'] and jdata[0][178*i+91+count] in ['0','1','2','3','4','5','6','7','8','9']:
+            count+=3
+            b==False
+            print('a06:'+str(b)+' i='+str(i))
+    # a07 increase from i=82
+    if jdata[0][178*i+104+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        count+=1
+        b=False
+        print('a07:'+str(b)+' i='+str(i))
+    # a08 increase from i=91
+    if jdata[0][178*i+120+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        count+=1
+        b=False
+        print('a08:'+str(b)+' i='+str(i))
+    # a09
+    if jdata[0][178*i+134+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        count+=1
+        b=False
+        print('a10:'+str(b)+' i='+str(i))
+    # a10 increase from i=93
+    if jdata[0][178*i+148+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        count+=1
+        b=False
+        print('a10:'+str(b)+' i='+str(i))
+    # a12
+    if jdata[0][178*i+176+count] in ['0','1','2','3','4','5','6','7','8','9']:
+        count+=1
+        b=False
+        print('a12:'+str(b)+' i='+str(i))
 
-for i in range(20,23):
-    print(jdata[0][1+178*i:178*(i+1)])
+    if b and i>=num:
+        print(jdata[0][1+178*i+count:178*(i+1)+count])
+    elif b==False and i>=num:
+        if count==2:
+            print(jdata[0][1+178*i:178*(i+1)+count])
+        elif count>2 and count<=6:
+            print(jdata[0][1+178*i+count-2:178*(i+1)+count])
+        elif count>6 and count<22:
+            print(jdata[0][1+178*i+count-3:178*(i+1)+count])
+        elif count==22:
+            print(jdata[0][1+178*i+count-1:178*(i+1)+count])
+        elif count>22 and count<30:
+            print(jdata[0][1+178*i+count-3:178*(i+1)+count])
+        elif count==31:
+            print(jdata[0][1+178*i+count-3:178*(i+1)+count])
+        elif count>35 and count<=41:
+            print(jdata[0][1+178*i+count-5:178*(i+1)+count])
+        elif count>41 and count<=107:
+            print(jdata[0][1+178*i+count-6:178*(i+1)+count])
+        elif count>107:
+            print(jdata[0][1+178*i+count-6:178*(i+1)+count])
 
-print(jdata[0][1+178*20:178*21])
-print(jdata[0][1+178*21:178*22+2])
-print(jdata[0][1+178*22+2:178*23+2])
     
+    if i>=num:
+        print(f'No.{i}, count={count}')
+        print()
 
+
+# print(jdata[0][1+178*91+31:178*92+36]) 
+# print(jdata[0][1+178*81+6:178*82+6]) 
+# print(jdata[0][1+178*82+6:178*83+9]) #+6 +9
+# print(jdata[0][1+178*83+9:178*84+12]) #+9 +12
+# print(jdata[0][1+178*83+9:178*84+12]) #+9 +12
+
+
+# x=87
+# print(x,jdata[0][1+178*x+90+22:1+178*x+104+22]) #a07
+# print(x,jdata[0][1+178*x+105+30:1+178*x+120+30]) #a08
+# print(x+1,jdata[0][1+178*(x+1)+105+30:1+178*(x+1)+120+32])
+# print(x+2,jdata[0][1+178*(x+2)+105+32:1+178*(x+2)+120+34])
 
 # print(len(jdata[0])) #len=44567
 
