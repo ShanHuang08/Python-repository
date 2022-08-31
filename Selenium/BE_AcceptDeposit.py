@@ -8,13 +8,13 @@ PATH='./chromedriver.exe'
 channel='bh'
 branch='uat'
 NewAccount='stest051'
-url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
+url='https://'+channel+'-admin-'+branch'
 browser=webdriver.Chrome(PATH)
 
 browser.get(url)
 browser.maximize_window()
-browser.find_element(By.ID,value='login').send_keys('shanbot') 
-browser.find_element(By.ID,value='password').send_keys('shan612283')
+browser.find_element(By.ID,value='login').send_keys('sh') 
+browser.find_element(By.ID,value='password').send_keys('sh')
 if branch=='uat':
     browser.find_element(By.NAME,value='otp').send_keys('1', Keys.RETURN)
 elif branch=='stage':
