@@ -21,3 +21,5 @@ class PythonMainPage(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    
+#     http://blog.castman.net/%E6%95%99%E5%AD%B8/2018/01/27/python-name-main.html
