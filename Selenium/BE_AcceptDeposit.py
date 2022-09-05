@@ -4,12 +4,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 PATH='./chromedriver.exe'
-channel='bh'
+channel='ls'
 branch='uat'
-NewAccount='stest051'
+NewAccount='stest001'
 url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
 browser=webdriver.Chrome(PATH)
-
+print(f'品牌:{channel}')
 browser.get(url)
 browser.maximize_window()
 browser.find_element(By.ID,value='login').send_keys('shanbot') 
