@@ -4,18 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from openpyxl import Workbook
 
-def WebDriverEnv():
-    PATH='./chromedriver.exe'
-    options=Options()
-    options.add_argument('--headless')
-    browser=webdriver.Chrome(PATH,options=options)
-    return browser
-
-def WorkbookSetup(ws):
+def WorldPopulation(browser,wb):
+    ws=wb.active
     ws.title='世界人口排名'
     ws.append(['洲名','國家','人口'])
 
-def GetContinens(browser):
     browser.get('https://www.ifreesite.com/population/')
     Continents=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@class="if_table starj taggllj"]')
     
@@ -30,9 +23,7 @@ def GetContinens(browser):
         EngTerr.append(CtnsList[1+2*i])
     for i in range(len(ChnTerr)):
         ChnTerr[i]=ChnTerr[i]+'('+EngTerr[i]+')'
-    return ChnTerr
 
-def GetCountries(browser):
     browser.get('https://www.ifreesite.com/population/')
     Countries=browser.find_elements(By.XPATH,value='//table[@class="if_tabletd"]/tbody/tr/td/table/tbody/tr/td[@width="50%"]/div')
     # 取得資料
@@ -46,25 +37,19 @@ def GetCountries(browser):
         # print(len(GetData),GetData)
         if len(GetData)==1:
             AllList.append(GetData[0])
-    return AllList
 
-def GetEngCountry(AllList):
     EngCountry=[]
     for i in range(len(AllList)):
         StringText=AllList[i].split('|')
         EngCountry.append(StringText[0][0:-1]) #[0:-1] 去掉最後一位的空格
-    return EngCountry
 
-def GetChnCountry(AllList):
     ChnCountry=[]
     for i in range(len(AllList)):
         StringText=AllList[i].split('|')
         # print(StringText)
         StringText2=StringText[1].split('\n')
         ChnCountry.append(StringText2[1])
-    return ChnCountry    
 
-def GetPopulation(AllList):
     Population=[]
     for i in range(len(AllList)):
         StringText=AllList[i].split('|')
@@ -81,18 +66,14 @@ def GetPopulation(AllList):
             PopulationText=PopulationText[0]+PopulationText[1]+PopulationText[2]+PopulationText[3]
         PopulationNum=int(PopulationText)
         Population.append(PopulationNum)
-    return Population
-
-def MergeCountryName(EngCountry,ChnCountry):
+    
     # 中英文國家名
     MergeNames=[]
     for i in range(len(EngCountry)):
         test=[]
         test=EngCountry[i]+'('+ChnCountry[i]+')'
         MergeNames.append(test)
-    return MergeNames
 
-def GetAllCountries(AllList,MergeNames,Population,ws,Contitents):
     leng=[len(AllList[0:58]),len(AllList[58:109]),len(AllList[109:157]),len(AllList[157:205]),len(AllList[205:210]),len(AllList[210:233])]
     ctnsum=0
     for s in range(len(leng)):
@@ -138,7 +119,7 @@ def GetAllCountries(AllList,MergeNames,Population,ws,Contitents):
                 CTN_Result.pop(1+2*i)
                 CTN_Result.insert(1+2*i,b[i][0:3])
 
-        ws.append([Contitents[s]]) 
+        ws.append([ChnTerr[s]]) 
         for i in range(len(CTN_Result)//2):
             res=[]
             res.append('')
@@ -147,26 +128,12 @@ def GetAllCountries(AllList,MergeNames,Population,ws,Contitents):
             ws.append(res)
 
 
-def main():
+if __name__=='__main__':
     PATH='./chromedriver.exe'
     options=Options()
     options.add_argument('--headless')
     browser=webdriver.Chrome(PATH,options=options)
     wb=Workbook()
-    ws=wb.active
-
-    WorkbookSetup(ws)
-    Contitents=GetContinens(browser)
-    # print(Contitents)
-    AllList=GetCountries(browser)
-    # print(AllList[0:6])
-    EngCountry=GetEngCountry(AllList)
-    ChnCountry=GetChnCountry(AllList)
-    Population=GetPopulation(AllList)
-    MergeNames=MergeCountryName(EngCountry,ChnCountry)
-    # print(MergeNames,len(MergeNames))
-    GetAllCountries(AllList,MergeNames,Population,ws,Contitents)
-
+    WorldPopulation(browser,wb)
     wb.save('defWorldPopulation.xlsx')
     browser.quit()
-main()
