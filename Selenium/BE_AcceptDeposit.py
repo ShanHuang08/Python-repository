@@ -4,9 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 PATH='./chromedriver.exe'
-channel='ls'
+channel='bh'
 branch='uat'
-NewAccount='stest001'
+NewAccount='stest053'
 url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
 browser=webdriver.Chrome(PATH)
 print(f'品牌:{channel}')
