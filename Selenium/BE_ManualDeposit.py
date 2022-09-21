@@ -57,7 +57,7 @@ def WireDeposit(browser,NewAccount,amount):
     browser.find_element(By.XPATH,value='//div[@x-placement="top-start"]/div[@class="el-scrollbar"]/div[@class="el-select-dropdown__wrap el-scrollbar__wrap"]/ul/li[1]').click() #選擇銀行帳號
     browser.find_element(By.XPATH,value='//button[@qa-button="add-dialog-submit"]').click() #送出
     browser.find_element(By.XPATH,value='//button[@qa-button="tab-group-confirm"]').click()
-    browser.implicitly_wait(2)
+    time.sleep(1)
     browser.find_element(By.XPATH,value='//button[@qa-button="tab-group-detail-dialog-confirm"]').click()
     print(f'人工公司入款{amount}元')
     time.sleep(5)
@@ -115,14 +115,26 @@ if __name__=='__main__':
     PATH='./chromedriver.exe'
     channel='bh'
     branch='uat'
-    NewAccount='stest053'
+    NewAccount='stest001'
     url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
     browser=webdriver.Chrome(PATH)
     amount=100
     AdminLogin(browser,branch,url)
-    ManualDeposit(browser,NewAccount,amount)
-    WireDeposit(browser,NewAccount,amount)
-    OnlineDeposit(browser,NewAccount,amount)
-    VirtualDeposit(browser,NewAccount,amount)
+    try:
+        ManualDeposit(browser,NewAccount,amount)
+    except:
+        print(f'人工入款失敗')
+    try:
+        WireDeposit(browser,NewAccount,amount)
+    except:
+        print(f'人工公司入款失敗')
+    try:
+        OnlineDeposit(browser,NewAccount,amount)
+    except:
+        print(f'人工在線入款失敗')
+    try:    
+        VirtualDeposit(browser,NewAccount,amount)
+    except:
+        print(f'人工虛擬入款失敗')
     time.sleep(2)
     browser.quit()
