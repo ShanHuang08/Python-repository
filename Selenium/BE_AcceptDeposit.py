@@ -2,6 +2,7 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from BE_InfoControl import Webchannel, Webbranch, WebNewaccount
 
 def AdminLogin(browser,branch,url):
     browser.get(url)
@@ -32,7 +33,10 @@ def WireAccept(browser,NewAccount):
             # print(f'i={i}')
             browser.find_element(By.XPATH,value='//*[@id="app"]/div/div[2]/div/section/div/div[2]/div/div[3]/table/tbody/tr/td[12]/div/div/button[@qa-button="accept"]').click()
             time.sleep(1)
-            browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[3]/button[2]').click()
+            try:
+                browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[3]/button[2]').click()
+            except:
+                browser.find_element(By.XPATH,value='/html/body/div[7]/div/div[3]/button[2]').click()
             time.sleep(1)
             browser.find_element(By.XPATH,value='//button[@qa-button="search"]').click()
             time.sleep(1)
@@ -58,10 +62,19 @@ def OnlineAccept(browser,NewAccount):
             browser.find_element(By.XPATH,value='//*[@id="app"]/div/div[2]/div/section/div/div[2]/div/div[3]/table/tbody/tr/td[17]/div/div/button[@qa-button="accept"]').click()
             time.sleep(1)
             if branch=='uat':
-                browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[2]/div[2]/div[1]/input').send_keys('1')
+                try:
+                    browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[2]/div[2]/div[1]/input').send_keys('1')
+                except:
+                    browser.find_element(By.XPATH,value='/html/body/div[7]/div/div[2]/div[2]/div[1]/input').send_keys('1')
             if branch=='stage':
-                browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[2]/div[2]/div[1]/input').send_keys('2') #會定位失敗
-            browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[3]/button[2]').click()
+                try:
+                    browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[2]/div[2]/div[1]/input').send_keys('2') #會定位失敗
+                except:
+                    browser.find_element(By.XPATH,value='/html/body/div[7]/div/div[2]/div[2]/div[1]/input').send_keys('2')
+            try:
+                browser.find_element(By.XPATH,value='/html/body/div[8]/div/div[3]/button[2]').click()
+            except:
+                browser.find_element(By.XPATH,value='/html/body/div[7]/div/div[3]/button[2]').click()
             time.sleep(1)
             browser.find_element(By.XPATH,value='//button[@qa-button="search"]').click()
             time.sleep(1)
@@ -100,13 +113,14 @@ def VirtualAccept(browser,NewAccount):
 
 if __name__=='__main__':
     PATH='./chromedriver.exe'
-    channel='bh'
-    branch='stage'
-    NewAccount='stest029'
+    channel=Webchannel()
+    branch=Webbranch()
+    NewAccount=WebNewaccount()
     url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
     browser=webdriver.Chrome(PATH)
     print(f'品牌:{channel} {branch}')
     AdminLogin(browser,branch,url)
+    # OnlineAccept(browser,NewAccount)
     try:
         WireAccept(browser,NewAccount)
     except:

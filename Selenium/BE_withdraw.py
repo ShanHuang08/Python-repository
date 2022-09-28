@@ -2,6 +2,7 @@ from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from BE_InfoControl import Webchannel, Webbranch, WebNewaccount
 
 def AdminLogin(browser,branch,url):
     browser.get(url)
@@ -43,12 +44,14 @@ def Withdraw(browser,NewAccount):
 
 if __name__=='__main__':
     PATH='./chromedriver.exe'
-    channel='bh'
-    branch='stage'
-    NewAccount='stest029'
+    channel=Webchannel()
+    branch=Webbranch()
+    NewAccount=WebNewaccount()
     url='https://'+channel+'-admin-'+branch+'.paradise-soft.com.tw/'
     browser=webdriver.Chrome(PATH)
     print(f'品牌:{channel} {branch}')
+    AdminLogin(browser,branch,url)
+    # Withdraw(browser,NewAccount)
     try:
         Withdraw(browser,NewAccount)
     except:
