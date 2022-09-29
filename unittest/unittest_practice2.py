@@ -9,22 +9,25 @@ def compare_string(s1, s2):
 class MyFirstTest(unittest.TestCase):
 
     def setUp(self):
-        self.default_greeting = "Hello"
+        self.default_str = "Hello"
 
     def test_compare_stringT(self):
-        test_greeting = "Hello"
+        test_str = "Hello"
+        message=test_str+" isn't incorrect"
         # self.assertFalse(compare_string(self.default_greeting, test_greeting))
-        self.assertTrue(compare_string(self.default_greeting, test_greeting))
+        self.assertTrue(compare_string(self.default_str, test_str),message)
 
     def test_compare_stringF(self):
-        test_greeting = "HellO" #大寫O
-        self.assertFalse(compare_string(self.default_greeting, test_greeting))
+        test_str = "HellO" #大寫O
+        message='test'
+        self.assertFalse(compare_string(self.default_str, test_str),message)
         # self.assertTrue(compare_string(self.default_greeting, test_greeting))
 
     def test_compare_hex_string(self):
-        hex_greeting = b"\x48\x65\x6c\x6c\x6f"
+        test_str = b"\x48\x65\x6c\x6c\x6f"
+        message='test'
         # self.assertTrue(compare_string(self.default_greeting, hex_greeting))
-        self.assertFalse(compare_string(self.default_greeting, hex_greeting))
+        self.assertFalse(compare_string(self.default_str, test_str),message)
 
 
 if __name__ == '__main__':
