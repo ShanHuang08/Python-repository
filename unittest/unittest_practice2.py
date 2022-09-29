@@ -19,13 +19,13 @@ class MyFirstTest(unittest.TestCase):
 
     def test_compare_stringF(self):
         test_str = "HellO" #大寫O
-        message='test'
+        message='Error msg'
         self.assertFalse(compare_string(self.default_str, test_str),message)
         # self.assertTrue(compare_string(self.default_greeting, test_greeting))
 
     def test_compare_hex_string(self):
         test_str = b"\x48\x65\x6c\x6c\x6f"
-        message='test'
+        message='Error msg'
         # self.assertTrue(compare_string(self.default_greeting, hex_greeting))
         self.assertFalse(compare_string(self.default_str, test_str),message)
 
