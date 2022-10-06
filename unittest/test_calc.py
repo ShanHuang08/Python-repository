@@ -18,6 +18,10 @@ class TestCalc(unittest.TestCase):
         self.assertEqual(result,50)
         self.assertEqual(calc.multiply(10,2),20)
 
+    def test_power(self):
+        self.assertEqual(calc.power(10,2),100)
+        self.assertEqual(calc.power(1,0),1)    
+
     def test_division(self):
         result=calc.division(10,5)
         self.assertEqual(result,2.0)
