@@ -7,15 +7,27 @@ class TestCalc(unittest.TestCase):
         pass
 
     def tearDown(self) -> None:
-        # print('teardowm\n')
+        # print('teardown\n')
         pass
 
     def test_add(self):
         self.assertEqual(calc.add(10,5),15)
+        if calc.add(10,5)==15:
+            testValue=True
+            message=''
+        else:
+            testValue=False
+            message='Test value is not true'
+        self.assertTrue(testValue,message)
         # print('add')
 
     def test_substract(self):
         self.assertEqual(calc.substract(10,5),5)
+        if calc.substract(10,5)==5:
+            testValue=True
+        else:
+            testValue=False
+        self.assertTrue(testValue,'Test value is not true')
         # print('substract')
 
     def test_multiply(self):

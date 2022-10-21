@@ -24,7 +24,7 @@ class TestCases(unittest.TestCase):
         result=calc.add(2,3)
         self.assertEqual(result,expected)
         self.assertEqual(expected,calc.add(2,3)) #兩個都可以
-        
+        self.assertTrue
 
     def test_substract(self):
         result=calc.substract(*self.args)
@@ -53,6 +53,17 @@ class TestCases(unittest.TestCase):
     def test_fullname(self):
         self.assertEqual(self.emp1.fullname,'Laibah Borys')
         self.assertEqual(self.emp2.fullname,'Zarah Clegg')
+        if self.emp1.first=='Laibah':
+            testValue=True
+        else:
+            testValue=False
+        self.assertTrue(testValue,'First name is incorrect')
+
+        if self.emp1.first!='Laibah':
+            testValue=True
+        else:
+            testValue=False
+        self.assertFalse(testValue,'First name is correct')
 
         self.emp1.last='Corse'
         self.emp2.last='chen'
