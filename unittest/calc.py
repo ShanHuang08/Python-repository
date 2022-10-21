@@ -3,6 +3,8 @@ def add(x,y):
 def substract(x,y):
     return x-y
 def multiply(x,y):
+    if x==0 or y==0:
+        raise ValueError("Can't multiply zero")
     return x*y
 def division(x,y):
     if x==0 or y==0:
