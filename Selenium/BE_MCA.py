@@ -3,7 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-brands=[]
+Banks=[]
 
 browser=webdriver.Chrome('./Chromedriver.exe')
 browser.get('https://central-web-uat.paradise-soft.com.tw/')
@@ -26,16 +26,16 @@ for i in range(1,11):
         result=res.text
         if result not in ['AAA','test']:
         # if result not in ['AAA'] and result not in ['test']: bad method
-            brands.append(result)    
+            Banks.append(result)    
     if i<10:
         NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
         time.sleep(1)
     else:
         pass
 
-print(len(brands)) #len=193
-print(brands)
-# print(brands[0]) AAA print(brands[165]) test
+print(len(Banks)) #len=193
+print(Banks)
+# print(Banks[0]) AAA print(Banks[165]) test
 
 
 
