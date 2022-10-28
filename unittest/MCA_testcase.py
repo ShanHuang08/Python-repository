@@ -1,11 +1,14 @@
 import unittest
 import BE_MCA
-from selenium.common.exceptions import NoSuchElementException
 
 class TestCases(unittest.TestCase):
 
     def test_MCAtest(self):
-        BE_MCA.MCABankSync()
+        BE_MCA.MCABankSync_default() #总控后台(预设值)
+        assert True
+
+    def test_MCAtest2(self):
+        BE_MCA.MCABankSync_custom() #自定义同步内容
         assert True
         
 if __name__=='__main__':
