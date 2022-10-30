@@ -23,6 +23,12 @@ class BinTestCases(unittest.TestCase):
     def test_error(self):
         with self.assertRaises(ValueError):
             BintoDec(True)
+        with self.assertRaises(TypeError):
+            DigitBintoHex('a')
+            DigitBintoHex(123)
+            DigitBintoHex('123')
+        # with self.assertRaises(TypeError):
+        #     DigitBintoHex(101) #AssertionError: ValueError not raised
 
 if __name__ == '__main__':
     unittest.main()

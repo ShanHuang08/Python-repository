@@ -1,6 +1,5 @@
 # 二進位補0
 def DigitBintoHex(num):
-    
     if type(num)==int:
         num=str(num)
     elif type(num)==str:
@@ -10,8 +9,9 @@ def DigitBintoHex(num):
             return 1
         else:
             return 0
-    else:
-        raise ValueError ('input error!')
+    for i in range(len(num)):
+        if num[i] not in ['0','1']: 
+            raise TypeError('num must be bin!')
     
     one='0'
     two='00'
@@ -79,6 +79,7 @@ def DigitBintoHex(num):
     return hex #for unittest
 
 if __name__=='__main__':
-    DigitBintoHex('1011110011111111011110111111010111111111')
+    # DigitBintoHex('1011110011111111011110111111010111111111')
+    DigitBintoHex(1011110011111111011110111111010111111111)
     # DigitBintoHex('1000')
 
