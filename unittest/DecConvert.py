@@ -41,7 +41,12 @@ def BintoDec(init_num):
     elif type(init_num)==str:
         num=init_num   
     else:
-        raise ValueError('Type error, only support str and int') 
+        raise TypeError('Type error, only support str and int') 
+    
+    for i in range(len(num)):
+        if num[i] not in ['0','1']:
+            raise ValueError('num must include 0 and 1')
+
 
     List=[]
     for i in range(len(num)-1,-1,-1):

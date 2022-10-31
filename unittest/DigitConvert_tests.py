@@ -1,3 +1,4 @@
+from typing import ValuesView
 import unittest
 from BintoHex import DigitBintoHex
 from DecConvert import *
@@ -21,14 +22,15 @@ class BinTestCases(unittest.TestCase):
         self.assertEqual(BintoDec(1111),15)
 
     def test_error(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             BintoDec(True)
+        with self.assertRaises(ValueError):
+            BintoDec(12)
         with self.assertRaises(TypeError):
             DigitBintoHex('a')
             DigitBintoHex(123)
             DigitBintoHex('123')
-        # with self.assertRaises(TypeError):
-        #     DigitBintoHex(101) #AssertionError: ValueError not raised
+
 
 if __name__ == '__main__':
     unittest.main()
