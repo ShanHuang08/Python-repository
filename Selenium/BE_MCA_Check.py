@@ -152,8 +152,8 @@ for i in range(len(Banks_code[i])): #len=193
         # pass
 
 print('---比對結果:---')
-print(f'成功數目:銀行名稱:{Banks_name_success}, 銀行網址:{Banks_url_success}, 銀行圖片:{Banks_picture_success}')
-print(f'失敗數目:銀行名稱:{Banks_name_failed}, 銀行網址:{Banks_url_failed}, 銀行圖片:{Banks_picture_failed}')
+print(f'成功數目:銀行名稱:{Banks_name_success}, 銀行網址:{Banks_url_success}, 銀行圖片:{Banks_picture_success}, 銀行狀態:{Banks_status_success}, 銀行推薦:{Banks_recommend_success}')
+print(f'失敗數目:銀行名稱:{Banks_name_failed}, 銀行網址:{Banks_url_failed}, 銀行圖片:{Banks_picture_failed}, 銀行狀態:{Banks_status_failed}, 銀行推薦:{Banks_recommend_failed}')
 print()
 if len(NameFailBanks)>0:
     print(f'失敗銀行代號(名稱):{NameFailBanks}')
