@@ -11,6 +11,7 @@ def MCABankSync_default():
     SyncSucess=0
     SyncFailed=0
     FailBanks=[]
+    Change=False
 
     browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
