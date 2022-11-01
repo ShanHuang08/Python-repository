@@ -95,7 +95,7 @@ print(f'銀行數目:{len(Banks_code)}, 名稱:{len(Banks_name)}, 網址:{len(Ba
 # print(len(Banks_picture))
 # print(Banks)
 
-time.sleep(4)
+time.sleep(2)
 browser.quit()
 
 with open('C:/Users/shan_huang/Python/Banks.json','r',encoding="utf-8") as jsonfile:
@@ -124,7 +124,7 @@ for i in range(len(jdata['Items'])): #len=191
         Banks_url_failed+=1
         UrlFailBanks.append(Banks_code[i])
     
-    if jdata['Items'][i]['imgpath'] and Banks_picture[i] in ['http']: #圖片網址比對有問題
+    if jdata['Items'][i]['imgpath'][0:4] and Banks_picture[i][0:4] in ['http']: #圖片網址比對有問題
         Banks_picture_success+=1
     else:
         Banks_picture_failed+=1
