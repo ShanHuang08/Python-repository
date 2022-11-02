@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from BE_InfoControl import *
+import random
+from selenium.webdriver.chrome.options import Options
 
 def MCABankSync_default():
     Banks=[]
@@ -11,8 +13,9 @@ def MCABankSync_default():
     SyncSucess=0
     SyncFailed=0
     FailBanks=[]
-    Change=False
-
+    
+    # options=Options()
+    # options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
     browser.maximize_window()
@@ -48,8 +51,8 @@ def MCABankSync_default():
     # print(Banks)
 
     # 全選 len=MaxNum=15
-    for i in range(len(Banks)):
-    # for i in range(65,67):
+    # for i in range(len(Banks)):
+    for i in range(2):
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
@@ -60,7 +63,6 @@ def MCABankSync_default():
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[3]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div/div[@class="el-input__wrapper"]').click() #同步来源
         time.sleep(1)
         #总控后台(预设值)
-        print('总控后台(预设值)')
         ActionChains(browser).send_keys(Keys.RETURN)
         #自定义同步内容
         # browser.find_element(By.XPATH,value='/html/body/div[2]/div[5]/div/div/div[1]/ul/li[2]').click()
@@ -113,6 +115,7 @@ def MCABankSync_custom():
     SyncSucess=0
     SyncFailed=0
     FailBanks=[]
+    Change=True
 
     browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
@@ -149,8 +152,8 @@ def MCABankSync_custom():
     # print(Banks)
 
     # 全選 len=MaxNum=15
-    for i in range(len(Banks)):
-    # for i in range(65,67):
+    # for i in range(len(Banks)):
+    for i in range(3):
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
@@ -163,15 +166,23 @@ def MCABankSync_custom():
         #总控后台(预设值)
         # ActionChains(browser).send_keys(Keys.RETURN)
         #自定义同步内容
-        print('自定义同步内容')
         browser.find_element(By.XPATH,value='/html/body/div[2]/div[5]/div/div/div[1]/ul/li[2]').click()
+
+        # 修改銀行網址
+        Addnum=random.choice(['1','2','3','4','5','6','7','8','9','0'])
+        if Change==True and i==0:
+            browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').clear()
+            browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').send_keys('http://www.abchina.com/cn/wydl/grwydl/'+Addnum)
+        else:
+            pass
 
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[6]/div[@class="el-form-item__content"]/div[@class="el-row"]/div[@class="el-col el-col-6 is-guttered"]/label/span[1]/span').click() #勾是否同步1 银行名称
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[@class="el-form-item__content"]/div[@class="el-row"]/div[@class="el-col el-col-6 is-guttered"]/label/span[1]/span').click() #勾是否同步2 银行网址
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[8]/div[@class="el-form-item__content"]/div[@class="el-row"]/div[@class="el-col el-col-6 is-guttered"]/label/span[1]/span').click() #勾是否同步3 银行图片
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[9]/div[@class="el-form-item__content"]/div[@class="el-row"]/div[@class="el-col el-col-6 is-guttered"]/label/span[1]/span').click() #勾是否同步4 启用
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[10]/div[@class="el-form-item__content"]/div[@class="el-row"]/div[@class="el-col el-col-6 is-guttered"]/label/span[1]/span').click() #勾是否同步5 推荐
-
+        
+        time.sleep(1)
         browser.find_element(By.XPATH,value='//footer[@class="el-dialog__footer"]/button[2]').click() # 同步按鈕
         time.sleep(1)
         browser.find_element(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[8]/div/div/footer/button[1]').click() #確認同步
@@ -204,5 +215,31 @@ def MCABankSync_custom():
     time.sleep(2)
     browser.quit()
 
+def MCA_SyncManagement():
+    Brand_names=[]
+    options=Options()
+    options.add_argument('--headless')
+    browser=webdriver.Chrome('./Chromedriver.exe',options=options)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.maximize_window()
+    time.sleep(1)
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
+    time.sleep(1)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
+    browser.implicitly_wait(5)
+    time.sleep(2)
+
+    # 品牌名稱數量
+    BrandNames=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[1]')
+    for res in BrandNames:
+        Brand_names.append(res.text)
+    # print(Brand_names)
+    return len(Brand_names) #16
+
 if __name__=='__main__':
-    MCABankSync_default()
+    # MCABankSync_default()
+    # MCABankSync_custom()
+    MCA_SyncManagement()
