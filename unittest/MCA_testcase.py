@@ -1,16 +1,30 @@
 import unittest
-import BE_MCA
+import BE_MCA_Sync, BE_MCA_Check
+import sys
 
-class TestCases(unittest.TestCase):
+class MCATestCases(unittest.TestCase):
 
     def test_MCAtest(self):
-        BE_MCA.MCABankSync_default() #总控后台(预设值)
+        BE_MCA_Sync.MCABankSync_default() #总控后台(预设值)
         assert True
 
     def test_MCAtest2(self):
-        BE_MCA.MCABankSync_custom() #自定义同步内容
+        ContinueRun=input('JSON尚未更新，是否繼續比對?(Y/N)')
+        if ContinueRun in ['Y','y']:
+            pass
+        elif ContinueRun in ['N','n']:
+            # MCATestCases.test_MCAtest3()
+            sys.exit()
+        else:
+            raise IndexError("Can't input other characters")
+
+        BE_MCA_Check.MCA_CheckBanks_Contents()
         assert True
         
+    def test_MCAtest3(self):
+        BE_MCA_Sync.MCABankSync_custom() #自定義
+
+
 if __name__=='__main__':
     unittest.main()
 
