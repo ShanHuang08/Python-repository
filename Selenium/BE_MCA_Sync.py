@@ -6,10 +6,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from BE_InfoControl import *
 import random
 from selenium.webdriver.chrome.options import Options
+Test_Banks=['123','AAA','ABC123','Miles','test']
+MaxNum=15 #15個品牌
+Change=True #不做修改, custom品牌全選
 
 def MCABankSync_default():
     Banks=[]
-    MaxNum=15 #15個品牌
     SyncSucess=0
     SyncFailed=0
     FailBanks=[]
@@ -40,7 +42,7 @@ def MCABankSync_default():
         # print(BankCodes.text)
         for res in BankCodes:
             result=res.text
-            if result not in ['AAA','Miles','test']:
+            if result not in Test_Banks:
             # if result not in ['AAA'] and result not in ['test']: bad method
                 Banks.append(result)    
         if i<int(Endpage)-1: #11-1
@@ -51,14 +53,15 @@ def MCABankSync_default():
     # print(Banks)
 
     # 全選 len=MaxNum=15
-    # for i in range(len(Banks)):
-    for i in range(2):
+    for i in range(len(Banks)):
+    # for i in range(2):
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
         browser.find_element(By.XPATH,value='//table[@class="el-table__body"]/tbody/tr/td[10]/div/button[2]').click() #同步按鈕
         time.sleep(1)
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div/div[@class="el-form-item__content"]/label/span[1]/span').click() #勾全選
+        # browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div/div[@class="el-form-item__content"]/div/label[2]/span[1]').click() #勾BH
         
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[3]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div/div[@class="el-input__wrapper"]').click() #同步来源
         time.sleep(1)
@@ -105,17 +108,23 @@ def MCABankSync_default():
 
     print(f'同步成功:{SyncSucess}')
     print(f'同步失敗:{SyncFailed}, 銀行代碼:{FailBanks}')
+    print('总控后台(预设值)同步完成')
 
     time.sleep(2)
     browser.quit()
 
 def MCABankSync_custom():
     Banks=[]
-    MaxNum=15
     SyncSucess=0
     SyncFailed=0
     FailBanks=[]
-    Change=True
+    SelectAll=0
+    if Change==True:
+        Digit=input('請問要勾選幾個品牌(1-5)? ')
+        # label[1]=3H, label[2]=BH, label[3]=C7, label[4]=C8, label[5]=CDD
+        if int(Digit)==0 or int(Digit)>5:
+            Digit=input('請輸入(1-5)之間的數字 ')
+    SelectSome=int(Digit) #要勾幾個品牌 全選=0
 
     browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
@@ -141,7 +150,7 @@ def MCABankSync_custom():
         # print(BankCodes.text)
         for res in BankCodes:
             result=res.text
-            if result not in ['AAA','Miles','test']:
+            if result not in Test_Banks:
             # if result not in ['AAA'] and result not in ['test']: bad method
                 Banks.append(result)    
         if i<int(Endpage)-1: #11-1
@@ -153,14 +162,26 @@ def MCABankSync_custom():
 
     # 全選 len=MaxNum=15
     # for i in range(len(Banks)):
-    for i in range(3):
+    for i in range(2):
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
         browser.find_element(By.XPATH,value='//table[@class="el-table__body"]/tbody/tr/td[10]/div/button[2]').click() #同步按鈕
         time.sleep(1)
-        browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div/div[@class="el-form-item__content"]/label/span[1]/span').click() #勾全選
         
+        if Change==False:
+            browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div/div[@class="el-form-item__content"]/label/span[1]/span').click() #勾全選
+            SelectAll+=1
+        else:
+            if SelectSome>0:
+                ch=0
+                for k in range(SelectSome):
+                    ch+=1
+                    browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div/div[@class="el-form-item__content"]/div/label['+str(ch)+']/span[1]').click()
+                    
+        if SelectAll==SelectSome:
+            raise ValueError('SelectAll=SelectSome, 全選跟單選的值不能相同')
+
         browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[3]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div/div[@class="el-input__wrapper"]').click() #同步来源
         time.sleep(1)
         #总控后台(预设值)
@@ -169,10 +190,15 @@ def MCABankSync_custom():
         browser.find_element(By.XPATH,value='/html/body/div[2]/div[5]/div/div/div[1]/ul/li[2]').click()
 
         # 修改銀行網址
-        Addnum=random.choice(['1','2','3','4','5','6','7','8','9','0'])
-        if Change==True and i==0:
+        Addurl=random.choice(['test1','test2','test3'])
+        Addname=random.choice(['測試一','測試二'])
+        if Change==True:
+            # 改網址
             browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').clear()
-            browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').send_keys('http://www.abchina.com/cn/wydl/grwydl/'+Addnum)
+            browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').send_keys('http://www.'+Addurl+'.com/')
+            # 改銀行名稱
+            # browser.find_element(By.XPATH,value='').clear()
+            # browser.find_element(By.XPATH,value='').send_keys(Addname)
         else:
             pass
 
@@ -196,6 +222,9 @@ def MCABankSync_custom():
         num=1
         for res in Records:
             SyncRecord=res.text
+            if SelectAll==0: #沒有全選
+                MaxNum=SelectSome
+            
             if num<=MaxNum:
                 if SyncRecord=='成功':
                     SyncSucess+=1
@@ -211,7 +240,7 @@ def MCABankSync_custom():
 
     print(f'同步成功:{SyncSucess}')
     print(f'同步失敗:{SyncFailed}, 失敗銀行代碼:{FailBanks}')
-
+    print('自定義同步完成')
     time.sleep(2)
     browser.quit()
 
@@ -232,7 +261,7 @@ def MCA_SyncManagement():
     browser.implicitly_wait(5)
     time.sleep(2)
 
-    # 品牌名稱數量
+    # 同步管理品牌名稱數量
     BrandNames=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[1]')
     for res in BrandNames:
         Brand_names.append(res.text)
@@ -241,5 +270,6 @@ def MCA_SyncManagement():
 
 if __name__=='__main__':
     # MCABankSync_default()
-    # MCABankSync_custom()
-    MCA_SyncManagement()
+    MCABankSync_custom()
+    # MCA_SyncManagement()
+    

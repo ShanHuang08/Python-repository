@@ -7,11 +7,11 @@ from BE_InfoControl import *
 import json
 from BE_MCA_Sync import MCA_SyncManagement
 
-def MCA_check_Contents():
-    excluce_code=['Miles','test']  
-    exclude_name=['MBANK','ewqewqe']
-    exclude_url=['test']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+def MCA_CheckBanks_Contents():
+    excluce_code=['Miles','test','ABC123']  
+    exclude_name=['MBANK','ewqewqe','123321']
+    exclude_url=['test','555555']
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -170,97 +170,112 @@ def MCA_check_Contents():
     if len(RecommendFailBanks)>0:
         print(f'失敗銀行代號(推薦):{RecommendFailBanks}')
 
-browser=webdriver.Chrome('./Chromedriver.exe')
-browser.get('https://central-web-uat.paradise-soft.com.tw/')
-browser.maximize_window()
-time.sleep(1)
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
-browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
-time.sleep(1)
-browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
-browser.implicitly_wait(5)
-time.sleep(2)
+def MCA_CheckBanksType_in_brands():
+    browser=webdriver.Chrome('./Chromedriver.exe')
+    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.maximize_window()
+    time.sleep(1)
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
+    time.sleep(1)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
+    browser.implicitly_wait(5)
+    time.sleep(2)
 
-# 選品牌名稱
-BrandList=[] #16 ['3h', '測試']
-# 點下拉選單
-browser.find_element(By.XPATH,value='//div[@class="ps-query-container__optional"]/div[1]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div[@class="el-input el-input--suffix"]/div[@class="el-input__wrapper"]/input').click()
-time.sleep(1)
-BrandNames=browser.find_elements(By.XPATH,value='//div[@class="el-popper is-pure is-light el-select__popper"][1]/div/div/div[1]/ul/li')
-for res in BrandNames:
-    Name=res.text
-    if Name not in ['模控后台(预设值)']:
-        BrandList.append(Name)
-# print(len(BrandList)) #len=16
-print('test1')
-if len(BrandList) != MCA_SyncManagement(): #16
-    print('test2')
-    print(f'{len(BrandList)} != {MCA_SyncManagement()}')
-    print(BrandList)
-    raise ValueError('銀行管理品牌名稱數量和同步管理不一致')
-browser.quit()
-# 會登出 要分開寫
+    # 選品牌名稱
+    BrandList=[] #16 ['3h', '測試']
+    # 點下拉選單
+    browser.find_element(By.XPATH,value='//div[@class="ps-query-container__optional"]/div[1]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div[@class="el-input el-input--suffix"]/div[@class="el-input__wrapper"]/input').click()
+    time.sleep(1)
+    BrandNames=browser.find_elements(By.XPATH,value='//div[@class="el-popper is-pure is-light el-select__popper"][1]/div/div/div[1]/ul/li')
+    for res in BrandNames:
+        Name=res.text
+        if Name not in ['模控后台(预设值)']:
+            BrandList.append(Name)
+    # print(len(BrandList)) #len=16
+    print('test1')
+    if len(BrandList) != MCA_SyncManagement(): #16
+        print('test2')
+        print(f'{len(BrandList)} != {MCA_SyncManagement()}')
+        print(BrandList)
+        raise ValueError('銀行管理品牌名稱數量和同步管理不一致')
+    browser.quit()
+    # 會登出 要分開寫
 
-browser=webdriver.Chrome('./Chromedriver.exe')
-browser.get('https://central-web-uat.paradise-soft.com.tw/')
-browser.maximize_window()
-time.sleep(1)
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
-browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
-time.sleep(1)
-browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
-browser.implicitly_wait(5)
-time.sleep(2)
+    browser=webdriver.Chrome('./Chromedriver.exe')
+    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.maximize_window()
+    time.sleep(1)
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
+    time.sleep(1)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
+    browser.implicitly_wait(5)
+    time.sleep(2)
 
-# BrandList[0]=li[2] max=li[17] = BrandList[15]
-Banks_code=[]
-Failed_Banks_type=[]
-Banks_type_success=0
-Banks_type_failed=0
-for i in range(len(BrandList)):
-    if BrandList[i] not in ['測試']:
-        # 分別選擇各品牌
-        num=str(i+2)
-        Values='//div[@class="el-popper is-pure is-light el-select__popper"][1]/div/div/div[1]/ul/li['+num+']'
-        print(Values)
-        browser.find_element(By.XPATH,value='//div[@class="ps-query-container__optional"]/div[1]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div[@class="el-input el-input--suffix"]/div[@class="el-input__wrapper"]/input').click()
-        # selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
-        browser.find_element(By.XPATH,value=Values).click() 
-        browser.find_element(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/button').click()
-        time.sleep(1)
+    # BrandList[0]=li[2] max=li[17] = BrandList[15]
+    Banks_code=[]
+    Failed_Banks_type=[]
+    for i in range(len(BrandList)):
+        Banks_type_success=0
+        Banks_type_failed=0
+        if Banks_type_success and Banks_type_failed != 0:
+            raise ValueError('變數未歸零')
 
-        TotalBank=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div/span[1]').text
-        print(f'{BrandList[i]} 共{TotalBank}条') #共 193 条
-        BNum=TotalBank.split(' ')
-        Endpage=int(BNum[1])/30+2 #8
-        
-        # 先爬代號
-        BanksCode=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[2]/div')
-        for res in BanksCode:
-            Banks_code.append(res.text)
-
-        # 爬銀行類型
-        BanksType=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[6]/div/span')
-        for res in BanksType:
-            Type=res.text
-            if Type != '':
-                Banks_type_success+=1
-            else:
-                Banks_type_failed+=1
-                Failed_Banks_type.append(BrandList[i]+' '+Banks_code[i]) #品牌+代號
-        
-        # 下一頁
-        if i<int(Endpage)-1: #11-1
-            NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
+        if BrandList[i] not in ['測試']:
+            # 分別選擇各品牌
+            num=str(i+2) #2456
+            # 點下拉選單
+            browser.find_element(By.XPATH,value='//div[@class="ps-query-container__optional"]/div[1]/div[@class="el-form-item__content"]/div[@class="el-select"]/div/div[@class="el-input el-input--suffix"]/div[@class="el-input__wrapper"]/input').click()
+            time.sleep(1)
+            browser.find_element(By.XPATH,value='/html/body/div[2]/div[2]/div/div/div[1]/ul/li['+num+']').click() #選擇各品牌
+            browser.find_element(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/button').click() #查找按鈕
             time.sleep(1)
 
-time.sleep(2)
-browser.quit()
+            TotalBank=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div/span[1]').text
+            print(f'{BrandList[i]} {TotalBank} num={num}') #共 193 条
+            BNum=TotalBank.split(' ')
+            Endpage=int(BNum[1])/30+2 #8
+        
+            for j in range(1,int(Endpage)):
+                # 先爬代號
+                BanksCode=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[2]/div')
+                for res in BanksCode:
+                    Banks_code.append(res.text)
+
+                # 爬銀行類型
+                BanksType=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[6]/div/span')
+                for res in BanksType:
+                    Type=res.text
+                    if Type != '':
+                        Banks_type_success+=1
+                    else:
+                        Banks_type_failed+=1
+                        Failed_Banks_type.append(BrandList[i]+' '+Banks_code[i]) #品牌+代號
+                
+                # 下一頁
+                if j<int(Endpage)-1: #11-1
+                    NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
+                    time.sleep(1)
+            print(f'{Banks_type_success} 家銀行正常顯示')
+            if Banks_type_failed>0:
+                print(f'{Banks_type_failed} 家顯示空白')
+                print(Failed_Banks_type)
+            
+            print('---------------')
+            # 頁面重整
+            browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+            browser.implicitly_wait(5)
+            time.sleep(2)
+
+    time.sleep(2)
+    browser.quit()
 
 
 if __name__=='__main__':
-    pass
+    MCA_CheckBanks_Contents()
+    # MCA_CheckBanksType_in_brands()
