@@ -195,7 +195,6 @@ def MCA_CheckBanksType_in_brands():
         if Name not in ['模控后台(预设值)']:
             BrandList.append(Name)
     # print(len(BrandList)) #len=16
-    print('test1')
     if len(BrandList) != MCA_SyncManagement(): #16
         print('test2')
         print(f'{len(BrandList)} != {MCA_SyncManagement()}')

@@ -107,7 +107,10 @@ def MCABankSync_default():
         time.sleep(2)
 
     print(f'同步成功:{SyncSucess}')
-    print(f'同步失敗:{SyncFailed}, 銀行代碼:{FailBanks}')
+    if len(FailBanks)>0:
+        print(f'同步失敗:{SyncFailed}, 銀行代碼:{FailBanks}')
+    else:
+        print(f'同步失敗:{SyncFailed}')
     print('总控后台(预设值)同步完成')
 
     time.sleep(2)
@@ -239,7 +242,10 @@ def MCABankSync_custom():
         time.sleep(2)
 
     print(f'同步成功:{SyncSucess}')
-    print(f'同步失敗:{SyncFailed}, 失敗銀行代碼:{FailBanks}')
+    if len(FailBanks)>0:
+        print(f'同步失敗:{SyncFailed}, 失敗銀行代碼:{FailBanks}')
+    else:
+        print(f'同步失敗:{SyncFailed}')
     print('自定義同步完成')
     time.sleep(2)
     browser.quit()
@@ -271,5 +277,5 @@ def MCA_SyncManagement():
 if __name__=='__main__':
     # MCABankSync_default()
     MCABankSync_custom()
-    # MCA_SyncManagement()
+    # print(MCA_SyncManagement())
     
