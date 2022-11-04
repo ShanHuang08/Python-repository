@@ -8,10 +8,10 @@ import json
 from BE_MCA_Sync import MCA_SyncManagement
 
 def MCA_CheckBanks_Contents():
-    excluce_code=['Miles','test','ABC123']  
-    exclude_name=['MBANK','ewqewqe','123321']
-    exclude_url=['test','555555']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123']  
+    exclude_name=['測測一','MBANK','ewqewqe','123321']
+    exclude_url=['wwwyyy','test','555555']
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -65,7 +65,7 @@ def MCA_CheckBanks_Contents():
         BanksRec=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[8]/div/span')
         # print(BankCodes.text)
         for res in BankCodes: #len=191
-            Banks_code_for_exclude.append(res.text)
+            Banks_code_for_exclude.append(res.text) #len=193
             code=res.text
             if code not in excluce_code:
                 Banks_code.append(code)
@@ -98,12 +98,14 @@ def MCA_CheckBanks_Contents():
         if i<int(Endpage)-1: #7-1 pages
             NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
             time.sleep(1)
-
+    print(Banks_status)
     # exclude i=121 Miles, i=164 test
-    for i in range(len(Banks_code_for_exclude)):
+    for i in range((len(Banks_code_for_exclude)-1),-1,-1): #Pop()要用逆迴圈刪除．從後面刪到前面，才不會刪錯
         if Banks_code_for_exclude[i] in excluce_code:
             Banks_status.pop(i)
             Banks_recommend.pop(i)
+            # print('i='+str(i), Banks_code_for_exclude[i])
+            # print(Banks_status)
 
     print(f'銀行數目:{len(Banks_code)}, 名稱:{len(Banks_name)}, 網址:{len(Banks_url)}, 圖片:{len(Banks_picture)}, 狀態:{len(Banks_status)}, 推薦:{len(Banks_recommend)}') #len=193 扣掉無效銀行=190+1
 
@@ -137,7 +139,9 @@ def MCA_CheckBanks_Contents():
                 Banks_url_failed+=1
                 UrlFailBanks.append(Banks_code[i])
             
-            if jdata['Items'][i]['imgpath'][0:4] and Banks_picture[i][0:4] in ['http']: #圖片網址比對有問題
+            # if jdata['Items'][i]['imgpath'][0:4] == Banks_picture[i][0:4] and jdata['Items'][i]['imgpath'][-(len(Banks_code[i])+4):-1]+jdata['Items'][i]['imgpath'][-1]==Banks_picture[i][-(len(Banks_code[i])+15):-11]: #圖片網址比對有問題
+            if jdata['Items'][i]['imgpath'][0:4] == Banks_picture[i][0:4]:
+            # if jdata['Items'][i]['imgpath'][-(len(Banks_code[i])+4):-1]+jdata['Items'][i]['imgpath'][-1]==Banks_picture[i][-(len(Banks_code[i])+15):-11]:
                 Banks_picture_success+=1
             else:
                 Banks_picture_failed+=1
@@ -148,12 +152,14 @@ def MCA_CheckBanks_Contents():
             else:
                 Banks_status_failed+=1
                 StatusFailBanks.append(Banks_code[i])
+                # print(Banks_code[i], jdata['Items'][i]['status'], Banks_status[i])
 
             if jdata['Items'][i]['recommend'] == Banks_recommend[i]:
                 Banks_recommend_success+=1
             else:
                 Banks_recommend_failed+=1
                 RecommendFailBanks.append(Banks_code[i])
+                # print(Banks_code[i], jdata['Items'][i]['status'], Banks_status[i])
     
     print('---比對結果:---')
     print(f'成功數目:銀行名稱:{Banks_name_success}, 銀行網址:{Banks_url_success}, 銀行圖片:{Banks_picture_success}, 銀行狀態:{Banks_status_success}, 銀行推薦:{Banks_recommend_success}')

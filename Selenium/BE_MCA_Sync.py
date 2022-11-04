@@ -8,7 +8,7 @@ import random
 from selenium.webdriver.chrome.options import Options
 Test_Banks=['123','AAA','ABC123','Miles','test']
 MaxNum=15 #15個品牌
-Change=True #不做修改, custom品牌全選
+Change=True #False=不做修改, custom品牌全選
 
 def MCABankSync_default():
     Banks=[]
