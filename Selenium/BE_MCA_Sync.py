@@ -35,6 +35,10 @@ def MCABankSync_default():
     BNum=TotalBank.split(' ')
     Endpage=int(BNum[1])/30+2 #8
     # print(f'Endpage={Endpage}')
+    if int(BNum[1])==0:
+        ErrorMsg='銀行數目為'+BNum[1]
+        browser.quit()
+        raise ValueError(ErrorMsg)
 
     for i in range(1,int(Endpage)):
         # print(f'pages={i}')
@@ -146,6 +150,10 @@ def MCABankSync_custom():
     BNum=TotalBank.split(' ')
     Endpage=int(BNum[1])/30+2 #8
     # print(f'Endpage={Endpage}')
+    if int(BNum[1])==0:
+        ErrorMsg='銀行數目為'+BNum[1]
+        browser.quit()
+        raise ValueError(ErrorMsg)
 
     for i in range(1,int(Endpage)):
         # print(f'pages={i}')
