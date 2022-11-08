@@ -8,10 +8,10 @@ import json
 from BE_MCA_Sync import MCA_SyncManagement
 
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123']  
-    exclude_name=['測測一','MBANK','ewqewqe','123321']
-    exclude_url=['wwwyyy','test','555555']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123','AAAB']  
+    exclude_name=['測測一','MBANK','ewqewqe','123321','名称']
+    exclude_url=['wwwyyy','test','555555','qew']
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/base/bank/aaab.jpeg','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -54,6 +54,10 @@ def MCA_CheckBanks_Contents():
     BNum=TotalBank.split(' ')
     Endpage=int(BNum[1])/30+2 #8
     # print(f'Endpage={Endpage}')
+    if int(BNum[1])==0:
+        ErrorMsg='銀行數目為'+BNum[1]
+        browser.quit()
+        raise ValueError(ErrorMsg)
 
     for i in range(1,int(Endpage)):
         # print(f'pages={i}')
@@ -98,7 +102,7 @@ def MCA_CheckBanks_Contents():
         if i<int(Endpage)-1: #7-1 pages
             NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
             time.sleep(1)
-    print(Banks_status)
+    # print(Banks_status)
     # exclude i=121 Miles, i=164 test
     for i in range((len(Banks_code_for_exclude)-1),-1,-1): #Pop()要用逆迴圈刪除．從後面刪到前面，才不會刪錯
         if Banks_code_for_exclude[i] in excluce_code:
@@ -112,19 +116,25 @@ def MCA_CheckBanks_Contents():
     # print(len(Banks_picture))
     # print(Banks)
     browser.quit()
-
+    #Get api info, return jdata(各品牌) call到這裡
     with open('C:/Users/shan_huang/Python/Banks.json','r',encoding="utf-8") as jsonfile:
         jdata=json.load(jsonfile)
 
-    if len(Banks_name) and len(Banks_url) and len(Banks_picture) != len(jdata['Items']):
-        if len(Banks_name) != len(jdata['Items']):
-            print(f'names({len(Banks_name)}) != jdata ')
-        elif len(Banks_url) != len(jdata['Items']):
-            print(f'urls({len(Banks_url)}) != jdata ')
-        elif len(Banks_picture) != len(jdata['Items']):
-            print(f'pictures({len(Banks_picture)}) != jdata ')
-        raise ValueError('Unable to make a comparison. Lengths are not the same!')
-
+    if len(Banks_name) != len(jdata['Items']):
+        print(f'names({len(Banks_name)}) != jdata ')
+        raise ValueError('Unable to make a comparison. Name lengths are not the same!')
+    elif len(Banks_url) != len(jdata['Items']):
+        print(f'urls({len(Banks_url)}) != jdata ')
+        raise ValueError('Unable to make a comparison. Url lengths are not the same!')
+    elif len(Banks_picture) != len(jdata['Items']):
+        print(f'pictures({len(Banks_picture)}) != jdata ')
+        raise ValueError('Unable to make a comparison. Picture lengths are not the same!')
+    elif len(Banks_status) != len(jdata['Items']):
+        print(f'pictures({len(Banks_status)}) != jdata ')
+        raise ValueError('Unable to make a comparison. Status lengths are not the same!')
+    elif len(Banks_recommend) != len(jdata['Items']):
+        print(f'pictures({len(Banks_recommend)}) != jdata ')
+        raise ValueError('Unable to make a comparison. Recommend lengths are not the same!')
 
     for i in range(len(jdata['Items'])): #len=191
             if jdata['Items'][i]['name'] == Banks_name[i]:
@@ -245,6 +255,10 @@ def MCA_CheckBanksType_in_brands():
             print(f'{BrandList[i]} {TotalBank} num={num}') #共 193 条
             BNum=TotalBank.split(' ')
             Endpage=int(BNum[1])/30+2 #8
+            if int(BNum[1])==0:
+                ErrorMsg='銀行數目為'+BNum[1]
+                browser.quit()
+                raise ValueError(ErrorMsg)
         
             for j in range(1,int(Endpage)):
                 # 先爬代號

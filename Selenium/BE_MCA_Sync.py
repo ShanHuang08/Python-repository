@@ -6,8 +6,42 @@ from selenium.webdriver.common.action_chains import ActionChains
 from BE_InfoControl import *
 import random
 from selenium.webdriver.chrome.options import Options
+
+def MCA_SyncManagement():
+    Brand_names=[]
+    Brand_falsechecks=[]
+    options=Options()
+    options.add_argument('--headless')
+    browser=webdriver.Chrome('./Chromedriver.exe',options=options)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.maximize_window()
+    time.sleep(1)
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
+    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
+    time.sleep(1)
+    browser.get('https://central-web-uat.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
+    browser.implicitly_wait(5)
+    time.sleep(2)
+
+    # 同步管理品牌名稱數量
+    BrandNames=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[1]')
+    for res in BrandNames:
+        Brand_names.append(res.text)
+    # print(Brand_names)
+    BrandChecks=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[3]/div/div/input')
+    for res in BrandChecks:
+        CheckStatus=res.get_attribute('aria-checked')
+        # print(CheckStatus)
+        if CheckStatus=='false':
+            Brand_falsechecks.append(CheckStatus)
+    SyncOn=len(Brand_names)-len(Brand_falsechecks)
+
+    return SyncOn #16-2=14
+
 Test_Banks=['123','AAA','ABC123','Miles','test']
-MaxNum=15 #15個品牌
+MaxNum=MCA_SyncManagement() #15個品牌
 Change=True #False=不做修改, custom品牌全選
 
 def MCABankSync_default():
@@ -18,7 +52,7 @@ def MCABankSync_default():
     
     # options=Options()
     # options.add_argument('--headless')
-    browser=webdriver.Chrome('./Chromedriver.exe')
+    browser=webdriver.Chrome('./Chromedriver.exe') 
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -55,6 +89,8 @@ def MCABankSync_default():
 
     print(f'銀行數目:{len(Banks)}') #len=193 扣掉無效銀行=190
     # print(Banks)
+
+
 
     # 全選 len=MaxNum=15
     for i in range(len(Banks)):
@@ -258,8 +294,9 @@ def MCABankSync_custom():
     time.sleep(2)
     browser.quit()
 
-def MCA_SyncManagement():
-    Brand_names=[]
+def MCA_Bankcodes():
+    Brand_codes=[]
+    Brand_falsechecks=[]
     options=Options()
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe',options=options)
@@ -276,14 +313,30 @@ def MCA_SyncManagement():
     time.sleep(2)
 
     # 同步管理品牌名稱數量
-    BrandNames=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[1]')
-    for res in BrandNames:
-        Brand_names.append(res.text)
-    # print(Brand_names)
-    return len(Brand_names) #16
+    BrandCodes=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[2]/div')
+    BrandChecks=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[2]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[3]/div/div/input')
+    for res in BrandCodes:
+        Brand_codes.append(res.text)
+    # print(Brand_codes)
+
+    for res in BrandChecks:
+        CheckStatus=res.get_attribute('aria-checked')
+        # print(CheckStatus)
+        Brand_falsechecks.append(CheckStatus)
+    # print(Brand_codes)
+    # print(Brand_falsechecks)
+
+    # 逆迴圈pop()
+    for i in range((len(Brand_codes)-1),-1,-1):
+        if Brand_falsechecks[i]=='false':
+            Brand_codes.pop(i)
+    return Brand_codes #可以當作抓品牌api的順序
 
 if __name__=='__main__':
-    # MCABankSync_default()
-    MCABankSync_custom()
     # print(MCA_SyncManagement())
+    # MCABankSync_default()
+    # MCABankSync_custom()
+    print(MCA_Bankcodes())
+   
+    
     
