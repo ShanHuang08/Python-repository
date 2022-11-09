@@ -40,7 +40,7 @@ def MCA_SyncManagement():
 
     return SyncOn #16-2=14
 
-Test_Banks=['123','AAA','ABC123','Miles','test']
+Test_Banks=['123','AAA','ABC123','Miles','test','AAAB']
 MaxNum=MCA_SyncManagement() #15個品牌
 Change=True #False=不做修改, custom品牌全選
 

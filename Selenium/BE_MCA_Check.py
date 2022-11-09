@@ -4,14 +4,14 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from BE_InfoControl import *
-import json
 from BE_MCA_Sync import MCA_SyncManagement
+from BrandJSON import BE_BrandJSON
 
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123','AAAB']  
-    exclude_name=['測測一','MBANK','ewqewqe','123321','名称']
-    exclude_url=['wwwyyy','test','555555','qew']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/base/bank/aaab.jpeg','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123']  
+    exclude_name=['測測一','MBANK','ewqewqe','123321']
+    exclude_url=['wwwyyy','test','555555']
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -117,8 +117,8 @@ def MCA_CheckBanks_Contents():
     # print(Banks)
     browser.quit()
     #Get api info, return jdata(各品牌) call到這裡
-    with open('C:/Users/shan_huang/Python/Banks.json','r',encoding="utf-8") as jsonfile:
-        jdata=json.load(jsonfile)
+    
+    jdata=BE_BrandJSON()
 
     if len(Banks_name) != len(jdata['Items']):
         print(f'names({len(Banks_name)}) != jdata ')
@@ -145,6 +145,9 @@ def MCA_CheckBanks_Contents():
             
             if jdata['Items'][i]['url'] == Banks_url[i]: #IndexError: list index out of range
                 Banks_url_success+=1
+            elif Banks_url[i]=='':
+                if jdata['Items'][i]['url']=='null':
+                   Banks_url_success+=1 
             else:
                 Banks_url_failed+=1
                 UrlFailBanks.append(Banks_code[i])
