@@ -1,5 +1,5 @@
 import unittest
-import BE_MCA_Sync, BE_MCA_Check
+import BE_MCA_Sync, BE_MCA_Check, BrandJSON
 import sys
 
 class MCATestCases(unittest.TestCase):
@@ -9,7 +9,7 @@ class MCATestCases(unittest.TestCase):
         assert True
 
     def test_MCAtest2(self):
-        ContinueRun=input('JSON尚未更新，是否繼續比對?(Y/N)')
+        ContinueRun=input('BrandJSON尚未更新，是否繼續比對?(Y/N)')
         if ContinueRun in ['Y','y']:
             pass
         elif ContinueRun in ['N','n']:
