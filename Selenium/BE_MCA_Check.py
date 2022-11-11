@@ -6,12 +6,13 @@ from selenium.webdriver.chrome.options import Options
 from BE_InfoControl import *
 from BE_MCA_Sync import MCA_SyncManagement
 from BrandJSON import BE_BrandJSON
+from MCA_datetime import MCAToday
 
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123']  
-    exclude_name=['測測一','MBANK','ewqewqe','123321']
-    exclude_url=['wwwyyy','test','555555']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123','AAAC','ABABAB']  
+    exclude_name=['測測一','MBANK','ewqewqe','123321','名称名称','四川川川川川银行']
+    exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c']
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668131880','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -146,8 +147,7 @@ def MCA_CheckBanks_Contents():
             if jdata['Items'][i]['url'] == Banks_url[i]: #IndexError: list index out of range
                 Banks_url_success+=1
             elif Banks_url[i]=='':
-                if jdata['Items'][i]['url']=='null':
-                   Banks_url_success+=1 
+                Banks_url_success+=1 
             else:
                 Banks_url_failed+=1
                 UrlFailBanks.append(Banks_code[i])
@@ -177,7 +177,7 @@ def MCA_CheckBanks_Contents():
     print('---比對結果:---')
     print(f'成功數目:銀行名稱:{Banks_name_success}, 銀行網址:{Banks_url_success}, 銀行圖片:{Banks_picture_success}, 銀行狀態:{Banks_status_success}, 銀行推薦:{Banks_recommend_success}')
     print(f'失敗數目:銀行名稱:{Banks_name_failed}, 銀行網址:{Banks_url_failed}, 銀行圖片:{Banks_picture_failed}, 銀行狀態:{Banks_status_failed}, 銀行推薦:{Banks_recommend_failed}')
-    print()
+
     if len(NameFailBanks)>0:
         print(f'失敗銀行代號(名稱):{NameFailBanks}')
     if len(UrlFailBanks)>0:
@@ -189,8 +189,10 @@ def MCA_CheckBanks_Contents():
     if len(RecommendFailBanks)>0:
         print(f'失敗銀行代號(推薦):{RecommendFailBanks}')
 
-def MCA_CheckBanksType_in_brands():
-    browser=webdriver.Chrome('./Chromedriver.exe')
+def MCA_CheckBanksSync_in_brands():
+    options=Options() 
+    options.add_argument('--headless')
+    browser=webdriver.Chrome('./Chromedriver.exe', options=options)
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -215,14 +217,13 @@ def MCA_CheckBanksType_in_brands():
             BrandList.append(Name)
     # print(len(BrandList)) #len=16
     if len(BrandList) != MCA_SyncManagement(): #16
-        print('test2')
         print(f'{len(BrandList)} != {MCA_SyncManagement()}')
         print(BrandList)
         raise ValueError('銀行管理品牌名稱數量和同步管理不一致')
     browser.quit()
     # 會登出 要分開寫
 
-    browser=webdriver.Chrome('./Chromedriver.exe')
+    browser=webdriver.Chrome('./Chromedriver.exe', options=options)
     browser.get('https://central-web-uat.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -238,9 +239,12 @@ def MCA_CheckBanksType_in_brands():
     # BrandList[0]=li[2] max=li[17] = BrandList[15]
     Banks_code=[]
     Failed_Banks_type=[]
+    Failed_Banks_sync=[]
     for i in range(len(BrandList)):
         Banks_type_success=0
         Banks_type_failed=0
+        Banks_sync_success=0
+        Banks_sync_failed=0
         if Banks_type_success and Banks_type_failed != 0:
             raise ValueError('變數未歸零')
 
@@ -279,15 +283,31 @@ def MCA_CheckBanksType_in_brands():
                         Banks_type_failed+=1
                         Failed_Banks_type.append(BrandList[i]+' '+Banks_code[i]) #品牌+代號
                 
+                # 爬同步時間
+                BanksSyncTime=browser.find_elements(By.XPATH,value='//*[@id="app"]/div/div/div[2]/div[2]/div/div[3]/div/div[1]/div[3]/div/div[1]/div/table/tbody/tr/td[9]/div/span')
+                for res in BanksSyncTime:
+                    Time=res.text
+                    if Time != '' and Time[0:10]==MCAToday():
+                        Banks_sync_success+=1
+                    else:
+                        Banks_sync_failed+=1
+                        Failed_Banks_sync.append(BrandList[i]+' '+Banks_code[i]) #品牌+代號
+
+                    
                 # 下一頁
                 if j<int(Endpage)-1: #11-1
                     NextPage=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div[@role="pagination"]/button[@class="btn-next"]').click()
                     time.sleep(1)
+            # 列印結果
             print(f'{Banks_type_success} 家銀行正常顯示')
             if Banks_type_failed>0:
                 print(f'{Banks_type_failed} 家顯示空白')
                 print(Failed_Banks_type)
-            
+            print(f'{Banks_sync_success} 家銀行成功在{MCAToday()}做批量同步')
+            if Banks_sync_failed>0:
+                print(f'{Banks_sync_failed} 家銀行沒有同步')
+                print(Failed_Banks_sync)
+
             print('---------------')
             # 頁面重整
             browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
@@ -299,5 +319,5 @@ def MCA_CheckBanksType_in_brands():
 
 
 if __name__=='__main__':
-    MCA_CheckBanks_Contents()
-    # MCA_CheckBanksType_in_brands()
+    # MCA_CheckBanks_Contents()
+    MCA_CheckBanksSync_in_brands()
