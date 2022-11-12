@@ -1,3 +1,4 @@
+import unittest
 def main(words): #My answer
     if len(words)==0: 
         return ""
@@ -37,20 +38,19 @@ def smash3(words):
         
     return sen_words.lstrip()
 
+class testcases(unittest.TestCase):
+    def test_empty(self):
+        self.assertEqual(main([]), '')
+        self.assertEqual(smash2([]), '')
+
+    def test_Single_word(self):
+        self.assertEqual(main(["hello"]), 'hello')
+        self.assertEqual(smash(["hello"]), 'hello')
+    
+    def test_Two_words(self):
+        self.assertEqual(smash3(["hello", "world"]), 'hello world')
+        self.assertEqual(smash4(["hello", "world"]), 'hello world')
+
 
 if __name__=='__main__':
-    # print(main([""]))
-    # print(main(["hello"]))
-    # print(main(["hello", "world"]))
-    print(smash([""]))
-    print(smash(["hello"]))
-    print(smash(["hello", "world"]))
-    print(smash2([""]))
-    print(smash2(["hello"]))
-    print(smash2(["hello", "world"]))
-    print(smash3([""]))
-    print(smash3(["hello"]))
-    print(smash3(["hello", "world"]))
-    print(smash4([""]))
-    print(smash4(["hello"]))
-    print(smash4(["hello", "world"]))
+    unittest.main()

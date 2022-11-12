@@ -1,6 +1,7 @@
-# x=1,y=10 => [1,2,3,4,5,6,7,8,9,10] len=10
-# x=2,y=5 => [2,4,6,8,10] len=5
-import random
+import unittest
+# x=1,n=10 => [1,2,3,4,5,6,7,8,9,10] len=10
+# x=2,n=5 => [2,4,6,8,10] len=5
+from random import randint
 
 def question1(x,n):
     List=[]
@@ -71,19 +72,24 @@ def find_average2(array):
     else:
         return 0
         
-# random sample
-testdigit=random.sample(range(1,50), random.randint(1,5))
-print(testdigit)
+class testcases(unittest.TestCase):
+    def test_question1(self):
+        self.assertEqual(question1(1,10), [1,2,3,4,5,6,7,8,9,10])
+        self.assertEqual(count_by(2,5), [2,4,6,8,10])
+    
+    def test_question2(self):
+        self.assertEqual(question2(3,2), True)
+        self.assertEqual(lovefunc(2,2), False)
 
-List=[]
-for i in range(random.randint(1,5)):
-    List.append(random.randint(1,50))
-print(List)
+    def test_question3(self):
+        self.assertEqual(question3([1,2,3]), 2)   
+        self.assertEqual(find_average([1,2,3]), 2) 
+
+
 
 
 if __name__=='__main__':
-    # print(question1(1,10))
-    # print(question1(2,5))
+    unittest.main()
     # print(question2(1,2))
     # print(question2(2,2))
     # print(question3([1,2,3,4]))
