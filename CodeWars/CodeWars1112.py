@@ -174,6 +174,15 @@ class testcases(unittest.TestCase):
         self.assertEqual(sum_array4([-3]), 0)
         self.assertEqual(sum_array4([-3, -5]), 0)
         self.assertEqual(sum_array4([6, 2, 1, 8, 10]), 16)
+    
+    def test_um_array_random(self):
+        RandomList=[]
+        for i in range(randint(0, 10)):
+            RandomList.append(randint(-10**2, 10**2))
+        
+        self.assertEqual(sum_array3(RandomList), sum_array(RandomList))
+        self.assertEqual(sum_array4(RandomList), sum_array(RandomList))
+
 
 if __name__=='__main__':
     unittest.main()
