@@ -42,9 +42,17 @@ def sum_array2(arr):
         Sum=0
         for i in range(len(arr)):
             Sum+=arr[i]
-        Sum = Sum-max(arr)
+            if arr[0] > arr[i] and arr[0] != arr[i]:
+                MaxNum=arr[0]
+            else:
+                MaxNum=arr[i]
+            if arr[0] < arr[i] and arr[0] != arr[i]:
+                MinNum=arr[0]
+            else:
+                MinNum=arr[i]
+        Sum = Sum-MaxNum
         if Sum != 0:
-            Sum = Sum-min(arr)
+            Sum = Sum-MinNum
         return Sum
 
 def sum_array(arr):
@@ -114,6 +122,20 @@ def sum_array4(arr):
         number += elem
     return number
 
+# [1,2,3,4]=>1*2*3*4=24
+def grow(arr):
+    while len(arr) > 1:
+        arr[1] = arr[0] * arr[1]
+        arr = arr[1:]
+        print(arr)
+    return arr[0]
+
+def grow2(arr):   
+    flag = arr[0]
+    for i in arr[1:]:
+        flag *= i
+      
+    return flag 
 
 class testcases(unittest.TestCase):
     def test_Basic_Test(self):
