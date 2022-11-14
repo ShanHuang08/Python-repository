@@ -42,7 +42,7 @@ def MCA_SyncOnManagement():
 
 Test_Banks=['123','AAA','ABC123','Miles','test','AAAC','ABABAB']
 MaxNum=MCA_SyncOnManagement() #15個品牌
-SyncAllBanks=False #是否要同步所有銀行, 包含交易所? False=只同步銀行
+SyncAllBanks=True #是否要同步所有銀行, 包含交易所? False=只同步銀行
 Change=True #False=不做修改, custom品牌全選
 
 def MCABankSync_default():
@@ -101,8 +101,8 @@ def MCABankSync_default():
     # print(Banks)
 
     # 全選 len=MaxNum=15
-    for i in range(len(Banks)):
-    # for i in range(10,12):
+    # for i in range(len(Banks)):
+    for i in range(10):
         print(Banks[i])
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
@@ -240,7 +240,7 @@ def MCABankSync_custom():
 
     # 全選 len=MaxNum=15
     # for i in range(len(Banks)):
-    for i in range(2):
+    for i in range(10):
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
@@ -277,8 +277,8 @@ def MCABankSync_custom():
             browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').clear()
             browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').send_keys('http://www.'+Addurl+'.com/')
             # 改銀行名稱
-            browser.find_element(By.XPATH,value='').clear()
-            browser.find_element(By.XPATH,value='').send_keys(Addname)
+            # browser.find_element(By.XPATH,value='').clear()
+            # browser.find_element(By.XPATH,value='').send_keys(Addname)
         else:
             pass
 

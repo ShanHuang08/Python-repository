@@ -9,10 +9,10 @@ from BrandJSON import BE_BrandJSON
 from MCA_datetime import MCAToday
 
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123','AAAC','ABABAB']  
-    exclude_name=['測測一','MBANK','ewqewqe','123321','名称名称','四川川川川川银行']
-    exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c']
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668131880','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123','ABABAB','AAAC']  
+    exclude_name=['測測一','MBANK','ewqewqe','123321','四川川川川川银行','名称名称'] #
+    exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c'] #
+    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668406375','https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -117,12 +117,28 @@ def MCA_CheckBanks_Contents():
     # print(len(Banks_picture))
     # print(Banks)
     browser.quit()
-    #Get api info, return jdata(各品牌) call到這裡
     
+    #Get api info, return jdata(各品牌) call到這裡
     jdata=BE_BrandJSON()
-
+    #檢查品牌是否有新增銀行 品牌有新增銀行，會在raise之前印出代碼 (差兩個以上, 第二個會抓不到), 11/15 把JSON codes抓下來, 改用set做差集 if len(a)>len(b): a-b
+    Code_diff=[]
+    if jdata['Pager']['Total'] == len(Banks_code):
+        pass
+    elif jdata['Pager']['Total'] > len(Banks_code):
+        ShowNumbers=jdata['Pager']['Total']-len(Banks_code)-1 #陣列從0開始
+        # print(ShowNumbers) #1
+        for i in range(len(Banks_code)):
+            if Banks_code[i] != jdata['Items'][i]['code']:
+                Code_diff.append(jdata['Items'][i]['code'])
+    elif jdata['Pager']['Total'] < len(Banks_code):
+        ShowNumbers=len(Banks_code)-jdata['Pager']['Total']-1 #陣列從0開始
+        for i in range(len(jdata['Pager']['Total'])):
+            if Banks_code[i] != jdata['Items'][i]['code']:
+                Code_diff.append(jdata['Items'][i]['code'])
+    # Raise error
     if len(Banks_name) != len(jdata['Items']):
         print(f'names({len(Banks_name)}) != jdata ')
+        print(f'diff bank code= {Code_diff[ShowNumbers]}')
         raise ValueError('Unable to make a comparison. Name lengths are not the same!')
     elif len(Banks_url) != len(jdata['Items']):
         print(f'urls({len(Banks_url)}) != jdata ')
@@ -319,5 +335,5 @@ def MCA_CheckBanksSync_in_brands():
 
 
 if __name__=='__main__':
-    # MCA_CheckBanks_Contents()
-    MCA_CheckBanksSync_in_brands()
+    MCA_CheckBanks_Contents()
+    # MCA_CheckBanksSync_in_brands()
