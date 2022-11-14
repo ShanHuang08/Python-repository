@@ -1,8 +1,7 @@
+# x=1,y=10 => [1,2,3,4,5,6,7,8,9,10] len=10
+# x=2,y=5 => [2,4,6,8,10] len=5
+import random
 import unittest
-# x=1,n=10 => [1,2,3,4,5,6,7,8,9,10] len=10
-# x=2,n=5 => [2,4,6,8,10] len=5
-from random import randint
-
 def question1(x,n):
     List=[]
     z=x
@@ -71,28 +70,51 @@ def find_average2(array):
         return sum(array) / len(array)
     else:
         return 0
-        
+
 class testcases(unittest.TestCase):
-    def test_question1(self):
+    def test_question1_basic(self):
         self.assertEqual(question1(1,10), [1,2,3,4,5,6,7,8,9,10])
-        self.assertEqual(count_by(2,5), [2,4,6,8,10])
     
-    def test_question2(self):
-        self.assertEqual(question2(3,2), True)
-        self.assertEqual(lovefunc(2,2), False)
+    def test_question1_Random(self):
+        x=random.randint(1,100)
+        n=random.randint(1,100)
+        sol=lambda x, n: [i * x for i in range(1, n + 1)]
+        if x < n:
+            for i in range(40):
+                self.assertEqual(question1(x,n), sol(x,n))
+        
+    
+    def test_question2_basic(self):
+        self.assertTrue(question2(2,5), 'Result is Not True')
+        self.assertFalse(question2(2,4), 'Result is Not False')
 
-    def test_question3(self):
-        self.assertEqual(question3([1,2,3]), 2)   
-        self.assertEqual(find_average([1,2,3]), 2) 
+    def test_question2_Random(self):
+        sol=lambda f1,f2: bool((f1+f2)%2)
+        for i in range(10):
+            f1=random.randint(1,10)
+            f2=random.randint(1,10)
+            if f1%2 != f2%2:
+                self.assertEqual(question2(f1,f2), sol(f1,f2))
+                self.assertTrue(question2(f1,f2))
+            else:
+                self.assertFalse(question2(f1,f2))
+        
+    
+    def test_question3_basic(self):
+        self.assertEqual(question3([]), 0)
+        self.assertEqual(question3([1,2,3,4]), 2.5)
+        
+    def test_question3_Random(self):
+        for i in range(10):
+            RandomList=[]
+            sol=lambda arr: sum(RandomList) / len(RandomList) if RandomList else 0
+            for k in range(random.randint(0,10)):
+                RandomList.append(random.randint(1,50))
+            self.assertEqual(question3(RandomList), sol(RandomList))
 
-
-
+            sol2=sum(RandomList) / len(RandomList) if RandomList else 0
+            self.assertEqual(question3(RandomList), sol2)
 
 if __name__=='__main__':
     unittest.main()
-    # print(question2(1,2))
-    # print(question2(2,2))
-    # print(question3([1,2,3,4]))
-    # print(question3([]))
-
     pass
