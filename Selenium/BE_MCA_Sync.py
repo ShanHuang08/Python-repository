@@ -7,6 +7,7 @@ from BE_InfoControl import *
 import random
 from selenium.webdriver.chrome.options import Options
 
+branch=MCA_branch()
 def MCA_SyncOnManagement():
     Brand_names=[]
     Brand_falsechecks=[]
@@ -40,7 +41,7 @@ def MCA_SyncOnManagement():
 
     return SyncOn #16-2=14
 
-Test_Banks=['123','AAA','ABC123','Miles','test','AAAC','ABABAB']
+Test_Banks=['123','AAA','ABC123','Miles','test','AAAC','ABABAB','AAAB','BJBANK']
 MaxNum=MCA_SyncOnManagement() #15個品牌
 SyncAllBanks=True #是否要同步所有銀行, 包含交易所? False=只同步銀行
 Change=True #False=不做修改, custom品牌全選
@@ -54,15 +55,18 @@ def MCABankSync_default():
     # options=Options()
     # options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe') 
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
     time.sleep(2)
     
     # 選擇銀行類型，預設為全部
@@ -101,8 +105,8 @@ def MCABankSync_default():
     # print(Banks)
 
     # 全選 len=MaxNum=15
-    # for i in range(len(Banks)):
-    for i in range(10):
+    for i in range(len(Banks)):
+    # for i in range(30):
         print(Banks[i])
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
@@ -164,7 +168,7 @@ def MCABankSync_default():
                 # print(f'{num}. {SyncRecord}')
             num+=1
         time.sleep(1)
-        browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+        browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
         browser.implicitly_wait(5)
         time.sleep(2)
 
@@ -192,15 +196,18 @@ def MCABankSync_custom():
     SelectSome=int(Digit) #要勾幾個品牌 全選=0
 
     browser=webdriver.Chrome('./Chromedriver.exe')
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
     time.sleep(2)
 
     # 選擇銀行類型，預設為全部
@@ -240,7 +247,8 @@ def MCABankSync_custom():
 
     # 全選 len=MaxNum=15
     # for i in range(len(Banks)):
-    for i in range(10):
+    for i in range(10,40):
+        print(Banks[i])
         browser.find_element(By.XPATH,value='//form[@class="el-form el-form--default el-form--label-right ps-query-container"]/div/div[2]/div[@class="el-form-item__content"]/div[@class="el-input"]/div[@class="el-input__wrapper"]/input').send_keys(Banks[i]) #輸入銀行代號
         browser.find_element(By.XPATH,value='//div[@class="query-action"]/div[1]/button').click() #查找
         time.sleep(1)
@@ -276,9 +284,21 @@ def MCABankSync_custom():
             # 改網址
             browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').clear()
             browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[7]/div[2]/div/div[1]/div/div/div/div/input').send_keys('http://www.'+Addurl+'.com/')
-            # 改銀行名稱
+            # 改銀行名稱 (不支援)
             # browser.find_element(By.XPATH,value='').clear()
             # browser.find_element(By.XPATH,value='').send_keys(Addname)
+            # 改啟用
+            # 如果啟用沒有checked
+            if browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[9]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[1]').get_attribute('class') != 'el-radio is-checked':
+                browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[9]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[1]').click()
+            else:
+                browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[9]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[2]').click()
+            # 改推薦
+            # 如果推薦沒有checked
+            if browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[10]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[1]').get_attribute('class') != 'el-radio is-checked':
+                browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[10]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[1]').click()
+            else:
+                browser.find_element(By.XPATH,value='//div[@class="el-dialog__body"]/form/div[10]/div[@class="el-form-item__content"]/div/div[1]/div[@class="el-radio-group"]/label[2]').click()
         else:
             pass
 
@@ -314,7 +334,7 @@ def MCABankSync_custom():
                 # print(f'{num}. {SyncRecord}')
             num+=1
         time.sleep(1)
-        browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+        browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
         browser.implicitly_wait(5)
         time.sleep(2)
 
@@ -333,15 +353,18 @@ def MCA_Bankcodes():
     options=Options()
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe',options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
     browser.implicitly_wait(5)
     time.sleep(2)
 
@@ -370,15 +393,18 @@ def MCA_SyncManagement():
     options=Options()
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe',options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
     browser.implicitly_wait(5)
     time.sleep(2)
 
@@ -394,8 +420,8 @@ def MCA_SyncManagement():
 
 if __name__=='__main__':
     # print(MCA_SyncOnManagement())
-    MCABankSync_default()
-    # MCABankSync_custom()
+    # MCABankSync_default()
+    MCABankSync_custom()
     # print(MCA_Bankcodes())
     # print(MCA_SyncManagement())
    

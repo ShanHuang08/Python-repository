@@ -8,11 +8,12 @@ from BE_MCA_Sync import MCA_SyncManagement
 from BrandJSON import BE_BrandJSON
 from MCA_datetime import MCAToday
 
+branch=MCA_branch()
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123','ABABAB','AAAC']  
+    excluce_code=['123','Miles','test','ABC123','ABABAB','AAAC']  #bh has AAAC bank
     exclude_name=['測測一','MBANK','ewqewqe','123321','四川川川川川银行','名称名称'] #
     exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c'] #
-    exclude_pic=['https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668406375','https://squirrel-uat.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-uat.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    exclude_pic=['https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668406375','https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -39,15 +40,18 @@ def MCA_CheckBanks_Contents():
     options=Options() 
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe', options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
     time.sleep(2)
 
     TotalBank=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div/span[1]').text
@@ -120,37 +124,39 @@ def MCA_CheckBanks_Contents():
     
     #Get api info, return jdata(各品牌) call到這裡
     jdata=BE_BrandJSON()
-    #檢查品牌是否有新增銀行 品牌有新增銀行，會在raise之前印出代碼 (差兩個以上, 第二個會抓不到), 11/15 把JSON codes抓下來, 改用set做差集 if len(a)>len(b): a-b
-    Code_diff=[]
+    #檢查品牌是否有新增銀行, 把JSON codes抓下來, 改用set做差集
+    jdata_list=[]
+    for i in range(jdata['Pager']['Total']):
+        jdata_list.append(jdata['Items'][i]['code'])
+
     if jdata['Pager']['Total'] == len(Banks_code):
         pass
     elif jdata['Pager']['Total'] > len(Banks_code):
-        ShowNumbers=jdata['Pager']['Total']-len(Banks_code)-1 #陣列從0開始
-        # print(ShowNumbers) #1
-        for i in range(len(Banks_code)):
-            if Banks_code[i] != jdata['Items'][i]['code']:
-                Code_diff.append(jdata['Items'][i]['code'])
+        jdataB=set(jdata_list)
+        central=set(Banks_code)
+        Code_diff=list(jdataB-central) #set差集 大-小
     elif jdata['Pager']['Total'] < len(Banks_code):
-        ShowNumbers=len(Banks_code)-jdata['Pager']['Total']-1 #陣列從0開始
-        for i in range(len(jdata['Pager']['Total'])):
-            if Banks_code[i] != jdata['Items'][i]['code']:
-                Code_diff.append(jdata['Items'][i]['code'])
-    # Raise error
+        central=set(Banks_code)
+        jdataB=set(jdata_list)
+        Code_diff=list(central-jdataB) #set差集 大-小
+
+
+    # Raise error if lengths aren't the same
     if len(Banks_name) != len(jdata['Items']):
-        print(f'names({len(Banks_name)}) != jdata ')
-        print(f'diff bank code= {Code_diff[ShowNumbers]}')
+        print(f'names({len(Banks_name)}) != jdata({jdata["Pager"]["Total"]})')
+        print(f'diff bank code = {Code_diff}')
         raise ValueError('Unable to make a comparison. Name lengths are not the same!')
     elif len(Banks_url) != len(jdata['Items']):
-        print(f'urls({len(Banks_url)}) != jdata ')
+        print(f'urls({len(Banks_url)}) != jdata({jdata["Pager"]["Total"]})')
         raise ValueError('Unable to make a comparison. Url lengths are not the same!')
     elif len(Banks_picture) != len(jdata['Items']):
-        print(f'pictures({len(Banks_picture)}) != jdata ')
+        print(f'pictures({len(Banks_picture)}) != jdata({jdata["Pager"]["Total"]})')
         raise ValueError('Unable to make a comparison. Picture lengths are not the same!')
     elif len(Banks_status) != len(jdata['Items']):
-        print(f'pictures({len(Banks_status)}) != jdata ')
+        print(f'pictures({len(Banks_status)}) != jdata({jdata["Pager"]["Total"]})')
         raise ValueError('Unable to make a comparison. Status lengths are not the same!')
     elif len(Banks_recommend) != len(jdata['Items']):
-        print(f'pictures({len(Banks_recommend)}) != jdata ')
+        print(f'pictures({len(Banks_recommend)}) != jdata({jdata["Pager"]["Total"]})')
         raise ValueError('Unable to make a comparison. Recommend lengths are not the same!')
 
     for i in range(len(jdata['Items'])): #len=191
@@ -209,15 +215,18 @@ def MCA_CheckBanksSync_in_brands():
     options=Options() 
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe', options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录密码"]').send_keys(BE_password())
-    browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    if branch == 'uat':
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
+    else:
+        browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
     browser.implicitly_wait(5)
     time.sleep(2)
 
@@ -240,7 +249,7 @@ def MCA_CheckBanksSync_in_brands():
     # 會登出 要分開寫
 
     browser=webdriver.Chrome('./Chromedriver.exe', options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
@@ -248,7 +257,7 @@ def MCA_CheckBanksSync_in_brands():
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank') #銀行管理頁面
     browser.implicitly_wait(5)
     time.sleep(2)
 
@@ -275,7 +284,7 @@ def MCA_CheckBanksSync_in_brands():
             time.sleep(1)
 
             TotalBank=browser.find_element(By.XPATH,value='//div[@class="ps-pager"]/div/span[1]').text
-            print(f'{BrandList[i]} {TotalBank} num={num}') #共 193 条
+            print(f'{BrandList[i]} {TotalBank}') #共 193 条
             BNum=TotalBank.split(' ')
             Endpage=int(BNum[1])/30+2 #8
             if int(BNum[1])==0:
@@ -326,7 +335,7 @@ def MCA_CheckBanksSync_in_brands():
 
             print('---------------')
             # 頁面重整
-            browser.get('https://central-web-uat.paradise-soft.com.tw/brand-setting/brand.bank')
+            browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/brand-setting/brand.bank')
             browser.implicitly_wait(5)
             time.sleep(2)
 
