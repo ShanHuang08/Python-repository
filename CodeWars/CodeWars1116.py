@@ -39,20 +39,16 @@ def high_and_low4(num):
 numbers="8 3 -5 42 -1 0 0 -9 4 7 4 -4"
 def question2_2(numbers):
     List=numbers.split(' ')
-
     for i in range(len(List)):
         LargerDigit=[]
-        for j in range(len(List)):
-            if int(List[i]) < int(List[j]): #List[i]跟List[j]做比較，把比List[i]"大"的數字append到列表，看List[i]到哪一個數字，列表長度=0
-                LargerDigit.append(List[j])      
-        if len(LargerDigit) == 0:
-            MaxDigit=List[i]
-
-    for i in range(len(List)):
         SmallerDigit=[]
         for j in range(len(List)):
-            if int(List[i]) > int(List[j]): #List[i]跟List[j]做比較，把比List[i]"小"的數字append到列表，看List[i]到哪一個數字，列表長度=0
+            if int(List[i]) < int(List[j]): #List[i]跟List[j]做比較，把比List[i]"大"的數字append到列表，看List[i]到哪一個數字，列表長度=0
+                LargerDigit.append(List[j])
+            elif int(List[i]) > int(List[j]): #List[i]跟List[j]做比較，把比List[i]"小"的數字append到列表，看List[i]到哪一個數字，列表長度=0
                 SmallerDigit.append(List[j])
+        if len(LargerDigit) == 0:
+            MaxDigit=List[i]
         if len(SmallerDigit) == 0: 
             MinDigit=List[i]
 
@@ -60,6 +56,7 @@ def question2_2(numbers):
 
 def high_and_low5(numbers):
     numbers = numbers.split()
+
     min = max = int(numbers[0])
 
     for x in numbers:
@@ -68,6 +65,7 @@ def high_and_low5(numbers):
             max = x
         elif x < min:
             min = x
+
     
     return ' '.join([str(x) for x in (max, min)])
 
@@ -105,7 +103,7 @@ if __name__=='__main__':
     # print(is_isogram2('Dermatoglyphics'))
     # print(is_isogram2('wkuxdDphn'))
     # print(question2("8 3 -5 42 -1 0 0 -9 4 7 4 -4"))
-    # print(high_and_low5("2 1 3"))
-    # print(high_and_low5("3 2 1"))
-    # print(high_and_low5("1 2 3"))
+    # print(question2_2("2 1 3"))
+    # print(question2_2("3 2 1"))
+    # print(question2_2("1 2 3"))
     pass
