@@ -29,12 +29,73 @@ def is_isogram2(string):
 is_isogram3=lambda s:len(s)==len(set(s.lower()))
 
 # high_and_low("1 2 -3 4 5") # return "5 -3"
+# high_and_low("8 3 -5 42 -1 0 0 -9 4 7 4 -4")) # return "42 -9"
+def question2(numbers):
+    return ' '.join([str(max(int(numbers.split(' ')[i]) for i in range(len(numbers.split(' '))))), str(min(int(numbers.split(' ')[i]) for i in range(len(numbers.split(' ')))))])
+
+def high_and_low4(num):
+    return ' '.join((max(num.split(' '),key=int), min(num.split(' '),key=int)))
 
 numbers="8 3 -5 42 -1 0 0 -9 4 7 4 -4"
+def question2_2(numbers):
+    List=numbers.split(' ')
+
+    for i in range(len(List)):
+        LargerDigit=[]
+        for j in range(len(List)):
+            if int(List[i]) < int(List[j]): #List[i]跟List[j]做比較，把比List[i]"大"的數字append到列表，看List[i]到哪一個數字，列表長度=0
+                LargerDigit.append(List[j])      
+        if len(LargerDigit) == 0:
+            MaxDigit=List[i]
+
+    for i in range(len(List)):
+        SmallerDigit=[]
+        for j in range(len(List)):
+            if int(List[i]) > int(List[j]): #List[i]跟List[j]做比較，把比List[i]"小"的數字append到列表，看List[i]到哪一個數字，列表長度=0
+                SmallerDigit.append(List[j])
+        if len(SmallerDigit) == 0: 
+            MinDigit=List[i]
+
+    return ' '.join([MaxDigit, MinDigit])
+
+def high_and_low5(numbers):
+    numbers = numbers.split()
+    min = max = int(numbers[0])
+
+    for x in numbers:
+        x = int(x)
+        if x > max:
+            max = x
+        elif x < min:
+            min = x
+    
+    return ' '.join([str(x) for x in (max, min)])
 
 
+def high_and_low(numbers): #z.
+    nn = [int(s) for s in numbers.split(" ")]
+    return "%i %i" % (max(nn),min(nn))
 
 
+def high_and_low2(numbers):
+    nums = sorted(numbers.split(), key=int)
+    return '{} {}'.format(nums[-1], nums[0])
+
+def high_and_low3(numbers):
+    numlist = numbers.split(" ")
+    i = 0
+    highest = int(numlist[0])
+    lowest = int(numlist[0])
+    while i < len(numlist):
+        numlist[i] = int(numlist[i])
+        if numlist[i] > highest:
+            highest = numlist[i]
+        if numlist[i] < lowest:
+            lowest = numlist[i]
+        i += 1
+    highest = str(highest)
+    lowest = str(lowest)
+    return  highest+" "+lowest
 
 if __name__=='__main__':
     # question1('Dermatoglyphics')
@@ -43,5 +104,8 @@ if __name__=='__main__':
     # print(is_isogram('wkuxdDphn'))
     # print(is_isogram2('Dermatoglyphics'))
     # print(is_isogram2('wkuxdDphn'))
-   
+    # print(question2("8 3 -5 42 -1 0 0 -9 4 7 4 -4"))
+    # print(high_and_low5("2 1 3"))
+    # print(high_and_low5("3 2 1"))
+    # print(high_and_low5("1 2 3"))
     pass
