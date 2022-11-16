@@ -419,11 +419,12 @@ def MCA_SyncManagement():
 
 
 if __name__=='__main__':
-    # print(MCA_SyncOnManagement())
+    print(MCA_SyncOnManagement())
     # MCABankSync_default()
-    MCABankSync_custom()
+    # MCABankSync_custom()
     # print(MCA_Bankcodes())
     # print(MCA_SyncManagement())
+
    
     
     

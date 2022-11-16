@@ -4,7 +4,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from BE_InfoControl import *
-from BE_MCA_Sync import MCA_SyncManagement
+from BE_MCA_Sync import MCA_SyncManagement, MCA_SyncOnManagement
 from BrandJSON import BE_BrandJSON
 from MCA_datetime import MCAToday
 
@@ -241,8 +241,12 @@ def MCA_CheckBanksSync_in_brands():
         if Name not in ['模控后台(预设值)']:
             BrandList.append(Name)
     # print(len(BrandList)) #len=16
-    if len(BrandList) != MCA_SyncManagement(): #16
-        print(f'{len(BrandList)} != {MCA_SyncManagement()}')
+    if MCA_SyncManagement() == 0:
+        raise ValueError('同步管理未設定')
+    elif MCA_SyncOnManagement() == 0:
+        raise ValueError('同步管理品牌未開啟')
+    if len(BrandList) != MCA_SyncOnManagement(): #16
+        print(f'{len(BrandList)} != {MCA_SyncOnManagement()}')
         print(BrandList)
         raise ValueError('銀行管理品牌名稱數量和同步管理不一致')
     browser.quit()
@@ -344,5 +348,5 @@ def MCA_CheckBanksSync_in_brands():
 
 
 if __name__=='__main__':
-    MCA_CheckBanks_Contents()
-    # MCA_CheckBanksSync_in_brands()
+    # MCA_CheckBanks_Contents()
+    MCA_CheckBanksSync_in_brands()
