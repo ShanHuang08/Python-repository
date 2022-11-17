@@ -10,10 +10,10 @@ from MCA_datetime import MCAToday
 
 branch=MCA_branch()
 def MCA_CheckBanks_Contents():
-    excluce_code=['123','Miles','test','ABC123','ABABAB','AAAC']  #bh has AAAC bank
-    exclude_name=['測測一','MBANK','ewqewqe','123321','四川川川川川银行','名称名称'] #
-    exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c'] #
-    exclude_pic=['https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668406375','https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
+    excluce_code=['123','Miles','test','ABC123','ABABAB','AAAC','AAA']  #bh has AAAC bank
+    exclude_name=['測測一','MBANK','ewqewqe','123321','四川川川川川银行','名称名称','AAA'] #
+    exclude_url=['wwwyyy','test','555555','https://www.scbank.cnn/','c','aa'] #
+    exclude_pic=['http://stage.squirrel.pstdsf.com/brand-image/base/bank/aaa.jpeg?1668585592','https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/aaac.jpeg?1668406375','https://squirrel-'+branch+'.paradise-soft.com.tw/brand-image/base/bank/ababab.jpeg?1667984438','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/123.png?1667458982','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/abc123.jpeg?1667384821','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/miles.png?1666681915','https://squirrel-'+branch+'.paradise-soft.com.tw//brand-image/base/bank/test.jpeg?1666860254']
     Banks_code=[]
     Banks_code_for_exclude=[]
     Banks_name=[]
@@ -37,9 +37,10 @@ def MCA_CheckBanks_Contents():
     StatusFailBanks=[]
     RecommendFailBanks=[]
 
-    options=Options() 
-    options.add_argument('--headless')
-    browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    # options=Options() 
+    # options.add_argument('--headless')
+    # browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -212,9 +213,10 @@ def MCA_CheckBanks_Contents():
         print(f'失敗銀行代號(推薦):{RecommendFailBanks}')
 
 def MCA_CheckBanksSync_in_brands():
-    options=Options() 
-    options.add_argument('--headless')
-    browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    # options=Options() 
+    # options.add_argument('--headless')
+    # browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -245,14 +247,15 @@ def MCA_CheckBanksSync_in_brands():
         raise ValueError('同步管理未設定')
     elif MCA_SyncOnManagement() == 0:
         raise ValueError('同步管理品牌未開啟')
-    if len(BrandList) != MCA_SyncOnManagement(): #16
-        print(f'{len(BrandList)} != {MCA_SyncOnManagement()}')
+    if len(BrandList) != MCA_SyncManagement(): #16
+        print(f'{len(BrandList)} != {MCA_SyncManagement()}')
         print(BrandList)
         raise ValueError('銀行管理品牌名稱數量和同步管理不一致')
     browser.quit()
     # 會登出 要分開寫
 
-    browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    # browser=webdriver.Chrome('./Chromedriver.exe', options=options)
+    browser=webdriver.Chrome('./Chromedriver.exe')
     browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
@@ -348,5 +351,5 @@ def MCA_CheckBanksSync_in_brands():
 
 
 if __name__=='__main__':
-    # MCA_CheckBanks_Contents()
-    MCA_CheckBanksSync_in_brands()
+    MCA_CheckBanks_Contents()
+    # MCA_CheckBanksSync_in_brands()

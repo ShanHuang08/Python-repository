@@ -14,7 +14,7 @@ def MCA_SyncOnManagement():
     options=Options()
     options.add_argument('--headless')
     browser=webdriver.Chrome('./Chromedriver.exe',options=options)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/')
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/')
     browser.maximize_window()
     time.sleep(1)
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入登录帐号"]').send_keys(BE_account())
@@ -22,7 +22,7 @@ def MCA_SyncOnManagement():
     browser.find_element(By.XPATH,value='//input[@placeholder="请输入OTP"]').send_keys(1)
     browser.find_element(By.XPATH,value='//*[@id="app"]/div/form/button').click()
     time.sleep(1)
-    browser.get('https://central-web-uat.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
+    browser.get('https://central-web-'+branch+'.paradise-soft.com.tw/system/system.brand_sync') #同步管理頁面
     browser.implicitly_wait(5)
     time.sleep(2)
 
@@ -41,7 +41,7 @@ def MCA_SyncOnManagement():
 
     return SyncOn #16-2=14
 
-Test_Banks=['123','AAA','ABC123','Miles','test','AAAC','ABABAB','AAAB','BJBANK']
+Test_Banks=['123','AAA','ABC123','Miles','test','AAAC','ABABAB','AAAB']
 MaxNum=MCA_SyncOnManagement() #15個品牌
 SyncAllBanks=True #是否要同步所有銀行, 包含交易所? False=只同步銀行
 Change=True #False=不做修改, custom品牌全選
