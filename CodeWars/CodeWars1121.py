@@ -96,45 +96,87 @@ def solution3(s): #2nd best
 
 # print('v'.islower(), 'v'.isupper())
 
-stocklist = ["ABART 20", "CDXEF 50", "BKWRK 25", "BTSQZ 89", "DRTYM 60"] #sort stocklist first
-Clist=["A", "B", "C", "W"]
 # 第一個大寫字母是分類
 # M = {"A", "B", "C", "W"} 要從stocklist的分類資訊計算出M每個元素的值 (A : 20) - (B : 114) - (C : 50) - (W : 0)
 # If L or M are empty return string is ""
 # https://www.codewars.com/kata/54dc6f5a224c26032800005c/train/python
-sol=[]
-category=[]
+# stocklist = ["ABART 20", "CDXEF 50", "BKWRK 25", "BTSQZ 89", "DRTYM 60"] #要分開
+# Clist=["A", "B", "C", "W"]
+stocklist = ["BBAR 150", "CDXE 515", "BKWR 250", "BTSQ 890", "DRTY 600"]
+Clist=["A", "B", "C", "D"]
+# stocklist = ["ABAR 200", "CDXE 500", "BKWR 250", "BTSQ 890", "DRTY 600"]
+# Clist = ["A", "B"]
+
+Category=[] #[['ABART', '20'], ['CDXEF', '50'], ['BKWRK', '25'], ['BTSQZ', '89'], ['DRTYM', '60']]
+StockNum=[]
+repeat=[]
 for i in stocklist:
-    category.append(i[0])
-    Sum=0
-    for j in Clist:
-        # print(j[0], j[-2:]) #A 20, C 50, B 25, B 89, D 68
-        if j == i[0]:
-            Sum+=int(i[-2:])
-            sol.append('('+i[0]+' '+':'+' '+str(Sum)+')')
-# print(sol) #['(A : 20)', '(C : 50)', '(B : 25)', '(B : 89)']
-# print(category) #['A', 'C', 'B', 'B', 'D']
-Del=''
-for j in range(len(sol)):
-    Sum=0
-    for k in range(len(sol)):
-        if sol[j][1] == sol[k][1]:
-            Sum+= int(sol[k][-3:-1])
-            Del=sol[j]
-print(f'Sum= {Sum}, {Del[1]}') #114 B
+    List=i.split(' ')
+    Category.append(List)
+    StockNum.append(List[1])
+    repeat.append(i[0])
 
-for j in range(len(sol)-1,-1,-1):
-    if sol[j][1] == Del[1]:
-        sol.pop(j)
-# print(sol) #['(A : 20)', '(C : 50)']
-sol.append('('+Del[1]+' '+':'+' '+str(Sum)+')')
-# print(sol) #['(A : 20)', '(C : 50)', '(B : 114)']
-
-
+repeatAmount=[]   
+for item in repeat:
+    freq=repeat.count(item)
+    repeatAmount.append(freq)
+Max=max(repeatAmount) #2 重複2次
+  
+sol=[]
 for i in Clist:
-    if i not in category:
-        sol.append('('+i+' '+':'+' '+'0'+')')
-print(sol) #['(A : 20)', '(C : 50)', '(B : 114)', '(W : 0)']
+    Sum=0
+    for j in Category:
+        if i == j[0][0]:
+            Sum+=int(j[1])   
+            sol.append('('+j[0][0]+' '+':'+' '+str(Sum)+')')
+print(sol) #['(A : 20)', '(B : 25)', '(B : 114)', '(C : 50)']
+
+Del=[]
+DelCategory=''
+RepeatLocation=[]
+for j in range(len(sol)):
+    for k in range(len(sol)):
+        # print(sol[j][1])
+        if sol[j][1] == sol[k][1]:
+            Del.append(sol[j][1])
+            RepeatLocation.append(j)
+            # print(j)
+for item in Del:
+    freq=Del.count(item)
+    if freq == Max*Max:
+        DelCategory=item #B (重複出現) 
+
+# 重複出現的如何從sol刪除 不能刪最後一個
+# 把未包含的加回去
+Delcount=1
+print(RepeatLocation)
+for i in sol:
+    if i[1] == DelCategory and Delcount < Max:
+        sol.pop()
+        Delcount+=1
+# print(sol)
+
+# ['(A : 20)', '(B : 25)', '(B : 114)', '(C : 50)', '(D : 60)'] 
+# 0 140行
+# 1
+# 1
+# 2
+# 2
+# 3
+# 4
+
+# ['(B : 150)', '(B : 400)', '(B : 1290)', '(C : 515)', '(D : 600)']
+# 0
+# 0
+# 0
+# 1
+# 1
+# 1
+# 2
+# 2
+# 2
+# 3
+# 4
 
 
 if __name__=='__main__':
