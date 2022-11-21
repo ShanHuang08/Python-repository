@@ -96,7 +96,7 @@ def solution3(s): #2nd best
 
 # print('v'.islower(), 'v'.isupper())
 
-stocklist = ["ABART 20", "CDXEF 50", "BKWRK 25", "BTSQZ 89", "DRTYM 60"]
+stocklist = ["ABART 20", "CDXEF 50", "BKWRK 25", "BTSQZ 89", "DRTYM 60"] #sort stocklist first
 Clist=["A", "B", "C", "W"]
 # 第一個大寫字母是分類
 # M = {"A", "B", "C", "W"} 要從stocklist的分類資訊計算出M每個元素的值 (A : 20) - (B : 114) - (C : 50) - (W : 0)
