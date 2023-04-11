@@ -52,3 +52,11 @@ if __name__=='__main__':
 # List=result.split('\n')
 # print(List)
 
+test2=subprocess.run('dir sdfds', shell=True, capture_output=True, universal_newlines=True, cwd='C:\\Users\\Shan')
+
+if test2.returncode == 0:
+    print(test2.stdout)
+else:
+    print(test2.stderr)
+
+
