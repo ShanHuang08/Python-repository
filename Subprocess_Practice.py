@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, os
 
 def CheckVersion(ip, check_pwd):
     if check_pwd.lower() == 'y':
@@ -28,10 +28,41 @@ def CheckVersion(ip, check_pwd):
 
     return
 
+def GetDirectory(Dircom):
+    Path = os.getcwd()
+    os.chdir('c:\\Users\\Stephenhuang')
+    Path = os.getcwd()
+
+    SearchDir=subprocess.run(Dircom , shell=True, capture_output=True, universal_newlines=True, cwd=Path)
+
+    if SearchDir.returncode == 0:
+        Directory = SearchDir.stdout
+    else:
+        print(SearchDir.stderr)
+        return
+        
+    # print(Directory.splitlines())
+    # print(Directory.split('\n'))
+
+    AIList = Directory.split('\n')
+    TextLine=''
+    for line in AIList:
+        if "sum" and "<DIR>" in line:
+            # print(line)
+            TextLine+=line
+    return TextLine.split()[-1]
+
+
+
+
 if __name__=='__main__':
-    ip = input('ip address: ')
-    check_pwd = input('Need a Password (y/n)')
-    CheckVersion(ip, check_pwd)
+    Dircom = 'dir sum*'
+    print(GetDirectory(Dircom))
+    Dircom = 'dir SMC*'
+    print(GetDirectory(Dircom))
+    # ip = input('ip address: ')
+    # check_pwd = input('Need a Password (y/n)')
+    # CheckVersion(ip, check_pwd)
     pass
 
 
@@ -52,11 +83,7 @@ if __name__=='__main__':
 # List=result.split('\n')
 # print(List)
 
-test2=subprocess.run('dir sdfds', shell=True, capture_output=True, universal_newlines=True, cwd='C:\\Users\\Shan')
 
-if test2.returncode == 0:
-    print(test2.stdout)
-else:
-    print(test2.stderr)
+
 
 
