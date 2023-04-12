@@ -1,5 +1,21 @@
 import subprocess, os
 
+def Check_ipaddr(ip):
+    command = 'ping ' + ip
+    Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
+    List = Ping.stdout.splitlines()
+    # print(List)
+    Text=''
+    for line in List:
+        if "TTL=" in line:
+            Text+=line
+
+    if len(Text) > 0:
+        return True
+    else:
+        return False
+
+
 def GetDirectory(OriginalDir, Dircom):
     Path = os.getcwd()
     os.chdir(OriginalDir)
@@ -11,9 +27,6 @@ def GetDirectory(OriginalDir, Dircom):
         Directory = SearchDir.stdout
     else:
         raise ValueError(SearchDir.stderr)
-        
-    # print(Directory.splitlines())
-    # print(Directory.split('\n'))
 
     AIList = Directory.split('\n')
     TextLine=''
@@ -59,10 +72,13 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
 
 if __name__=='__main__':
     ip = input('ip address: ')
-    check_pwd = input('Need a Unique Password (y/n)')
+    check_pwd = input('Login via Unique Password (y/n)')
     OriginalDir = 'C:\\Users\\Stephenhuang\\'
-    SumFolder = GetDirectory(OriginalDir, Dircom='dir sum*')
-    SMCFolder = GetDirectory(OriginalDir, Dircom='dir SMC*')
-    SumLocation = OriginalDir + SumFolder
-    SMCLocation = OriginalDir + SMCFolder
-    CheckVersion(ip, check_pwd, SumLocation, SMCLocation)
+    Check_ipaddr(ip)
+    if Check_ipaddr(ip):
+        SumFolder = GetDirectory(OriginalDir, Dircom='dir sum*')
+        SMCFolder = GetDirectory(OriginalDir, Dircom='dir SMC*')
+        SumLocation = OriginalDir + SumFolder
+        SMCLocation = OriginalDir + SMCFolder
+        CheckVersion(ip, check_pwd, SumLocation, SMCLocation)
+    raise ValueError('Invalid ip address')
