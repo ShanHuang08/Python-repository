@@ -15,7 +15,6 @@ def Check_ipaddr(ip):
     else:
         return False
 
-
 def GetDirectory(OriginalDir, Dircom):
     Path = os.getcwd()
     os.chdir(OriginalDir)
@@ -27,6 +26,9 @@ def GetDirectory(OriginalDir, Dircom):
         Directory = SearchDir.stdout
     else:
         raise ValueError(SearchDir.stderr)
+        
+    # print(Directory.splitlines())
+    # print(Directory.split('\n'))
 
     AIList = Directory.split('\n')
     TextLine=''
@@ -38,7 +40,7 @@ def GetDirectory(OriginalDir, Dircom):
             TextLine+=line
 
     if len(TextLine.split()) == 0:
-        raise ValueError('No Diractory found')
+        raise ValueError(f'{Dircom} No Diractory found')
 
     return TextLine.split()[-1]
 
@@ -48,32 +50,62 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
         pwd = input('Input Unique Password: ')
     else:
         pwd = 'ADMIN'
+    try:
+        filename = ip+' CheckVersion.txt'
+        file = open(filename, 'w')
+        sumcom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c ' 
+        cmd1 = sumcom + 'getbiosinfo --showall'
+        cmd2 = sumcom + 'getbmcinfo'
+        cmd3 = sumcom + 'getcpldinfo'
+        cmds = cmd1+' && '+cmd2+' && '+cmd3
+        sumproc = subprocess.run(cmds, shell=True, capture_output=True, universal_newlines=True, cwd=SumLocation)
+        
+        if sumproc.stdout != '':
+            # print(sumproc.stdout)
+            file.write(sumproc.stdout + '\n')
+        else:
+            print(sumproc.stderr)
+        
+        smccom = 'SMCIPMITOOL.exe '+ip+' ADMIN '+pwd+' redfish version'
+        smcproc = subprocess.run(smccom, shell=True, capture_output=True, universal_newlines=True, cwd=SMCLocation)
 
-    sumcom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c ' 
-    cmd1 = sumcom + 'getbiosinfo --showall'
-    cmd2 = sumcom + 'getbmcinfo'
-    cmd3 = sumcom + 'getcpldinfo'
-    cmds = cmd1+' && '+cmd2+' && '+cmd3
-    sumproc = subprocess.run(cmds, shell=True, capture_output=True, universal_newlines=True, cwd=SumLocation)
-    
-    if sumproc.stdout != '':
-        print(sumproc.stdout)
-    else:
-        print(sumproc.stderr)
-    
-    smccom = 'SMCIPMITOOL.exe '+ip+' ADMIN '+pwd+' redfish version'
-    smcproc = subprocess.run(smccom, shell=True, capture_output=True, universal_newlines=True, cwd=SMCLocation)
-
-    if smcproc.stdout != '':
-        print(f'Redfish version: {smcproc.stdout}')
-    else:
-        print(smcproc.stderr)
+        if smcproc.stdout != '':
+            # print(f'Redfish version: {smcproc.stdout}')
+            file.write(f'Redfish version: {smcproc.stdout}')
+        else:
+            print(smcproc.stderr)
+        file.close()
+        print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
+    except Exception as e:
+        print(f'{filename} 檔案寫入失敗: {e}')
     return
+
+def DMIinfo(ip, check_pwd, SumLocation):
+    if check_pwd.lower() == 'y':
+        pwd = input('Input Unique Password: ')
+    else:
+        pwd = 'ADMIN'
+    try:
+        filename = ip+' DMI.txt'
+        file = open(filename,'w')
+        dmicom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c getdmiinfo'
+        dmiproc = subprocess.run(dmicom, shell=True, capture_output=True, universal_newlines=True, cwd=SumLocation)
+
+        if dmiproc.stdout != '':
+            file.write(dmiproc.stdout)
+        else:
+            print(dmiproc.stderr)
+        file.close()
+        print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
+    except Exception as e:
+        print(f'{filename} 檔案寫入失敗: {e}')
+    return
+
 
 if __name__=='__main__':
     ip = input('ip address: ')
     check_pwd = input('Login via Unique Password (y/n)')
-    OriginalDir = 'C:\\Users\\Stephenhuang\\'
+    OriginalDir = 'C:\\Users\\Stephenhuang\\' #sum跟SMCIPMITOOL都放在同一個資料夾之下
     Check_ipaddr(ip)
     if Check_ipaddr(ip):
         SumFolder = GetDirectory(OriginalDir, Dircom='dir sum*')
@@ -81,4 +113,7 @@ if __name__=='__main__':
         SumLocation = OriginalDir + SumFolder
         SMCLocation = OriginalDir + SMCFolder
         CheckVersion(ip, check_pwd, SumLocation, SMCLocation)
-    raise ValueError('Invalid ip address')
+        DMIinfo(ip, check_pwd, SumLocation)
+        subprocess.run('explorer '+OriginalDir, shell=True)
+    else:
+        raise ValueError('Invalid ip address')
