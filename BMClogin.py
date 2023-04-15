@@ -26,6 +26,7 @@ def test():
     # sleep(3)
     # browser.find_element(By.ID,value='consoleImg').click()
 
+    # Remote Control Launch console
     browser.execute_script('goPage("remote")')
     sleep(5)
 

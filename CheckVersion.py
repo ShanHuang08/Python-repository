@@ -9,11 +9,8 @@ def Check_ipaddr(ip):
     for line in List:
         if "TTL=" in line:
             Text+=line
+    return len(Text) > 0
 
-    if len(Text) > 0:
-        return True
-    else:
-        return False
 
 def GetDirectory(OriginalDir, Dircom):
     Path = os.getcwd()
@@ -30,13 +27,11 @@ def GetDirectory(OriginalDir, Dircom):
     # print(Directory.splitlines())
     # print(Directory.split('\n'))
 
-    AIList = Directory.split('\n')
+    DirList = Directory.split('\n')
     TextLine=''
-    for line in AIList:
-        if "sum" in line and "<DIR>" in line:
+    for line in DirList:
+        if ("sum" in line or "SMC" in line) and "<DIR>" in line:
             # print(line)
-            TextLine+=line
-        elif "SMC" in line and "<DIR>" in line:
             TextLine+=line
 
     if len(TextLine.split()) == 0:
@@ -50,9 +45,9 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
         pwd = input('Input Unique Password: ')
     else:
         pwd = 'ADMIN'
+    filename = ip+' CheckVersion.txt'
+    file = open(filename, 'w')
     try:
-        filename = ip+' CheckVersion.txt'
-        file = open(filename, 'w')
         sumcom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c ' 
         cmd1 = sumcom + 'getbiosinfo --showall'
         cmd2 = sumcom + 'getbmcinfo'
@@ -74,10 +69,11 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
             file.write(f'Redfish version: {smcproc.stdout}')
         else:
             print(smcproc.stderr)
-        file.close()
+        
         print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
     except Exception as e:
         print(f'{filename} 檔案寫入失敗: {e}')
+    file.close()
     return
 
 def DMIinfo(ip, check_pwd, SumLocation):
@@ -85,9 +81,9 @@ def DMIinfo(ip, check_pwd, SumLocation):
         pwd = input('Input Unique Password: ')
     else:
         pwd = 'ADMIN'
+    filename = ip+' DMI.txt'
+    file = open(filename,'w')
     try:
-        filename = ip+' DMI.txt'
-        file = open(filename,'w')
         dmicom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c getdmiinfo'
         dmiproc = subprocess.run(dmicom, shell=True, capture_output=True, universal_newlines=True, cwd=SumLocation)
 
@@ -95,12 +91,12 @@ def DMIinfo(ip, check_pwd, SumLocation):
             file.write(dmiproc.stdout)
         else:
             print(dmiproc.stderr)
-        file.close()
+        
         print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
     except Exception as e:
         print(f'{filename} 檔案寫入失敗: {e}')
+    file.close()
     return
-
 
 if __name__=='__main__':
     ip = input('ip address: ')
