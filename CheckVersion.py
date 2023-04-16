@@ -35,9 +35,9 @@ def GetDirectory(OriginalDir, Dircom):
             TextLine+=line
 
     if len(TextLine.split()) == 0:
-        raise ValueError(f'{Dircom} No Diractory found')
-
-    return TextLine.split()[-1]
+        raise ValueError(f'{Dircom} No Diractory found. Parent path: {OriginalDir}')
+    else:
+        return TextLine.split()[-1]
 
 
 def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
@@ -45,8 +45,6 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
         pwd = input('Input Unique Password: ')
     else:
         pwd = 'ADMIN'
-    filename = ip+' CheckVersion.txt'
-    file = open(filename, 'w')
     try:
         sumcom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c ' 
         cmd1 = sumcom + 'getbiosinfo --showall'
@@ -66,14 +64,12 @@ def CheckVersion(ip, check_pwd, SumLocation, SMCLocation):
 
         if smcproc.stdout != '':
             # print(f'Redfish version: {smcproc.stdout}')
-            file.write(f'Redfish version: {smcproc.stdout}')
+            file.write(f'Redfish version: {smcproc.stdout}' + '\n')
         else:
             print(smcproc.stderr)
-        
-        print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
+            file.write(smcproc.stderr + '\n')
     except Exception as e:
-        print(f'{filename} 檔案寫入失敗: {e}')
-    file.close()
+        print(e)
     return
 
 def DMIinfo(ip, check_pwd, SumLocation):
@@ -81,35 +77,35 @@ def DMIinfo(ip, check_pwd, SumLocation):
         pwd = input('Input Unique Password: ')
     else:
         pwd = 'ADMIN'
-    filename = ip+' DMI.txt'
-    file = open(filename,'w')
     try:
         dmicom = 'sum.exe -i '+ip+' -u ADMIN -p '+pwd+' -c getdmiinfo'
         dmiproc = subprocess.run(dmicom, shell=True, capture_output=True, universal_newlines=True, cwd=SumLocation)
-
+        file.write('DIM info:' + '\n')
         if dmiproc.stdout != '':
             file.write(dmiproc.stdout)
         else:
             print(dmiproc.stderr)
-        
-        print(f'{filename} 寫入完成, 路徑: {OriginalDir}')
+            file.write(dmiproc.stderr)
     except Exception as e:
-        print(f'{filename} 檔案寫入失敗: {e}')
-    file.close()
+        print(e)
     return
 
 if __name__=='__main__':
     ip = input('ip address: ')
     check_pwd = input('Login via Unique Password (y/n)')
     OriginalDir = 'C:\\Users\\Stephenhuang\\' #sum跟SMCIPMITOOL都放在同一個資料夾之下
+    filename = ip+' CheckVersion.txt'
     Check_ipaddr(ip)
     if Check_ipaddr(ip):
         SumFolder = GetDirectory(OriginalDir, Dircom='dir sum*')
         SMCFolder = GetDirectory(OriginalDir, Dircom='dir SMC*')
         SumLocation = OriginalDir + SumFolder
         SMCLocation = OriginalDir + SMCFolder
+        
+        file = open(filename, 'w')
         CheckVersion(ip, check_pwd, SumLocation, SMCLocation)
         DMIinfo(ip, check_pwd, SumLocation)
+        file.close()
         subprocess.run('explorer '+OriginalDir, shell=True)
     else:
         raise ValueError('Invalid ip address')
