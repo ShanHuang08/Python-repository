@@ -1,0 +1,82 @@
+
+{"UserName": "user1", "Password": "Suser123", "RoleId": "Administrator", "Enabled": true, "AccountTypes": ["Redfish"]}
+
+{"UserName": "user2", "Password": "Suser123", "RoleId": "Operator", "Enabled": true, "AccountTypes": ["Redfish"]}
+
+{"UserName": "user3", "Password": "Suser123", "RoleId": "ReadOnly", "Enabled": true, "AccountTypes": ["Redfish"]}
+
+CommunityStrings
+{
+    "SNMP" :{
+        "CommunityStrings": [
+            {
+                "AccessMode": "Full",
+                "CommunityString": "TEST01",
+                "Name": "Test01"
+            },
+            {
+                "AccessMode": "Limited",
+                "CommunityString": "TEST02",
+                "Name": "Test02"
+            }
+        ]
+    }
+}
+
+Add Alert
+"Protocol" : "SNMPv1", "SMTP",
+"Severity" : "Warning", "Critical",
+{
+    "Status" : {
+        "State" : "Enable"
+    },
+    "Destinayion" : "1.2.3.4",
+    "Protocol" : "SNMPv1",
+    "SNMP" : {
+        "TrapCommunity" : "test"
+    },
+    "EventTypes" : ["Alert"],
+    "Oem" : {
+        "Supermicro" : {
+            "Severity" : "Information",
+            "EnableSubscription" : true
+        }
+    }
+}
+{
+    "Status" : {
+        "State" : "Enable"
+    },
+    "Destinayion" : "Stephenhuang@supermicro.com",
+    "Context": "test",
+    "Protocol" : "SMTP",
+    "SubscriptionType": "",
+    "EventTypes" : ["Alert"],
+    "Oem" : {
+        "Supermicro" : {
+            "SMTPSubject": "test",
+            "Severity" : "Information",
+            "EnableSubscription" : true
+        }
+    }
+}
+
+{
+    "Destination" : "https://10.184.21.19:443",
+    "Context": "Redfish test",
+    "Protocol": "Redfish",
+    "Oem": {
+        "Supermicro": {
+            "EnableSubscription": true
+        }
+    }
+}
+
+{
+    "SMTP" : {
+        "Authentication" : "None",
+        "ConnectionProtocol" : "None",
+        "Port" : 25,
+        "ServerAddress" : "mail.supermicro.com.tw"
+    }
+}
