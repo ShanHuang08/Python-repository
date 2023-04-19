@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {
     "Tasks":{"@odata.id":"/redfish/v1/TaskService"},
     "Chassis":{"@odata.id":"/redfish/v1/Chassis"},
@@ -33,40 +32,4 @@
     "@odata.etag":"\"8acd1cc7d22a27f2c2a\"",
     "AccountService":{"@odata.id":"/redfish/v1/AccountService"},
     "RedfishVersion":"1.8.0"
-=======
-{
-    "Tasks":{"@odata.id":"/redfish/v1/TaskService"},
-    "Chassis":{"@odata.id":"/redfish/v1/Chassis"},
-    "@odata.id":"/redfish/v1/",
-    "ProtocolFeaturesSupported":{"ExcerptQuery":true,
-        "OnlyMemberQuery":true,
-        "ExpandQuery":{
-            "Levels":true,
-            "NoLinks":true,
-            "Links":true,
-            "ExpandAll":true,
-            "MaxLevels":2
-            },
-        "FilterQuery":true,
-        "SelectQuery":true
-        },
-    "Links":{"Sessions":{"@odata.id":"/redfish/v1/SessionService/Sessions"}},
-    "Managers":{"@odata.id":"/redfish/v1/Managers"},
-    "EventService":{"@odata.id":"/redfish/v1/EventService"},
-    "JsonSchemas":{"@odata.id":"/redfish/v1/JsonSchemas"},
-    "Systems":{"@odata.id":"/redfish/v1/Systems"},
-    "TelemetryService":{"@odata.id":"/redfish/v1/TelemetryService"},
-    "Description":"This resource is used to represent a service root for a Redfish implementation.",
-    "Registries":{"@odata.id":"/redfish/v1/Registries"},
-    "UUID":"18DBB102-D9D1-11E9-AAFD-FA2C77062E80",
-    "Vendor":"Lenovo",
-    "Name":"Root Service",
-    "UpdateService":{"@odata.id":"/redfish/v1/UpdateService"},
-    "@odata.type":"#ServiceRoot.v1_5_2.ServiceRoot",
-    "SessionService":{"@odata.id":"/redfish/v1/SessionService"},
-    "Id":"RootService",
-    "@odata.etag":"\"8acd1cc7d22a27f2c2a\"",
-    "AccountService":{"@odata.id":"/redfish/v1/AccountService"},
-    "RedfishVersion":"1.8.0"
->>>>>>> 8ed83d2505d4355229a31d2a06788e31225895b9
 }

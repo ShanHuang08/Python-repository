@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # Linked files:BE_withdraw, BE_AcceptDeposit, BE_ManualDeposit, Deposit_Benefits_Setup, version.py
 
@@ -15,22 +14,4 @@ def BE_password():
 def JenkinsAccount():
     return 'shan_huang'
 def JenkinsPassword():
-=======
-
-# Linked files:BE_withdraw, BE_AcceptDeposit, BE_ManualDeposit, Deposit_Benefits_Setup, version.py
-
-def Webchannel():
-    return 'bh'
-def Webbranch():
-    return 'uat'
-def WebNewaccount():
-    return 'stest060'
-def BE_account():
-    return 'shanbot'
-def BE_password():
-    return 'shan612283'
-def JenkinsAccount():
-    return 'shan_huang'
-def JenkinsPassword():
->>>>>>> 8ed83d2505d4355229a31d2a06788e31225895b9
     return 'Dethl8889'
