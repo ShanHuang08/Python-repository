@@ -18,11 +18,11 @@ k.generate_key(crypto.TYPE_RSA, 2048)
 # 產生 certificate
 cert = crypto.X509()
 cert.get_subject().CN = "IPMI"
-cert.get_subject().OU = "IPMI"
-cert.get_subject().O = "SM"
-cert.get_subject().L = "TAIPEI"
-cert.get_subject().ST = "TAIPEI"
-cert.get_subject().C = "TW"
+cert.get_subject().OU = "Software"
+cert.get_subject().O = "Super Micro Computer"
+cert.get_subject().L = "San Jose"
+cert.get_subject().ST = "California"
+cert.get_subject().C = "US"
 cert.get_subject().emailAddress = "support@supermicro.com"
 cert.set_serial_number(0)
 cert.gmtime_adj_notBefore(0)
