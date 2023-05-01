@@ -239,15 +239,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC 
-def Element_isclickable(xpath):
-    driver = webdriver.Chrome()
-    driver.get('https://www.bing.com/')
-    try:
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, xpath)))
-        return True
-    except :
-        return False
+from robot.libraries import SeleniumLibrary
 
 
 def functions():
@@ -265,6 +257,5 @@ def functions():
     PrimeNumber2()
     scissors()
     CreateSheet()
-    Element_isclickable(xpath)
 While_Bingo()
 
