@@ -10,7 +10,7 @@ ${Seconds}    5s
 *** Test Cases ***
 LoginTest
     Open Browser    http://${url}   ${BROWSER}
-    Set Window Size    800     600
+    Set Window Size    1920     1080
     Set Selenium Timeout    ${Seconds}
     Sleep    ${Seconds}
     Close Browser
