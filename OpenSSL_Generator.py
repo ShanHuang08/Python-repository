@@ -2,7 +2,7 @@ from OpenSSL import crypto
 from datetime import datetime, timedelta
 import subprocess
 
-MySSLFolder='C:\\Users\\Stephenhuang\\Desktop\SSL Certificate Key'
+MySSLFolder='"C:\\Users\\Stephenhuang\\Desktop\SSL Certificate Key"'
 def Today():
     date_time=datetime.now()
     date_time=str(date_time)
@@ -32,8 +32,11 @@ cert.set_pubkey(k)
 cert.sign(k, 'sha256')
 
 # 將 key 與 certificate 寫入檔案
+
 Now = Today()
 open("key_"+Now+".pem", "wb").write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
 open("cert_"+Now+".pem", "wb").write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
 
-subprocess.run("explorer .", shell=True)
+subprocess.run(f"move key_{Now}.pem {MySSLFolder}", shell=True)
+subprocess.run(f"move cert_{Now}.pem {MySSLFolder}", shell=True)
+subprocess.run(f"explorer {MySSLFolder}", shell=True)
