@@ -3,7 +3,7 @@ import hashlib
 import base64
 import binascii
 
-def generate_tsig_key(key_name, key_secret, algorithm='HMAC_MD5', key_file='tsig.key', private_file='TSIG.private'):
+def generate_tsig_key(key_name, key_secret, algorithm='HMAC_MD5', key_file='TSIG.key', private_file='TSIG.private'):
     # Generate TSIG signature
     tsig_signature = hmac.new(key_secret.encode(), digestmod=hashlib.sha256).digest()
 
