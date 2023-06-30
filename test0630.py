@@ -1,9 +1,25 @@
 
-message = 'hello,world'
-message = message.replace('world','hello')
-print(message)
+#字串交換
 
-message_list = ['hello', 'world']
-message_str = message_list[0] + ',' + message_list[1]
-new_message = message_str.replace(message_list[1], message_list[0])
-print(new_message)
+def MySolution():
+    message = 'hello,world'
+    List = message.split(',')
+    message_1 = List[0].replace(List[0], List[1])
+    message_2 = List[1].replace(List[1], List[0])
+
+    new_message = message_1 + ',' + message_2
+    print(new_message)
+
+
+def ChatGPT():
+    message = 'hello,world'
+    index = message.index(',')  # 找到逗號的索引位置
+
+    new_message = message[index + 1:] + ',' + message[:index]
+
+    print(new_message)
+
+
+if __name__=='__main__':
+    MySolution()
+    ChatGPT()
