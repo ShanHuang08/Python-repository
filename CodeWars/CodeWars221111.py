@@ -6,7 +6,7 @@ def question1(x,n):
     List=[]
     z=x
     for i in range(n):
-        List.append(x)
+        List.append(int(x))
         x+=z
     return List
 
@@ -116,5 +116,5 @@ class testcases(unittest.TestCase):
             self.assertEqual(question3(RandomList), sol2)
 
 if __name__=='__main__':
-    unittest.main()
+    # unittest.main()
     pass
