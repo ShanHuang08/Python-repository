@@ -22,7 +22,7 @@ CodeWars1110
 CodeWars1111
     ${x}    Convert To Integer    5
     ${n}    Convert To Integer    10
-    ${result}    CodeWars1111.Question 1    ${x}    ${n}
+    ${result}    CodeWars221111.Question 1    ${x}    ${n}
     Log    ${result}
     Log    message
     ${x}    Convert To Integer    ${value1}
