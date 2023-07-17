@@ -1,7 +1,7 @@
 import paramiko
 import socket
 
-BMC_IP = '10.140.171.5'
+BMC_IP = '10.184.22.196'
 accounts = ['Admin', 'Operator', 'User']
 pwd = '123456'
 for account in accounts:
