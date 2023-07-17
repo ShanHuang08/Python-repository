@@ -3,13 +3,15 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
+from Library.dictionary import *
 
 # https://gitlab.supermicro.com/swqa/ipmi-test-automation/-/blob/master/asset/xpath/webpagexpath.py
 ip = '172.31.52.168'
 account='ADMIN'
 password='ADMIN'
 
-def test():
+
+def Chrome_LaunchConsole():
     browsers=[]
     for i in range(4):
         browser=webdriver.Chrome('chromedriver.exe')
@@ -79,5 +81,5 @@ def Firefox():
     browser.quit()
 
 if __name__=='__main__':
-    test()
+    Chrome_LaunchConsole()
     # Firefox()
