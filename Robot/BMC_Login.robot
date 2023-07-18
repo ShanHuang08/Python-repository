@@ -1,8 +1,8 @@
 *** Settings ***
 Library    SeleniumLibrary
 Library    BuiltIn
-Library    ../test0630.py
-Library    /Users/Shan/Workspace2/Python-repository/dict.py
+Library    ../dict.py
+# Library    /Users/Stephenhuang/Python/test
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -24,10 +24,8 @@ LoginTest
     Capture Page Screenshot
     Close Browser
 TestCase2
-     Chat GPT
-     My Solution 
+    ${result}    Lists To Dict    key_list    key2_list    value_list
 
-FailCase
-    Failed Case
+
 *** Keywords ***
 
