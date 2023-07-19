@@ -1,10 +1,4 @@
 from robot.libraries.BuiltIn import BuiltIn
-from robot.api.deco import keyword
-
-A = 'Type1'
-B = 'Type2'
-C = '123'
-SUT = A
 
 def run(name, *args):
     return BuiltIn().run_keyword(name, *args)
@@ -13,20 +7,9 @@ def var(var_name, default=None):
     return BuiltIn().get_variable_value(var_name, default=default)
 
 
-@keyword('SUT_type')
-def SUT_Type():
-    if SUT not in A or B:
-        return f'{SUT} != {A} and {B}'
-    else:
-        return f'{SUT}'
-
-@keyword('test_keyword')
-def test_keyword():
-    return f'test_keyword'
 
 
-
-run('SUT_type')
+# run('SUT Type')
 
 
 # 在 Python 中，print() 函式用於將文字輸出到終端或標準輸出流。它將輸出的結果打印到終端，並通常不返回任何值。
