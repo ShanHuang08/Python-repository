@@ -2,7 +2,7 @@
 Library    SeleniumLibrary
 Library    BuiltIn
 Library    ../dict.py
-# Library    /Users/Stephenhuang/Python/test
+Library    testrun.py
 
 *** Variables ***
 ${BROWSER}    chrome
@@ -24,8 +24,8 @@ LoginTest
     Capture Page Screenshot
     Close Browser
 TestCase2
-    ${result}    Lists To Dict    key_list    key2_list    value_list
-
+    ${result}    Testlog
+    ${result}    This is a new keyword
 
 *** Keywords ***
 

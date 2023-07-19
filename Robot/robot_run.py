@@ -1,5 +1,6 @@
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api.deco import keyword
+from SeleniumLibrary import SeleniumLibrary
 
 A = 'Type1'
 B = 'Type2'
@@ -24,9 +25,11 @@ def SUT_Type():
 def test_keyword():
     return f'test_keyword'
 
+# BuiltIn().set_library_search_order(SeleniumLibrary, 'SUT_type')
 
 
-run('SUT_type')
+# run('SUT_type')
+
 
 
 # 在 Python 中，print() 函式用於將文字輸出到終端或標準輸出流。它將輸出的結果打印到終端，並通常不返回任何值。
