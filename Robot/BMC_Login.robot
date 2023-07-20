@@ -2,7 +2,7 @@
 Library    SeleniumLibrary
 Library    BuiltIn
 Library    ../dict.py
-Library    ../test0630.py
+# Library    ../test0630.py
 Library    testrun.py
 
 *** Variables ***

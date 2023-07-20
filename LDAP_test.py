@@ -1,4 +1,4 @@
-from Library.dictionary import Path, scripts
+from Library.dictionary import Path, goPage
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
@@ -20,6 +20,11 @@ browser.find_element(By.ID,value=Login['password']).send_keys(Password)
 browser.find_element(By.ID,value=Login['Button']).click()
 sleep(7)
 browser.maximize_window()
-browser.execute_script(scripts['Account Services'])
+browser.execute_script(goPage['Account Services'])
 sleep(7)
+
+
+
+
+
 browser.quit()

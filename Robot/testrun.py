@@ -15,3 +15,8 @@ def Testlog():
 @keyword('This is a new keyword')
 def testlog2():
     run('Log', 'run() Hello, World!')
+    run('Open Browser', 'https://www.google.com', 'chrome')
+    run('Close Browser')
+
+def MyLibrary0630():
+    run()

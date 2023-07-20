@@ -1,6 +1,6 @@
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api.deco import keyword
-from SeleniumLibrary import SeleniumLibrary
+
 
 A = 'Type1'
 B = 'Type2'
