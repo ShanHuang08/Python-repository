@@ -1,4 +1,4 @@
-from Method.test_method import *
+
 from Robot.robot_run import run
 from robot.api.deco import keyword
 
@@ -10,7 +10,7 @@ SUT = A
 class MyLibrary():
     def __init__(self) -> None:
         pass
-
+    @keyword('My Solution')
     def MySolution(self):
         message = 'hello,world'
         List = message.split(',')

@@ -37,7 +37,7 @@ Path = {
 }
 
 
-scripts = {
+goPage = {
     'Dashboard' : 'goPage("dashboard")',
     'Component info' : 'goPage("sys_cmpn_overview")',
     'Account Services' : 'goPage("config_account_overview")',
