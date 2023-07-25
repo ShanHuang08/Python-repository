@@ -13,6 +13,9 @@ def run(name, *args):
 def var(var_name, default=None):
     return BuiltIn().get_variable_value(var_name, default=default)
 
+def get_lib_instance(lib, all_=False):
+    return BuiltIn().get_library_instance(lib, all=all_)
+
 
 
 # BuiltIn().set_library_search_order(SeleniumLibrary, 'SUT_type')
