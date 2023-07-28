@@ -1,8 +1,8 @@
 from random import choice, randint
-
+al='abcdefghijklmnopqrstuvwxyz'
+digit='1234567890'
 def KeyGenerator():
-    al='abcdefghijklmnopqrstuvwxyz'
-    digit='1234567890'
+
     result=''
     for i in range(2):
         List=[]
@@ -27,7 +27,16 @@ def AI_Optimize():
         result += f'{sub_result}\n'
     return result
 
+
+def StringGenerator():
+    result = ''
+    for i in range(256):
+        result+=choice(al)
+    print(result)
+        
+
+
 if __name__=='__main__':
-    print(KeyGenerator())
-    # print(AI_Optimize())
+    # print(KeyGenerator())
+    StringGenerator()
 
