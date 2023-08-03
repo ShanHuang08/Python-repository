@@ -1,7 +1,7 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import socket
 
-BMC_IP = '10.140.171.5'
+BMC_IP = '10.184.13.213'
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
     pwd = '123456'

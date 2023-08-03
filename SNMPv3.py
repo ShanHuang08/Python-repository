@@ -19,8 +19,6 @@ def KeyGenerator():
     return result
 
 def AI_Optimize():
-    al = 'abcdefghijklmnopqrstuvwxyz'
-    digit = '1234567890'
     result = ''
     for i in range(2):
         sub_result = ''.join([f'{choice(al.upper())}{choice(digit)}{choice(al)}' for k in range(3)])
@@ -29,8 +27,9 @@ def AI_Optimize():
 
 
 def StringGenerator():
+    digit = int(input("字串長度: "))
     result = ''
-    for i in range(256):
+    for i in range(digit):
         result+=choice(al)
     print(result)
         

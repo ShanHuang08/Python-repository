@@ -23,7 +23,17 @@ browser.maximize_window()
 browser.execute_script(goPage['Account Services'])
 sleep(7)
 
+# Turn on LDAP
+browser.find_element(By.ID,value='').click()
+sleep(5)
+browser.find_element(By.ID,value=Ldap['Bind DN']).send_keys('cn=Manager,dc=ipmi,dc=com')
+browser.find_element(By.ID,value=Ldap['Bind Password']).send_keys('secret')
+browser.find_element(By.ID,value=Ldap['Username Attribute']).send_keys('cn')
 
+# Add buttin
+browser.find_element(By.ID,value=Ldap['Server Add']).click()
+sleep(2)
+browser.find_element(By.ID,value=Ldap['Ip add']).send_keys('10.140.168.235')
 
 
 
