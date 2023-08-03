@@ -1,7 +1,7 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import socket
 
-BMC_IP = '10.184.19.36'
+BMC_IP = '10.184.20.66'
 account = 'ADMIN'
 pwd = 'ADMIN'
 
