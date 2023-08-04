@@ -20,7 +20,8 @@ def snmpv2_get(server_ip, community_key, oid):
 
     # 執行 SNMP GET 請求
     error_indication, error_status, error_index, var_binds = next(get_request)
-
+    print(var_binds)
+    # [ObjectType(ObjectIdentity(<ObjectName value object, tagSet <TagSet object, tags 0:0:6>, payload [1.3.6.1.4.1.21317.1.10.0]>), <Integer value object, tagSet <TagSet object, tags 0:0:2>, subtypeSpec <ConstraintsIntersection object, consts <ValueRangeConstraint object, consts -2147483648, 2147483647>>, payload [0]>)]
     # 處理回應結果
     if error_indication:
         print(f"錯誤1: {error_indication}, Please enable SNMP and set-up community!")
