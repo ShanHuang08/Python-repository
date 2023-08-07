@@ -45,6 +45,37 @@ goPage = {
 }
 
 
+redfish = {
+    "Accounts" : "/redfish/v1/AccountService/Accounts/",
+    "MD5_DES" : {"UserName" : "SnmpUser", 
+                 "Password" : "Suser123", 
+                 "RoleId" : "Administrator", 
+                 "Enabled" : True, 
+                 "AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5", "EncryptionProtocol": "CBC_DES"}
+                 },
+    "SNMP" : "/redfish/v1/Managers/1/NetworkProtocol",
+    "Enable SNMP" : {"SNMP" : {"ProtocolEnabled": True}},
+    "Add SNMPv2 Community" : {"SNMP" : {
+                        "EnableSNMPv2c" : True,
+                        "CommunityStrings" : [
+                            {
+                                "AccessMode": "Full",
+                                "CommunityString": "Public",
+                                "Name": "V2Test"
+                            }
+                        ]
+                    }
+    },
+    "Enable SNMPv3" : {
+        "SNMP" : {
+            "EnableSNMPv3": True,
+            "AuthenticationProtocol": "HMAC_MD5",
+            "EncryptionProtocol": "CBC_DES"
+        }
+    }
+}
+
 '''
 Server Address
 //*[@id="formAddr"]/div[4]
