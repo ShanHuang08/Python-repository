@@ -1,4 +1,6 @@
 from pysnmp.hlapi import *
+from Library.Redfish_requests import *
+from Library.dictionary import redfish
 
 server_ip = '10.184.16.44'
 port = 161
@@ -8,6 +10,8 @@ account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
 
+# url = 'https://'+server_ip +'/redfish/v1/Systems/1'
+# auth = ('ADMIN', 'ADMIN')
 
 def snmpv2_get(server_ip, port, community_key, oid):
     # 定義 SNMP Community 和 SNMP 版本
@@ -107,19 +111,10 @@ def v3_test_code():
     AES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmAesCfb128Protocol )
     DES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmDESPrivProtocol )
     
-    server_ip = '10.10.10.10'
-    key='Aa123456'
-    port = 161
-    context=ContextData()
-    if combo2 == 'SHA1/AES':
-        credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', authProtocol=usmHMACSHAAuthProtocol , privProtocol=usmAesCfb128Protocol )
-    
     # get
-    nextCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), context, oid_obj)
-
+    nextCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), ContextData(), oid_obj)
     # set
-    setCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), context, oid_obj)
-
+    setCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), ContextData(), oid_obj)
 
     # getCmd() 函數用於發送單個的 SNMP GET 請求
     # 而 nextCmd() 函數用於發送連續的 SNMP GETNEXT 請求（也稱為 SNMP WALK）
