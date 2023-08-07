@@ -2,6 +2,7 @@ from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import socket
 
 BMC_IP = '10.184.16.44'
+ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
     pwd = '123456'
@@ -9,7 +10,7 @@ def LDAPLogin():
         try:
             ssh = SSHClient()
             ssh.set_missing_host_key_policy(AutoAddPolicy())
-            ssh.connect(hostname=BMC_IP, username=account, password=pwd)
+            ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
             ssh.exec_command('show')
             ssh.close()
             print(f'SMASH run {account} Success')
@@ -25,7 +26,7 @@ def ADLogin():
         try:
             ssh = SSHClient()
             ssh.set_missing_host_key_policy(AutoAddPolicy())
-            ssh.connect(hostname=BMC_IP, username=account, password=pwd)
+            ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
             ssh.exec_command('show')
             ssh.close()
             print(f'AD account {account} Login Success')
@@ -41,7 +42,7 @@ def ssh_test():
     try:
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
-        ssh.connect(hostname=BMC_IP, username=account, password=pwd)
+        ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
         ssh.exec_command('show')
         ssh.close()
         print(f'SSH run {account} Success')
