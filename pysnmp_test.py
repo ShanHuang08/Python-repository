@@ -1,6 +1,6 @@
 from pysnmp.hlapi import *
 
-server_ip = '10.184.20.66'
+server_ip = '10.184.16.44'
 port = 161
 oid = "1.3.6.1.4.1.21317.1.10.0"
 Run_get = True 
@@ -43,7 +43,7 @@ def snmpv2_get(server_ip, port, community_key, oid):
 
 def snmpv2_set(server_ip, port, community_key, oid):
     community = CommunityData(community_key)
-    target = UdpTransportTarget(server_ip, port)
+    target = UdpTransportTarget((server_ip, port))
     oid_obj = ObjectType(ObjectIdentity(oid))
     set_request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
     error_indication, error_status, error_index, var_binds = next(set_request)
@@ -59,7 +59,7 @@ def snmpv2_set(server_ip, port, community_key, oid):
 
 def snmpv3_get(server_ip, port, account, v3_key, oid):
     MD5_DES_credential = UsmUserData(userName=account, authKey=v3_key, privKey=v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
-    target = UdpTransportTarget(server_ip, port)
+    target = UdpTransportTarget((server_ip, port))
     oid_obj = ObjectType(ObjectIdentity(oid))
     get_request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
     error_indication, error_status, error_index, var_binds = next(get_request)
@@ -75,18 +75,16 @@ def snmpv3_get(server_ip, port, account, v3_key, oid):
             print(f'OID: {var_bind[0]}, Value: {value}')
 
 
+
 if __name__ == '__main__':
     print(f'Server: {server_ip}')
     if Run_get:
         snmpv2_get(server_ip, port, community_key, oid)
-        snmpv3_get(server_ip, port, community_key, oid)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
     else:
         snmpv2_set(server_ip, port, community_key, oid)
         snmpv2_get(server_ip, port, community_key, oid)
         snmpv3_get(server_ip, port, account, v3_key, oid)
-
-
-
 
 
     # https://www.jianshu.com/p/739803ca71d5
