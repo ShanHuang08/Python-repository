@@ -2,6 +2,7 @@ from pysnmp.hlapi import *
 from Library.Redfish_requests import *
 from Library.dictionary import redfish
 from sys import exit
+import json
 
 # Source:ChatGPT 2023/8/8
 
@@ -12,7 +13,6 @@ Run_get = True
 account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
-
 auth = ('ADMIN', 'ADMIN')
 
 def snmpv2_get(server_ip, port, community_key, oid):
@@ -82,37 +82,40 @@ def snmpv3_get(server_ip, port, account, v3_key, oid):
 
 def Redfish_setup():
     print('Start setting up SNMP environment')
-    Create = POST(url='https://'+server_ip + redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
-    if Create == 201:
-        print('Account is created')
+    Create = POST(url='https://'+server_ip+ redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
+    if Create[0] == 201:
+        print('Account has created')
     else:
-        print(f'Failed, Status code: {Create}')
+        print(f'Failed, Status code: {Create[0]}')
         exit()
     
-    Enable_SNMP = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Enable SNMP'])
-    SNMPv2 = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Add SNMPv2 Community'])
-    SNMPv3 = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Enable SNMPv3'])
+    bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], redfish['Enable SNMPv3']]
+    for body in bodies:
+        Snmp = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=body)
+        if Snmp[0] != 200:
+             print(f'SNMP set-up failed\nStatus: {Snmp[0]}\n{Snmp[1]}')
+             exit()
 
-    if Enable_SNMP == 200 and SNMPv2 == 200 and SNMPv3 == 200:
-        print('SNMP set-up success')
-    else:
-        print(f'SNMP set-up failed\nEnable SNMP: {Enable_SNMP}\nSNMPv2: {SNMPv2}\nSNMPv3: {SNMPv3}')
-    # 建立完account之後去抓目前有幾個帳號, 應該可以得到Delete要用的ID
 
-def Clear():
+def Clear_setup():
     print('Clear SNMP environment')
-    Disable_SNMP = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Disable SNMP'])
-    if Disable_SNMP == 200:
+    Disable_SNMP = PATCH(url='https://'+server_ip+ redfish['SNMP'], auth=auth, body=redfish['Disable SNMP'])
+    if Disable_SNMP[0] == 200:
         print('SNMP disabled')
     else:
-        print(f'Failed, Status code: {Disable_SNMP}')
+        print(f'Failed, Status code: {Disable_SNMP[0]}')
+
     # 找到Account建立在哪個Link, 針對Link做Delete
-    print('Delete user')
-    Delete = DELETE(url='https://'+server_ip + redfish['Accounts'] + '3', auth=auth)
-    if Delete == 200:
-        print('Account is deleted')
+    data = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)
+    jdata = json.loads(data[1])
+
+    count = str(jdata['']+1)
+
+    Delete = DELETE(url='https://'+server_ip+ redfish['Accounts'] + count, auth=auth)
+    if Delete[0] == 200:
+        print('Account has deleted')
     else:
-        print(f'Failed, Status code: {Delete}')
+        print(f'Failed, Status code: {Delete[0]}')
         exit()
 
 if __name__ == '__main__':
@@ -128,7 +131,7 @@ if __name__ == '__main__':
         snmpv2_get(server_ip, port, community_key, oid)
         snmpv3_get(server_ip, port, account, v3_key, oid)
 
-    Clear()
+    Clear_setup()
 
     # https://www.jianshu.com/p/739803ca71d5
     # https://blog.csdn.net/OldHusband/article/details/102568620
