@@ -73,6 +73,14 @@ redfish = {
             "AuthenticationProtocol": "HMAC_MD5",
             "EncryptionProtocol": "CBC_DES"
         }
+    },
+    "Disable SNMP" :{
+        "SNMP" :{
+            "EnableSNMPv3": False,
+            "CommunityStrings": [],
+            "EnableSNMPv2c" : False,
+            "ProtocolEnabled": False
+        }
     }
 }
 

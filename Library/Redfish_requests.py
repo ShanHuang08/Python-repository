@@ -13,25 +13,46 @@ def GET(url, auth):
         print(str(e))
     except requests.exceptions.ConnectionError as e:
         print(str(e))
+    return [Get_data.status_code, Get_data.text]
 
 def PATCH(url, auth, body):
     try:
         Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False)
-        print(f"HTTP Status: {Patch_data.status_code}")
     except requests.exceptions.HTTPError as e:
         print(str(e))
     except requests.exceptions.ConnectTimeout as e:
         print(str(e))
     except requests.exceptions.ConnectionError as e:
         print(str(e))
+    if Patch_data.status_code == 200:
+        return Patch_data.status_code
+    else:
+        return f"{Patch_data.status_code}\nBody: {Patch_data.text}"
 
 def POST(url, auth, body):
     try:
         Post_data = requests.post(url=url, auth=auth, json=body, verify=False)
-        print(f"HTTP Status: {Post_data.status_code}")
     except requests.exceptions.HTTPError as e:
         print(str(e))
     except requests.exceptions.ConnectTimeout as e:
         print(str(e))
     except requests.exceptions.ConnectionError as e:
         print(str(e))
+    if Post_data.status_code == 201:
+        return Post_data.status_code
+    else:
+        return f"{Post_data.status_code}\nBody: {Post_data.text}"
+
+def DELETE(url, auth):
+    try:
+        Delete_data = requests.delete(url=url, auth=auth, verify=False)
+    except requests.exceptions.HTTPError as e:
+        print(str(e))
+    except requests.exceptions.ConnectTimeout as e:
+        print(str(e))
+    except requests.exceptions.ConnectionError as e:
+        print(str(e))        
+    if Delete_data.status_code == 200:
+        return Delete_data.status_code
+    else:
+        return f"{Delete_data.status_code}\nBody: {Delete_data.text}"

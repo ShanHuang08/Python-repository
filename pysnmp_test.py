@@ -1,6 +1,9 @@
 from pysnmp.hlapi import *
 from Library.Redfish_requests import *
 from Library.dictionary import redfish
+from sys import exit
+
+# Source:ChatGPT 2023/8/8
 
 server_ip = '10.184.16.44'
 port = 161
@@ -10,8 +13,7 @@ account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
 
-# url = 'https://'+server_ip +'/redfish/v1/Systems/1'
-# auth = ('ADMIN', 'ADMIN')
+auth = ('ADMIN', 'ADMIN')
 
 def snmpv2_get(server_ip, port, community_key, oid):
     # 定義 SNMP Community 和 SNMP 版本
@@ -78,18 +80,55 @@ def snmpv3_get(server_ip, port, account, v3_key, oid):
             value = var_bind[-1]
             print(f'OID: {var_bind[0]}, Value: {value}')
 
+def Redfish_setup():
+    print('Start setting up SNMP environment')
+    Create = POST(url='https://'+server_ip + redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
+    if Create == 201:
+        print('Account is created')
+    else:
+        print(f'Failed, Status code: {Create}')
+        exit()
+    
+    Enable_SNMP = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Enable SNMP'])
+    SNMPv2 = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Add SNMPv2 Community'])
+    SNMPv3 = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Enable SNMPv3'])
 
+    if Enable_SNMP == 200 and SNMPv2 == 200 and SNMPv3 == 200:
+        print('SNMP set-up success')
+    else:
+        print(f'SNMP set-up failed\nEnable SNMP: {Enable_SNMP}\nSNMPv2: {SNMPv2}\nSNMPv3: {SNMPv3}')
+    # 建立完account之後去抓目前有幾個帳號, 應該可以得到Delete要用的ID
+
+def Clear():
+    print('Clear SNMP environment')
+    Disable_SNMP = PATCH(url='https://'+server_ip + redfish['SNMP'], auth=auth, body=redfish['Disable SNMP'])
+    if Disable_SNMP == 200:
+        print('SNMP disabled')
+    else:
+        print(f'Failed, Status code: {Disable_SNMP}')
+    # 找到Account建立在哪個Link, 針對Link做Delete
+    print('Delete user')
+    Delete = DELETE(url='https://'+server_ip + redfish['Accounts'] + '3', auth=auth)
+    if Delete == 200:
+        print('Account is deleted')
+    else:
+        print(f'Failed, Status code: {Delete}')
+        exit()
 
 if __name__ == '__main__':
     print(f'Server: {server_ip}')
+    Redfish_setup()
+
     if Run_get:
         snmpv2_get(server_ip, port, community_key, oid)
         snmpv3_get(server_ip, port, account, v3_key, oid)
     else:
         snmpv2_set(server_ip, port, community_key, oid)
+        # Set之後就會timeout, 先用redfish改
         snmpv2_get(server_ip, port, community_key, oid)
         snmpv3_get(server_ip, port, account, v3_key, oid)
 
+    Clear()
 
     # https://www.jianshu.com/p/739803ca71d5
     # https://blog.csdn.net/OldHusband/article/details/102568620
