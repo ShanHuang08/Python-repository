@@ -1,5 +1,9 @@
 import requests
 from pprint import pprint
+import urllib3
+
+# 禁用所有警告 Idea from ChatGPT
+urllib3.disable_warnings()
 
 def GET(url, auth):
     try:

@@ -1,7 +1,7 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import socket
 
-BMC_IP = '10.184.16.44'
+BMC_IP = '10.184.21.109'
 ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
@@ -54,6 +54,6 @@ def ssh_test():
         print(f"socket.gaierror occurred: {str(e)}")
 
 if __name__=='__main__':
-    LDAPLogin()
+    # LDAPLogin()
     # ADLogin()
-    # ssh_test()
+    ssh_test()

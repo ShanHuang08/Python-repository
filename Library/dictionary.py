@@ -47,6 +47,7 @@ goPage = {
 
 redfish = {
     "Accounts" : "/redfish/v1/AccountService/Accounts/",
+    "Systems" : "/redfish/v1/Systems/1/",
     "MD5_DES" : {"UserName" : "SnmpUser", 
                  "Password" : "Suser123", 
                  "RoleId" : "Administrator", 
@@ -81,7 +82,7 @@ redfish = {
             "EnableSNMPv2c" : False,
             "ProtocolEnabled": False
         }
-    }
+    },
 }
 
 '''
