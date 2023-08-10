@@ -132,13 +132,11 @@ if __name__ == '__main__':
     print(f'Server: {server_ip}')
     Redfish_setup()
     
-    # UID_Change(Change)
     snmpv2_set(server_ip, port, community_key, oid)
     snmpv2_get(server_ip, port, community_key, oid)
     snmpv3_get(server_ip, port, account, v3_key, oid)
     Change = "Off"
     oid_value = 0
-    # UID_Change(Change)
     snmpv2_set(server_ip, port, community_key, oid)
     snmpv2_get(server_ip, port, community_key, oid)
     snmpv3_get(server_ip, port, account, v3_key, oid)
