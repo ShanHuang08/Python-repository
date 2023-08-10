@@ -1,3 +1,5 @@
+from pysnmp.proto import rfc1902
+
 Path = {
     'Privacy' : {
         'Advance' : 'details-button',
@@ -83,6 +85,11 @@ redfish = {
             "ProtocolEnabled": False
         }
     },
+}
+
+OID = {
+    "uid on" : rfc1902.Unsigned32(1),
+    "uid off" :  rfc1902.Unsigned32(1)
 }
 
 '''

@@ -163,11 +163,6 @@ def v3_test_code():
     MD5_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', authProtocol=usmHMACMD5AuthProtocol )
     AES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmAesCfb128Protocol )
     DES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmDESPrivProtocol )
-    
-    # get
-    nextCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), ContextData(), oid_obj)
-    # set
-    setCmd(SnmpEngine(), credentials, UdpTransportTarget((server_ip, port)), ContextData(), oid_obj)
 
     # getCmd() 函數用於發送單個的 SNMP GET 請求
     # 而 nextCmd() 函數用於發送連續的 SNMP GETNEXT 請求（也稱為 SNMP WALK）
