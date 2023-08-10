@@ -1,17 +1,18 @@
 from pysnmp.hlapi import *
 from pysnmp.proto import rfc1902
 from Library.Redfish_requests import *
-from Library.dictionary import redfish
+from Library.dictionary import redfish, OID
 from sys import exit
 import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.20.66'
+server_ip = '10.184.29.186'
 port = 161
+Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
-oid_value = 1
-oid_set = {'1.3.6.1.4.1.21317.1.10.0': rfc1902.Unsigned32(1)}  #放到Dictionary
+uid_on = OID['uid on']
+uid_off = OID['uid off']
 Change = "Blinking"  #For Redfish 
 account = 'SnmpUser'
 community_key='Public'
@@ -50,10 +51,10 @@ def snmpv2_get(server_ip, port, community_key, oid):
             # 取得 SNMP 回傳的值
             print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')
 
-def snmpv2_set(server_ip, port, community_key, oid):
+def snmpv2_set(server_ip, port, community_key, oid, value):
     community = CommunityData(community_key, mpModel=1)
     target = UdpTransportTarget((server_ip, port))
-    oid_obj = ObjectType(ObjectIdentity(oid), rfc1902.Unsigned32(oid_value))
+    oid_obj = ObjectType(ObjectIdentity(oid), value)
     set_request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
     error_indication, error_status, error_index, var_binds = next(set_request)
     print(f'SNMPv2 Set:\nLog: {var_binds}')
@@ -131,15 +132,20 @@ def Clear_setup():
 if __name__ == '__main__':
     print(f'Server: {server_ip}')
     Redfish_setup()
-    
-    snmpv2_set(server_ip, port, community_key, oid)
-    snmpv2_get(server_ip, port, community_key, oid)
-    snmpv3_get(server_ip, port, account, v3_key, oid)
-    Change = "Off"
-    oid_value = 0
-    snmpv2_set(server_ip, port, community_key, oid)
-    snmpv2_get(server_ip, port, community_key, oid)
-    snmpv3_get(server_ip, port, account, v3_key, oid)
+
+    if Get_Only:
+        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv3_get(server_ip, port, account, v3_key, oid)  
+    else:
+        snmpv2_set(server_ip, port, community_key, oid, value=uid_on)
+        # UID_Change(Change)
+        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
+        Change = "Off"
+        snmpv2_set(server_ip, port, community_key, oid, value=uid_off)
+        # UID_Change(Change)
+        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
 
     Clear_setup()
 
