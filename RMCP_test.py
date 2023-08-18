@@ -10,11 +10,5 @@ try:
     response = SUT_Connect.get_net_configuration()
     print(f"IPv4:\n{response}")
 except pyghmi.exceptions.IpmiException as e:
-    if e != None:
-        print(str(e))
-        print(type(e))
-    else:
-        print('RMCP connection failed!')
-
-
+    print(str(e))
 

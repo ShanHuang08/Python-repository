@@ -7,7 +7,7 @@ import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.29.186'
+server_ip = '10.184.21.109'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
@@ -84,6 +84,24 @@ def snmpv3_get(server_ip, port, account, v3_key, oid):
             value = var_bind[-1]
             print(f'OID: {var_bind[0]}, Value: {value}')
 
+def snmpv3_set(server_ip, port, account, v3_key, oid, value):
+    MD5_DES_credential = UsmUserData(userName=account, authKey=v3_key, privKey=v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
+    target = UdpTransportTarget((server_ip, port))
+    oid_obj = ObjectType(ObjectIdentity(oid), value)
+    set_request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+    error_indication, error_status, error_index, var_binds = next(set_request)
+    print(f'SNMPv3 Set:\nLog: {var_binds}')
+
+    if error_indication:
+        print(f"Error: {error_indication}")
+    elif error_status:
+        print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+    else:
+        for var_bind in var_binds:
+            value = var_bind[-1]
+            print(f'OID: {var_bind[0]}, Value: {value}')
+
+
 def Redfish_setup():
     print('Start setting up SNMP environment')
     Create = POST(url='https://'+server_ip+ redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
@@ -138,14 +156,19 @@ if __name__ == '__main__':
         snmpv3_get(server_ip, port, account, v3_key, oid)  
     else:
         snmpv2_set(server_ip, port, community_key, oid, value=uid_on)
-        # UID_Change(Change)
         snmpv2_get(server_ip, port, community_key, oid)
+        # UID_Change(Change)
+        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_off)
         snmpv3_get(server_ip, port, account, v3_key, oid)
         Change = "Off"
-        snmpv2_set(server_ip, port, community_key, oid, value=uid_off)
-        # UID_Change(Change)
-        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_on)
         snmpv3_get(server_ip, port, account, v3_key, oid)
+        # UID_Change(Change)
+        snmpv2_set(server_ip, port, community_key, oid, value=uid_off)
+        snmpv2_get(server_ip, port, community_key, oid)
+        
+        
+        
 
     Clear_setup()
 
