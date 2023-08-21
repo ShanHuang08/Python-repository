@@ -88,7 +88,7 @@ def snmpv3_set(server_ip, port, account, v3_key, oid, value):
     MD5_DES_credential = UsmUserData(userName=account, authKey=v3_key, privKey=v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
     target = UdpTransportTarget((server_ip, port))
     oid_obj = ObjectType(ObjectIdentity(oid), value)
-    set_request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+    set_request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
     error_indication, error_status, error_index, var_binds = next(set_request)
     print(f'SNMPv3 Set:\nLog: {var_binds}')
 
