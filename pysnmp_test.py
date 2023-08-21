@@ -7,7 +7,7 @@ import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.21.109'
+server_ip = '10.184.19.187'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
@@ -158,17 +158,15 @@ if __name__ == '__main__':
         snmpv2_set(server_ip, port, community_key, oid, value=uid_on)
         snmpv2_get(server_ip, port, community_key, oid)
         # UID_Change(Change)
-        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_off)
-        snmpv3_get(server_ip, port, account, v3_key, oid)
-        Change = "Off"
-        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_on)
-        snmpv3_get(server_ip, port, account, v3_key, oid)
-        # UID_Change(Change)
         snmpv2_set(server_ip, port, community_key, oid, value=uid_off)
         snmpv2_get(server_ip, port, community_key, oid)
-        
-        
-        
+
+        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_on)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
+
+        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_off)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
+        Change = "Off"      
 
     Clear_setup()
 
