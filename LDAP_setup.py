@@ -2,13 +2,17 @@ from Library.dictionary import Path, goPage, redfish
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
+from Library.Redfish_requests import *
+from Library.SMASH import SMASH
 
 
-BMC_ip = '172.31.34.231'
+BMC_ip = '10.184.21.109'
+url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
 Account=Password='ADMIN'
 auth = ('ADMIN', 'ADMIN')
 
-def Sccape(Account, Password):
+
+def Scrape(Account, Password):
     Privacy = Path['Privacy']
     Login = Path['Login']
     Ldap = Path['Account Services']['Directory Services']['LDAP']
@@ -41,4 +45,22 @@ def Sccape(Account, Password):
     browser.quit()
 
 def Redfish_setup():
-    pass
+    setup = PATCH(url=url, auth=auth, body=redfish['LDAP Setup'])
+    if setup[0] == 200:
+        print('LDAP setup success')
+    else:
+        print(f'Setup failed, Status code: {setup[-1]}')
+
+def Clear_setup():
+    print('Clear LDAP setup')
+    clear = PATCH(url=url, auth=auth, body=redfish['LDAP clear'])
+    if clear[0] == 200:
+        print('Setup has cleared')
+    else:
+        print(f'Clear failed, Status code: {clear[-1]}')
+
+if __name__=='__main__':
+    print(f"Server: {BMC_ip}")
+    Redfish_setup()
+    SMASH(ip=BMC_ip)
+    Clear_setup()

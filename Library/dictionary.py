@@ -85,6 +85,59 @@ redfish = {
             "ProtocolEnabled": False
         }
     },
+    "LDAP Setup" : {
+    "LDAP": {
+        "ServiceEnabled": True,
+        "ServiceAddresses": [
+            "ldap://10.140.168.235:389"
+        ],
+        "Authentication": {
+            "Username": "cn=Manager,dc=ipmi,dc=com",
+            "Password": "secret"
+        },
+        "RemoteRoleMapping": [
+            {
+                "RemoteUser": "Admin",
+                "LocalRole": "Administrator"
+            },
+            {
+                "RemoteUser": "Operator",
+                "LocalRole": "Operator"
+            },
+            {
+                "RemoteUser": "User",
+                "LocalRole": "ReadOnly"
+            }
+        ],
+        "LDAPService": {
+            "SearchSettings": {
+                "BaseDistinguishedNames": [
+                    "dc=ipmi,dc=com"
+                ],
+                "UsernameAttribute": "cn"
+            }
+        }
+    }
+    },
+    "LDAP clear" : {
+    "LDAP": {
+        "ServiceEnabled": False,
+        "ServiceAddresses": [],
+        "Authentication": {
+            "Username": "",
+            "Password": ""
+        },
+        "RemoteRoleMapping": [],
+        "LDAPService": {
+            "SearchSettings": {
+                "BaseDistinguishedNames": [],
+                "UsernameAttribute": ""
+            }
+        }
+    }
+    }
+
+
 }
 
 OID = {
