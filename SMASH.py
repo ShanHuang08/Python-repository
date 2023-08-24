@@ -61,7 +61,9 @@ def ssh_os():
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
         ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
-        ssh.exec_command('show')
+        stdin, stdout, stderr = ssh.exec_command('ip addr')
+        result = stdout.read()
+        print(result)
         ssh.close()
         print(f'SSH run {account} Success')
     except ssh_exception.SSHException as e:
