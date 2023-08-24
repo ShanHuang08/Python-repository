@@ -1,7 +1,7 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import socket
 
-BMC_IP = '10.184.21.109'
+BMC_IP = '10.184.26.174'
 ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
@@ -35,7 +35,7 @@ def ADLogin():
         except socket.gaierror as e:
             print(f"socket.gaierror occurred: {str(e)}")
 
-def ssh_test():
+def ssh_bmc():
     account = 'ADMIN'
     pwd = 'ADMIN'
 
@@ -53,7 +53,27 @@ def ssh_test():
     except socket.gaierror as e:
         print(f"socket.gaierror occurred: {str(e)}")
 
+def ssh_os():
+    account = 'root'
+    pwd = '111111'
+
+    try:
+        ssh = SSHClient()
+        ssh.set_missing_host_key_policy(AutoAddPolicy())
+        ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
+        ssh.exec_command('show')
+        ssh.close()
+        print(f'SSH run {account} Success')
+    except ssh_exception.SSHException as e:
+        print(f"SSHException occurred: {str(e)}")
+    except ssh_exception.NoValidConnectionsError as e:
+        print(f'{str(e)}, SSh port is closed!')
+    except socket.gaierror as e:
+        print(f"socket.gaierror occurred: {str(e)}")
+
 if __name__=='__main__':
+    print(f"Server: {BMC_IP}")
     # LDAPLogin()
     # ADLogin()
-    ssh_test()
+    ssh_bmc()
+    # ssh_os()
