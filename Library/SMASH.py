@@ -1,5 +1,4 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
-import socket
 
 def SMASH(ip):
     accounts = ['Admin', 'Operator', 'User']
@@ -14,5 +13,5 @@ def SMASH(ip):
             print(f'SMASH run {account} Success')
         except ssh_exception.SSHException as e:
             print(f"SSHException occurred: {str(e)}")
-        except socket.gaierror as e:
-            print(f"socket.gaierror occurred: {str(e)}")
+        except TimeoutError as e:
+            print(f"Connection timed out: {e}")
