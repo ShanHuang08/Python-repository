@@ -8,6 +8,17 @@ urllib3.disable_warnings()
 def GET(url, auth):
     try:
         Get_data = requests.get(url=url, auth=auth, verify=False)
+    except requests.exceptions.HTTPError as e:
+        print(str(e))
+    except requests.exceptions.ConnectTimeout as e:
+        print(str(e))
+    except requests.exceptions.ConnectionError as e:
+        print(str(e))
+    return [Get_data.status_code, Get_data.text]
+
+def GET_Data(url, auth):
+    try:
+        Get_data = requests.get(url=url, auth=auth, verify=False)
         print(f"HTTP Status: {Get_data.status_code}\nBody:\n")
         pprint(Get_data.text)
     except requests.exceptions.HTTPError as e:

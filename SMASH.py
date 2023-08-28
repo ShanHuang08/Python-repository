@@ -1,7 +1,7 @@
 import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 
-BMC_IP = '192.168.5.130'
+BMC_IP = '10.184.28.181'
 ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
@@ -81,7 +81,7 @@ def ssh_updoad():
 def ssh_os():
     account = 'root'
     pwd = '111111'
-    commands = ['pwd', 'ls -l', 'cat /etc/system-release', 'cat '+FileName[1:], 'fdisk -l']
+    commands = ['pwd', 'ls -l', 'cat /etc/system-release', 'cat '+FileName[1:], 'rpm -q ipmitool', 'ipmitool lan print']
     try:
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
@@ -105,5 +105,5 @@ if __name__=='__main__':
     # LDAPLogin()
     # ADLogin()
     # ssh_bmc()
-    ssh_updoad()
+    # ssh_updoad()
     ssh_os()

@@ -7,7 +7,7 @@ import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.19.187'
+server_ip = '10.184.16.44'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
@@ -108,7 +108,11 @@ def Redfish_setup():
     if Create[0] == 201:
         print('Account has created')
     else:
-        print(f'Failed, Status code: {Create[0]}')
+        print(f'Failed, Status code: {Create[0]}\n{Create[-1]}')
+        if "reached the limit" in Create[-1]:
+            Get_Account = GET(url='https://'+server_ip+'/redfish/v1/AccountService/Accounts/16', auth=auth)
+            if Get_Account[0] == 200:
+                print("Accounts reach the limit, Please delete an account and try again")
         exit()
     
     bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], redfish['Enable SNMPv3']]
