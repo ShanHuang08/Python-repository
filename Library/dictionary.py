@@ -145,6 +145,19 @@ OID = {
     "uid off" :  rfc1902.Unsigned32(0)
 }
 
+
+SUT = {
+    "X12SPW-F TW" : {
+        "BMC" : "10.184.15.152",
+        "OS" : "10.184.26.174"
+    },
+    "X12STE-F TW" : {
+        "BMC" : "10.184.30.82",
+        "OS" : "10.184.27.100"
+    }
+}
+
+
 '''
 Server Address
 //*[@id="formAddr"]/div[4]

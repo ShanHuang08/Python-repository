@@ -6,7 +6,7 @@ from Library.Redfish_requests import *
 from Library.SMASH import SMASH
 
 
-BMC_ip = '10.184.21.109'
+BMC_ip = '10.184.30.82'
 url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
 Account=Password='ADMIN'
 auth = ('ADMIN', 'ADMIN')
@@ -49,7 +49,7 @@ def Redfish_setup():
     if setup[0] == 200:
         print('LDAP setup success')
     else:
-        print(f'Setup failed, Status code: {setup[-1]}')
+        print(f'Setup failed, Status code: {setup[0]}\n{setup[-1]}')
 
 def Clear_setup():
     print('Clear LDAP setup')
@@ -57,7 +57,7 @@ def Clear_setup():
     if clear[0] == 200:
         print('Setup has cleared')
     else:
-        print(f'Clear failed, Status code: {clear[-1]}')
+        print(f'Clear failed, Status code: {clear[0]}\n{clear[-1]}')
 
 if __name__=='__main__':
     print(f"Server: {BMC_ip}")
