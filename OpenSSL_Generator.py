@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import subprocess
 
 MySSLFolder='"C:\\Users\\Stephenhuang\\Desktop\SSL Certificate Key"'
+
 def Today():
     date_time=datetime.now()
     date_time=str(date_time)
@@ -17,6 +18,7 @@ k.generate_key(crypto.TYPE_RSA, 2048)
 
 # 產生 certificate
 cert = crypto.X509()
+cert.set_version(3)
 cert.get_subject().CN = "IPMI"
 cert.get_subject().OU = "Software"
 cert.get_subject().O = "Super Micro Computer"
@@ -34,9 +36,9 @@ cert.sign(k, 'sha256')
 # 將 key 與 certificate 寫入檔案
 
 Now = Today()
-open("key_"+Now+".pem", "wb").write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
-open("cert_"+Now+".pem", "wb").write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
+open("key_"+Now+".key", "wb").write(crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
+open("cert_"+Now+".crt", "wb").write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))
 
-subprocess.run(f"move key_{Now}.pem {MySSLFolder}", shell=True)
-subprocess.run(f"move cert_{Now}.pem {MySSLFolder}", shell=True)
+subprocess.run(f"move key_{Now}.key {MySSLFolder}", shell=True)
+subprocess.run(f"move cert_{Now}.crt {MySSLFolder}", shell=True)
 subprocess.run(f"explorer {MySSLFolder}", shell=True)
