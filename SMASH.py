@@ -83,6 +83,7 @@ def ssh_os():
     pwd = '111111'
     commands = ['pwd', 'ls -l', 'cat /etc/system-release', 'cat '+FileName[1:], 'rpm -q ipmitool', 'ipmitool lan print']
     try:
+        file = open('X13SET.txt','w')
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
         ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
@@ -90,7 +91,9 @@ def ssh_os():
             print(f"Execute: {cmd}")
             stdin, stdout, stderr = ssh.exec_command(cmd)
             for result in stdout.readlines():
-                print(result) #str
+                # print(result) #str
+                file.write(result)
+        file.close()
         ssh.close()
         # print(f'SSH run {account} Success')
     except ssh_exception.SSHException as e:
