@@ -1,7 +1,9 @@
 import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 
-BMC_IP = '10.184.28.181'
+BMC_IP = '10.184.22.196'
+OS_IP = '10.184.19.196'
+SUT_Name = 'H13SRD.txt'
 ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
@@ -83,10 +85,10 @@ def ssh_os():
     pwd = '111111'
     commands = ['pwd', 'ls -l', 'cat /etc/system-release', 'cat '+FileName[1:], 'rpm -q ipmitool', 'ipmitool lan print']
     try:
-        file = open('X13SET.txt','w')
+        file = open(SUT_Name,'w')
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
-        ssh.connect(hostname=BMC_IP, username=account, password=pwd, port=ssh_port)
+        ssh.connect(hostname=OS_IP, username=account, password=pwd, port=ssh_port)
         for cmd in commands:
             print(f"Execute: {cmd}")
             stdin, stdout, stderr = ssh.exec_command(cmd)
