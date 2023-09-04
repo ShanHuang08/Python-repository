@@ -16,7 +16,7 @@ def GetTagData():
     Tag_Value_List = []
     for data in DataList:
         Start_Pos = data.index('<')
-        End_Pos = Start_Pos + data[Start_Pos:].index('>')
+        End_Pos = data.index('>')
         # print(data[Start_Pos+1:End_Pos])
         Tag_Name = data[Start_Pos+1:End_Pos]
         Tag_Name_List.append(Tag_Name)
@@ -49,5 +49,5 @@ def Today():
 
 if __name__=='__main__':
     Tag_Name, Tag_Value = GetTagData()
-    # print(Tag_Name)
-    # print(Tag_Value)
+    print(Tag_Name)
+    print(Tag_Value)
