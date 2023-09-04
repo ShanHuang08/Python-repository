@@ -1,47 +1,53 @@
+from datetime import datetime
+
 def TXT_to_List():
     file = open('Change_setting.txt', 'r')
     content = file.read()
-    # print(content)
-    # print(type(content), len(content))
     file.close()
-    Info_List = content.splitlines()
-    return Info_List
+    return content.splitlines()
 
-Data = TXT_to_List()
+DataList = TXT_to_List()
 # print(Data)
-print(len(Data)) #31
+# print(len(DataList)) #31
 
-content = '19:38:52.052    INFO            Setting: "<SSH>22</SSH>" to "<SSH>233</SSH>"'
-content2 = '19:38:52.043    INFO            Setting: "<BoardMfgName>FruBM41</BoardMfgName>" to "<BoardMfgName>BM_1693481932</BoardMfgName>"'
-print('1.算出<跟>的index, 可以定位tag Name')
-Start_Pos = content.index('<') #42
-# print(content[42:].index('<')) #0
-End_Pos = Start_Pos + content[Start_Pos:].index('>') #4
-End_Pos2 = Start_Pos + content2[Start_Pos:].index('>')
-print(content[Start_Pos+1:End_Pos])
-print(content2[Start_Pos+1:End_Pos2])
+def GetTagData():
+    # 1.算出<跟>的index, 用來定位tag Name')
+    Tag_Name_List = []
+    Tag_Value_List = []
+    for data in DataList:
+        Start_Pos = data.index('<')
+        End_Pos = Start_Pos + data[Start_Pos:].index('>')
+        # print(data[Start_Pos+1:End_Pos])
+        Tag_Name = data[Start_Pos+1:End_Pos]
+        Tag_Name_List.append(Tag_Name)
+    # 2.算出第三個">"跟第四個"<"的index, 用來定位tag value
+        More_List = []
+        for i in range(len(data)):
+            if data[i] == '>':
+                More_List.append(i)
+        # print(More_List) #len=4
+
+        Less_List = []
+        for i in range(len(data)):
+            if data[i] == '<':
+                Less_List.append(i)
+        # print(Less_List) #len=4
+        if len(More_List) == len(Less_List):
+            # print(data[More_List[2]+1:Less_List[3]])
+            value = data[More_List[2]+1:Less_List[3]]
+            Tag_Value_List.append(value)
+        else:
+            print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
+    return Tag_Name_List, Tag_Value_List
+
+def Today():
+    date_time = str(datetime.now())
+    Month_Day = date_time[5:7]+date_time[8:10]
+    Time = date_time[11:13]+date_time[14:16]
+    return f"{Month_Day}_{Time}"
 
 
-
-print('2.算出第三個">"跟第四個"<"的index, 可以定位tag value')
-
-count = 0
-List = []
-for i in range(len(content)):
-    if content[i] == '>':
-        List.append(i)
-        count+=1
-print(f'"<" 出現{count}次')
-
-List2 = []
-count2 = 0
-for i in range(len(content)):
-    if content[i] == '<':
-        List2.append(i)
-        count2+=1
-print(f'">" 出現{count2}次')
-
-
-print(f'第{count-1}次 ">"  位於{List[(count-1)-1]}')
-print(f'第{count2}次 "<"  位於{List2[(count2)-1]}')
-print(content[65+1:69])
+if __name__=='__main__':
+    Tag_Name, Tag_Value = GetTagData()
+    # print(Tag_Name)
+    # print(Tag_Value)
