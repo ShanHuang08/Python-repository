@@ -1,9 +1,10 @@
 import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
+import subprocess
 
 BMC_IP = '10.184.22.196'
-OS_IP = '10.184.19.196'
-SUT_Name = 'H13SRD.txt'
+OS_IP = '10.184.24.227'
+SUT_Name = 'X12SPO.txt'
 ssh_port = 22
 def LDAPLogin():
     accounts = ['Admin', 'Operator', 'User']
@@ -97,6 +98,7 @@ def ssh_os():
                 file.write(result)
         file.close()
         ssh.close()
+        subprocess.run('notepad '+SUT_Name, shell=True)
         # print(f'SSH run {account} Success')
     except ssh_exception.SSHException as e:
         print(f"SSHException occurred: {str(e)}")

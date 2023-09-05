@@ -1,14 +1,14 @@
 from datetime import datetime
+from xml.etree import ElementTree
 
+FileName = 'Change_setting.txt'
 def TXT_to_List():
-    file = open('Change_setting.txt', 'r')
+    file = open(FileName, 'r')
     content = file.read()
     file.close()
     return content.splitlines()
 
 DataList = TXT_to_List()
-# print(Data)
-# print(len(DataList)) #31
 
 def GetTagData():
     # 1.算出<跟>的index, 用來定位tag Name')
@@ -34,8 +34,8 @@ def GetTagData():
         # print(Less_List) #len=4
         if len(More_List) == len(Less_List):
             # print(data[More_List[2]+1:Less_List[3]])
-            value = data[More_List[2]+1:Less_List[3]]
-            Tag_Value_List.append(value)
+            Tag_Value = data[More_List[2]+1:Less_List[3]]
+            Tag_Value_List.append(Tag_Value)
         else:
             print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
     return Tag_Name_List, Tag_Value_List
@@ -47,7 +47,24 @@ def Today():
     return f"{Month_Day}_{Time}"
 
 
+tree = ElementTree.parse("D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml")
+root = tree.getroot()
+# print(root.tag)
+
+List= ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
+for i in List:
+    for child in root.iter(i):
+        print(child.tag, child.text, child.attrib)
+
+# 出現兩次的Element, 第一次的value是Enable or Disable, 可以先用這個做判斷 (由上到下)
+# 支援Xpath
+
+# https://docs.python.org/3/library/xml.etree.elementtree.html
+# https://hackmd.io/@top30339/rJYlKYpml?type=view
+
 if __name__=='__main__':
-    Tag_Name, Tag_Value = GetTagData()
-    print(Tag_Name)
-    print(Tag_Value)
+    # Tag_Name, Tag_Value = GetTagData()
+    # for i in range(len(Tag_Name)):
+    #     print(f'{Tag_Name[i]} : {Tag_Value[i]}')
+    pass
+
