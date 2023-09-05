@@ -46,19 +46,40 @@ def Today():
     Time = date_time[11:13]+date_time[14:16]
     return f"{Month_Day}_{Time}"
 
+def Modify_test():
+    TagName = ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
+    TagValue = ['BDT_test','BS_test','PS_test','12345','5','223','82']
+    # tree = ElementTree.parse("D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml")
+    tree = ElementTree.parse('test.xml')
+    root = tree.getroot()
+    # print(root.tag)
 
-tree = ElementTree.parse("D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml")
-root = tree.getroot()
-# print(root.tag)
-
-List= ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
-for i in List:
-    for child in root.iter(i):
-        print(child.tag, child.text, child.attrib)
-
-# 出現兩次的Element, 第一次的value是Enable or Disable, 可以先用這個做判斷 (由上到下)
+    for i in range(len(TagName)):
+        count = 0
+        for child in root.iter(TagName[i]):
+            # print(child.tag, child.text) 
+            count+=1
+        if count > 1:
+            print(f'{TagName[i]} 重複--------------------')
+            for child in root.iter(TagName[i]):
+                # 第一個Tag value是Enable/Disable, 第二個value是數字
+                if child.text in ['Enable', 'Disable']:
+                    if TagValue[i] in ['Enable', 'Disable'] and child.text != TagValue[i]:
+                        print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第一個')
+                    elif TagValue[i] in ['Enable', 'Disable'] and child.text == TagValue[i]:
+                        print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新')
+                else:
+                    if TagValue[i] in ['Enable', 'Disable']:
+                        print(f'{child.text} != {TagValue[i]}, {TagName[i]}不用更新')
+                    elif child.text != TagValue[i]:    
+                        print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第二個')
+                    else:
+                        print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新') 
+        else:
+            print(f'{TagName[i]} 不重複--------------------')
+            for child in root.iter(TagName[i]):
+                print(f'更新{TagName[i]}')
 # 支援Xpath
-
 # https://docs.python.org/3/library/xml.etree.elementtree.html
 # https://hackmd.io/@top30339/rJYlKYpml?type=view
 
@@ -66,5 +87,4 @@ if __name__=='__main__':
     # Tag_Name, Tag_Value = GetTagData()
     # for i in range(len(Tag_Name)):
     #     print(f'{Tag_Name[i]} : {Tag_Value[i]}')
-    pass
-
+    Modify_test()
