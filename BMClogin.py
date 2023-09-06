@@ -6,41 +6,43 @@ from selenium.webdriver.support.ui import Select
 from Library.dictionary import *
 
 # https://gitlab.supermicro.com/swqa/ipmi-test-automation/-/blob/master/asset/xpath/webpagexpath.py
-ip = '172.31.52.168'
+ip = '10.184.14.49'
 account='ADMIN'
 password='ADMIN'
-
+Privacy = Path['Privacy']
+Login = Path['Login']
 
 def Chrome_LaunchConsole():
     browsers=[]
-    for i in range(4):
+    for i in range(1):
         browser=webdriver.Chrome('chromedriver.exe')
         # browser=webdriver.Firefox(executable_path='geckodriver.exe')
         browser.get('http://'+ip)
-        browsers.append(browser)
-        browser.find_element(By.ID,value='details-button').click()
-        browser.find_element(By.ID,value='proceed-link').click()
-        sleep(2)
-        browser.find_element(By.ID,value='usrName').send_keys(account)
-        browser.find_element(By.ID,value='pwd').send_keys(password)
-        browser.find_element(By.ID,value='login_word').click()
-        sleep(7)
         browser.maximize_window()
+        browsers.append(browser)
+        browser.find_element(By.ID,value=Privacy['Advance']).click()
+        browser.find_element(By.ID,value=Privacy['Go ahead']).click()
+        sleep(2)
+        browser.find_element(By.ID,value=Login['username']).send_keys(account)
+        browser.find_element(By.ID,value=Login['password']).send_keys(password)
+        browser.find_element(By.ID,value=Login['Button']).click()
+        sleep(7)
+        
             # Launch ikvm
         # browser.execute_script('window.scrollTo(0,800)') #Scroll down
         # sleep(3)
         # browser.find_element(By.ID,value='consoleImg').click()
         # Remote Control Launch console
-        browser.execute_script('goPage("remote")')
+        browser.execute_script(goPage['Remote Control'])
         sleep(5)
     
         browser.find_element(By.XPATH, value='//button[@id="launchConsole"]').click()
-        print(f'NO.{i} times')
+        print(f'NO.{i+1} times')
         sleep(3)
-    print('5 times')
-    browsers[0].find_element(By.XPATH, value='//button[@id="launchConsole"]').click()
+    print(f'{i+1} times')
+    # browsers[0].find_element(By.XPATH, value='//button[@id="launchConsole"]').click()
     print('Waiting...')
-    sleep(100)
+    sleep(600)
 
     # browser.execute_script('doLogout()')
     # sleep(5)

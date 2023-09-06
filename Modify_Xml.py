@@ -1,14 +1,30 @@
 from datetime import datetime
 from xml.etree import ElementTree
 
-FileName = 'Change_setting.txt'
+Change_FileName = 'Change_setting.txt'
+Ori_xml = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
+
+def Modify_Name():
+    date_time = str(datetime.now())
+    Month_Day = date_time[5:7]+date_time[8:10]
+    Time = date_time[11:13]+date_time[14:16]
+    num = Ori_xml.index('b')
+    New_Name = Ori_xml[num:-14]+'_'+f"{Month_Day}_{Time}"+'.xml'
+    return New_Name
+
+def Check_Name():
+    if New_XMLName[0:3] in ['bmc', 'bio']:
+        return True
+    else:
+        print(f'File name error! {New_XMLName}')
+        return False
+
 def TXT_to_List():
-    file = open(FileName, 'r')
+    file = open(Change_FileName, 'r')
     content = file.read()
     file.close()
     return content.splitlines()
 
-DataList = TXT_to_List()
 
 def GetTagData():
     # 1.算出<跟>的index, 用來定位tag Name')
@@ -40,17 +56,12 @@ def GetTagData():
             print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
     return Tag_Name_List, Tag_Value_List
 
-def Today():
-    date_time = str(datetime.now())
-    Month_Day = date_time[5:7]+date_time[8:10]
-    Time = date_time[11:13]+date_time[14:16]
-    return f"{Month_Day}_{Time}"
 
 def Modify_test():
-    TagName = ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
-    TagValue = ['BDT_test','BS_test','PS_test','12345','5','223','82']
-    # tree = ElementTree.parse("D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml")
-    tree = ElementTree.parse('test.xml')
+    # TagName = ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
+    # TagValue = ['BDT_test','BS_test','PS_test','12345','5','223','82']
+    tree = ElementTree.parse(Ori_xml)
+    # tree = ElementTree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
 
@@ -62,7 +73,7 @@ def Modify_test():
         if count > 1:
             print(f'{TagName[i]} 重複--------------------')
             for child in root.iter(TagName[i]):
-                # 第一個Tag value是Enable/Disable, 第二個value是數字
+                # 1.Tag value是Enable/Disable, 第二個value是數字
                 if child.text in ['Enable', 'Disable']:
                     if TagValue[i] in ['Enable', 'Disable'] and child.text != TagValue[i]:
                         print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第一個')
@@ -74,17 +85,21 @@ def Modify_test():
                     elif child.text != TagValue[i]:    
                         print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第二個')
                     else:
-                        print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新') 
+                        print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新')
+                # 2.<User UserID="2"> <User UserID="3">, 下面子節點全部一樣, 先get參數的值, 再去查看下一層的child.text, 修改text
         else:
             print(f'{TagName[i]} 不重複--------------------')
             for child in root.iter(TagName[i]):
-                print(f'更新{TagName[i]}')
+                print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
 # 支援Xpath
 # https://docs.python.org/3/library/xml.etree.elementtree.html
 # https://hackmd.io/@top30339/rJYlKYpml?type=view
 
 if __name__=='__main__':
-    # Tag_Name, Tag_Value = GetTagData()
+    DataList = TXT_to_List()
+    TagName, TagValue = GetTagData()
+    New_XMLName = Modify_Name()
     # for i in range(len(Tag_Name)):
     #     print(f'{Tag_Name[i]} : {Tag_Value[i]}')
-    Modify_test()
+    if Check_Name():
+        Modify_test()
