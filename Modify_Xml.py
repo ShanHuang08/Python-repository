@@ -1,7 +1,7 @@
 from datetime import datetime
 from xml.etree import ElementTree
 
-Change_FileName = 'Change_setting.txt'
+Change_FileName = 'BMC_Change.txt'
 Ori_xml = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
 
 def Modify_Name():
@@ -9,7 +9,12 @@ def Modify_Name():
     Month_Day = date_time[5:7]+date_time[8:10]
     Time = date_time[11:13]+date_time[14:16]
     num = Ori_xml.index('b')
-    New_Name = Ori_xml[num:-14]+'_'+f"{Month_Day}_{Time}"+'.xml'
+    tail = 0
+    if len(Ori_xml[num:]) == 20 or 21:
+        tail-=14
+    else:
+        tail-=16
+    New_Name = Ori_xml[num:tail]+'_'+f"{Month_Day}_{Time}"+'.xml'
     return New_Name
 
 def Check_Name():
@@ -26,7 +31,7 @@ def TXT_to_List():
     return content.splitlines()
 
 
-def GetTagData():
+def GetBMCTagData():
     # 1.算出<跟>的index, 用來定位tag Name')
     Tag_Name_List = []
     Tag_Value_List = []
@@ -97,7 +102,7 @@ def Modify_test():
 
 if __name__=='__main__':
     DataList = TXT_to_List()
-    TagName, TagValue = GetTagData()
+    TagName, TagValue = GetBMCTagData()
     New_XMLName = Modify_Name()
     # for i in range(len(Tag_Name)):
     #     print(f'{Tag_Name[i]} : {Tag_Value[i]}')
