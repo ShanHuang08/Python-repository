@@ -9,7 +9,12 @@ def Modify_Name():
     Month_Day = date_time[5:7]+date_time[8:10]
     Time = date_time[11:13]+date_time[14:16]
     num = Ori_xml.index('b')
-    New_Name = Ori_xml[num:-14]+'_'+f"{Month_Day}_{Time}"+'.xml'
+    tail = 0
+    if len(Ori_xml[num:]) == 20:
+        tail-=14
+    else:
+        tail-=16
+    New_Name = Ori_xml[num:tail]+'_'+f"{Month_Day}_{Time}"+'.xml'
     return New_Name
 
 def Check_Name():
@@ -60,8 +65,8 @@ def GetTagData():
 def Modify_test():
     # TagName = ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
     # TagValue = ['BDT_test','BS_test','PS_test','12345','5','223','82']
-    tree = ElementTree.parse(Ori_xml)
-    # tree = ElementTree.parse('test.xml')
+    # tree = ElementTree.parse(Ori_xml)
+    tree = ElementTree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
 
