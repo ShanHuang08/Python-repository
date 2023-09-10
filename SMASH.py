@@ -3,10 +3,11 @@ from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import subprocess
 
 BMC_IP = '10.184.22.196'
-OS_IP = '10.184.24.227'
-SUT_Name = 'X12SPO.txt'
+OS_IP = '172.31.49.17'
+SUT_Name = 'H13SSH.txt'
 ssh_port = 22
 def LDAPLogin():
+    print(f"Server: {BMC_IP}")
     accounts = ['Admin', 'Operator', 'User']
     pwd = '123456'
     for account in accounts:
@@ -23,6 +24,7 @@ def LDAPLogin():
             print(f"Connection timed out: {e}")
 
 def ADLogin():
+    print(f"Server: {BMC_IP}")
     accounts = ['ad_spring@satc.com', 'ad_summer@satc.com', 'ad_autumn@satc.com', 'ad_winter@satc.com']
     pwd = 'Super123'
     for account in accounts:
@@ -39,6 +41,7 @@ def ADLogin():
             print(f"Connection timed out: {e}")
 
 def ssh_bmc():
+    print(f"Server: {BMC_IP}")
     account = 'ADMIN'
     pwd = 'ADMIN'
 
@@ -60,6 +63,7 @@ local_path = "D:/CentOS/Upload"
 remote_path = "/root"
 FileName = '/test1.txt'
 def ssh_updoad():
+    print(f"Server: {OS_IP}")
     account = 'root'
     pwd = '111111'
  
@@ -82,6 +86,7 @@ def ssh_updoad():
         print(f"檔案上傳失敗：{e}")
 
 def ssh_os():
+    print(f"Server: {OS_IP}")
     account = 'root'
     pwd = '111111'
     commands = ['pwd', 'ls -l', 'cat /etc/system-release', 'cat '+FileName[1:], 'rpm -q ipmitool', 'ipmitool lan print']
@@ -108,7 +113,6 @@ def ssh_os():
         print(f"Connection timed out: {e}")
 
 if __name__=='__main__':
-    print(f"Server: {BMC_IP}")
     # LDAPLogin()
     # ADLogin()
     # ssh_bmc()

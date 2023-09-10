@@ -1,28 +1,9 @@
 from datetime import datetime
 from xml.etree import ElementTree
 
-Change_FileName = 'Change_setting.txt'
+Change_FileName = 'BMC_Change.txt'
 Ori_xml = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
 
-def Modify_Name():
-    date_time = str(datetime.now())
-    Month_Day = date_time[5:7]+date_time[8:10]
-    Time = date_time[11:13]+date_time[14:16]
-    num = Ori_xml.index('b')
-    tail = 0
-    if len(Ori_xml[num:]) == 20:
-        tail-=14
-    else:
-        tail-=16
-    New_Name = Ori_xml[num:tail]+'_'+f"{Month_Day}_{Time}"+'.xml'
-    return New_Name
-
-def Check_Name():
-    if New_XMLName[0:3] in ['bmc', 'bio']:
-        return True
-    else:
-        print(f'File name error! {New_XMLName}')
-        return False
 
 def TXT_to_List():
     file = open(Change_FileName, 'r')
@@ -30,18 +11,53 @@ def TXT_to_List():
     file.close()
     return content.splitlines()
 
+def Modify_Name():
+    date_time = str(datetime.now())
+    Month_Day = date_time[5:7]+date_time[8:10]
+    Time = date_time[11:13]+date_time[14:16]
+    num = Ori_xml.index('b')
+    tail = 0
+    if len(Ori_xml[num:]) in [20, 21]:
+        tail-=14
+    else:
+        tail-=16
+    return Ori_xml[num:tail]+'_'+f"{Month_Day}_{Time}"+'.xml'
 
-def GetTagData():
+def Check_Name():
+    if New_XMLName[0:3] in ['bmc', 'bio']:
+        return True
+    else:
+        print(f'File name error! {New_XMLName}')
+        return False
+    
+# 根據txt檔案內容判斷要執行哪一種方法
+def WhichData():
+    result = []
+    for check in DataList:
+        if "Menu" not in check:
+            result.append('BMC')
+        else:
+            result.append('Bios') 
+    if "Bios" not in result:
+        return GetBMCTagData()
+    else:
+        return GetBiosTagData()
+
+def GetBMCTagData():
+    First_filter = []
+    for filter in DataList:
+        if "Setting" in filter:
+            First_filter.append(filter)
     # 1.算出<跟>的index, 用來定位tag Name')
     Tag_Name_List = []
     Tag_Value_List = []
-    for data in DataList:
+    for data in First_filter:
         Start_Pos = data.index('<')
         End_Pos = data.index('>')
         # print(data[Start_Pos+1:End_Pos])
         Tag_Name = data[Start_Pos+1:End_Pos]
         Tag_Name_List.append(Tag_Name)
-    # 2.算出第三個">"跟第四個"<"的index, 用來定位tag value
+    # 2.算出 倒數第二個">"到最後一個"<"的index, 用來定位tag value, <![CDATA[]]>要用倒數第三個">"到最後一個"<"的index  
         More_List = []
         for i in range(len(data)):
             if data[i] == '>':
@@ -54,17 +70,68 @@ def GetTagData():
                 Less_List.append(i)
         # print(Less_List) #len=4
         if len(More_List) == len(Less_List):
-            # print(data[More_List[2]+1:Less_List[3]])
-            Tag_Value = data[More_List[2]+1:Less_List[3]]
-            Tag_Value_List.append(Tag_Value)
+            # if Tag_Name == 'RemoteUser' or Tag_Name == 'RemoteGroup':
+            if Tag_Name in ['RemoteUser', 'RemoteGroup']: #需要擴充, 不然會有例外
+                # print(data[More_List[-3]+1:Less_List[-1]])
+                Tag_Value = data[More_List[-3]+1:Less_List[-1]]
+                Tag_Value_List.append(Tag_Value)
+            else:
+                Tag_Value = data[More_List[-2]+1:Less_List[-1]]
+                Tag_Value_List.append(Tag_Value)
         else:
             print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
-    return Tag_Name_List, Tag_Value_List
+    if len(Tag_Name_List) == len(Tag_Value_List):
+        return Tag_Name_List, Tag_Value_List
+    else:
+        return print(f"Length of tag name and tag value aren't equal {Tag_Name_List} != {Tag_Value_List}" )
+
+def GetBiosTagData():
+    First_filter = []
+    for filter in DataList:
+        # print(len(filter))
+        if len(filter) > 19 and 'Menu' not in filter:
+            First_filter.append(filter)
+    Tag_Data = []
+    Change_Data = []
+    for filter in First_filter:
+        if 'change' not in filter:
+            Tag_Data.append(filter)
+        else:
+            Change_Data.append(filter)    
+    
+    Tag_Name_List = []
+    Tag_Value_List = []
+    for data in Tag_Data:   
+        Tag_Pos = []    
+        for i in range(len(data)):
+            if data[i] =='"':
+                Tag_Pos.append(i)
+        # print(Tag_Pos)
+        Tag_Name = data[Tag_Pos[0]+1:Tag_Pos[1]]
+        # print(Tag_Name[0:11])
+        if Tag_Name[0:11] != 'Boot Option':
+            Tag_Name_List.append(Tag_Name)
+        else:
+            Tag_Name = data[Tag_Pos[0]+1:Tag_Pos[3]]
+            Tag_Name_List.append(Tag_Name)
+
+    for data in Change_Data:
+        Value_Pos = []
+        for i in range(len(data)):
+            if data[i] == '"':
+                Value_Pos.append(i)
+        # print(Value_Pos)
+        Tag_Value = data[Value_Pos[2]+1:Value_Pos[3]]
+        # print(Tag_Value)
+        Tag_Value_List.append(Tag_Value)
+    
+    if len(Tag_Name_List) == len(Tag_Value_List):
+        return Tag_Name_List, Tag_Value_List
+    else:
+        print(f"Length of tag name and tag value aren't equal {Tag_Name_List} != {Tag_Value_List}" )
 
 
 def Modify_test():
-    # TagName = ['BoardMfgDateTime', 'BoardSerialNum', 'ProductSerialNum', 'BitRate', 'RetryTime', 'SSH', 'HTTP']
-    # TagValue = ['BDT_test','BS_test','PS_test','12345','5','223','82']
     # tree = ElementTree.parse(Ori_xml)
     tree = ElementTree.parse('test.xml')
     root = tree.getroot()
@@ -82,6 +149,7 @@ def Modify_test():
                 if child.text in ['Enable', 'Disable']:
                     if TagValue[i] in ['Enable', 'Disable'] and child.text != TagValue[i]:
                         print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第一個')
+                        child.text = TagValue[i]
                     elif TagValue[i] in ['Enable', 'Disable'] and child.text == TagValue[i]:
                         print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新')
                 else:
@@ -89,22 +157,26 @@ def Modify_test():
                         print(f'{child.text} != {TagValue[i]}, {TagName[i]}不用更新')
                     elif child.text != TagValue[i]:    
                         print(f'{child.text} != {TagValue[i]}, {TagName[i]} 更新第二個')
+                        child.text = TagValue[i]
                     else:
                         print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新')
                 # 2.<User UserID="2"> <User UserID="3">, 下面子節點全部一樣, 先get參數的值, 再去查看下一層的child.text, 修改text
         else:
             print(f'{TagName[i]} 不重複--------------------')
+            # Bios都不重複, 用是否有attribute來篩選
             for child in root.iter(TagName[i]):
                 print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
+                child.text = TagValue[i]
+    tree.write(New_XMLName)
 # 支援Xpath
 # https://docs.python.org/3/library/xml.etree.elementtree.html
 # https://hackmd.io/@top30339/rJYlKYpml?type=view
 
 if __name__=='__main__':
     DataList = TXT_to_List()
-    TagName, TagValue = GetTagData()
     New_XMLName = Modify_Name()
-    # for i in range(len(Tag_Name)):
-    #     print(f'{Tag_Name[i]} : {Tag_Value[i]}')
+    TagName, TagValue = WhichData()
+    # for i in range(len(TagName)):
+    #     print(f'{TagName[i]} : {TagValue[i]}')
     if Check_Name():
         Modify_test()
