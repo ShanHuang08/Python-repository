@@ -6,7 +6,7 @@ Ori_xml = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
 
 
 def TXT_to_List():
-    file = open(Change_FileName, 'r')
+    file = open(Change_FileName, 'r', encoding='utf-8')
     content = file.read()
     file.close()
     return content.splitlines()
@@ -71,7 +71,7 @@ def GetBMCTagData():
         # print(Less_List) #len=4
         if len(More_List) == len(Less_List):
             # if Tag_Name == 'RemoteUser' or Tag_Name == 'RemoteGroup':
-            if Tag_Name in ['RemoteUser', 'RemoteGroup']: #需要擴充, 不然會有例外
+            if Tag_Name in ['RemoteUser', 'RemoteGroup', 'Name', 'Password']: #需要擴充, 不然會有例外
                 # print(data[More_List[-3]+1:Less_List[-1]])
                 Tag_Value = data[More_List[-3]+1:Less_List[-1]]
                 Tag_Value_List.append(Tag_Value)
@@ -132,8 +132,8 @@ def GetBiosTagData():
 
 
 def Modify_test():
-    # tree = ElementTree.parse(Ori_xml)
-    tree = ElementTree.parse('test.xml')
+    tree = ElementTree.parse(Ori_xml)
+    # tree = ElementTree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
 
@@ -167,10 +167,11 @@ def Modify_test():
             for child in root.iter(TagName[i]):
                 print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
                 child.text = TagValue[i]
-    tree.write(New_XMLName)
-# 支援Xpath
-# https://docs.python.org/3/library/xml.etree.elementtree.html
-# https://hackmd.io/@top30339/rJYlKYpml?type=view
+    tree.write(New_XMLName, encoding='utf-8')
+# 改用lxml工具可以保留註解
+# https://lxml.de/tutorial.html
+
+# https://imonce.github.io/2019/10/21/3%E5%B0%8F%E6%97%B6%E7%B2%BE%E9%80%9Alxml-etree-Python%E4%B8%ADxml%E7%9A%84%E8%AF%BB%E5%8F%96%E3%80%81%E8%A7%A3%E6%9E%90%E3%80%81%E7%94%9F%E6%88%90%E5%92%8C%E6%9F%A5%E6%89%BE/
 
 if __name__=='__main__':
     DataList = TXT_to_List()
