@@ -2,7 +2,7 @@ from datetime import datetime
 from xml.etree import ElementTree
 
 Change_FileName = 'BMC_Change.txt'
-Ori_xml = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
+Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 
 
 def TXT_to_List():
@@ -12,16 +12,18 @@ def TXT_to_List():
     return content.splitlines()
 
 def Modify_Name():
-    date_time = str(datetime.now())
-    Month_Day = date_time[5:7]+date_time[8:10]
-    Time = date_time[11:13]+date_time[14:16]
-    num = Ori_xml.index('b')
-    tail = 0
-    if len(Ori_xml[num:]) in [20, 21]:
-        tail-=14
+    date_time = datetime.now().strftime("%m%d_%H%M")
+    file_name = Ori_xml.split('\\')[-1] #取最後一個斜線
+    prefix = file_name[:6]
+    # print(date_time)
+    if prefix.startswith('bmc'):
+        prefix = file_name[:6] # 取文件名前六個字符
+        return f'{date_time.replace(date_time, f"{prefix}_{date_time}.xml")}'
+    elif prefix.startswith('bios'):
+        prefix = file_name[:7]
+        return f'{date_time.replace(date_time, f"{prefix}_{date_time}.xml")}'
     else:
-        tail-=16
-    return Ori_xml[num:tail]+'_'+f"{Month_Day}_{Time}"+'.xml'
+        return f'File name error! {prefix}_{date_time}.xml'
 
 def Check_Name():
     if New_XMLName[0:3] in ['bmc', 'bio']:
@@ -132,8 +134,8 @@ def GetBiosTagData():
 
 
 def Modify_test():
-    tree = ElementTree.parse(Ori_xml)
-    # tree = ElementTree.parse('test.xml')
+    # tree = ElementTree.parse(Ori_xml)
+    tree = ElementTree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
 
@@ -167,7 +169,7 @@ def Modify_test():
             for child in root.iter(TagName[i]):
                 print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
                 child.text = TagValue[i]
-    tree.write(New_XMLName, encoding='utf-8')
+    tree.write(New_XMLName, encoding='utf-8', short_empty_elements=False)
 # 改用lxml工具可以保留註解
 # https://lxml.de/tutorial.html
 
