@@ -1,5 +1,6 @@
 from datetime import datetime
-from xml.etree import ElementTree
+# from xml.etree import ElementTree
+from lxml import etree
 
 Change_FileName = 'BMC_Change.txt'
 Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
@@ -82,6 +83,8 @@ def GetBMCTagData():
                 Tag_Value_List.append(Tag_Value)
         else:
             print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
+    # Tag_Name_List.append('child10')
+    # Tag_Value_List.append('')
     if len(Tag_Name_List) == len(Tag_Value_List):
         return Tag_Name_List, Tag_Value_List
     else:
@@ -126,7 +129,7 @@ def GetBiosTagData():
         Tag_Value = data[Value_Pos[2]+1:Value_Pos[3]]
         # print(Tag_Value)
         Tag_Value_List.append(Tag_Value)
-    
+
     if len(Tag_Name_List) == len(Tag_Value_List):
         return Tag_Name_List, Tag_Value_List
     else:
@@ -135,10 +138,11 @@ def GetBiosTagData():
 
 def Modify_test():
     # tree = ElementTree.parse(Ori_xml)
-    tree = ElementTree.parse('test.xml')
+    # tree = ElementTree.parse('test.xml')
+    tree = etree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
-
+    
     for i in range(len(TagName)):
         count = 0
         for child in root.iter(TagName[i]):
@@ -169,7 +173,8 @@ def Modify_test():
             for child in root.iter(TagName[i]):
                 print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
                 child.text = TagValue[i]
-    tree.write(New_XMLName, encoding='utf-8', short_empty_elements=False)
+    
+    tree.write(New_XMLName, encoding='utf-8', xml_declaration=True, pretty_print=True)
 # 改用lxml工具可以保留註解
 # https://lxml.de/tutorial.html
 # https://imonce.github.io/2019/10/21/3%E5%B0%8F%E6%97%B6%E7%B2%BE%E9%80%9Alxml-etree-Python%E4%B8%ADxml%E7%9A%84%E8%AF%BB%E5%8F%96%E3%80%81%E8%A7%A3%E6%9E%90%E3%80%81%E7%94%9F%E6%88%90%E5%92%8C%E6%9F%A5%E6%89%BE/
