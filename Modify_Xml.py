@@ -23,7 +23,7 @@ def Modify_Name():
         prefix = file_name[:7]
         return f'{date_time.replace(date_time, f"{prefix}_{date_time}.xml")}'
     else:
-        return f'File name error! {prefix}_{date_time}.xml'
+        print(f'File name error! {prefix}_{date_time}.xml')
 
 def Check_Name():
     if New_XMLName[0:3] in ['bmc', 'bio']:
@@ -172,7 +172,6 @@ def Modify_test():
     tree.write(New_XMLName, encoding='utf-8', short_empty_elements=False)
 # 改用lxml工具可以保留註解
 # https://lxml.de/tutorial.html
-
 # https://imonce.github.io/2019/10/21/3%E5%B0%8F%E6%97%B6%E7%B2%BE%E9%80%9Alxml-etree-Python%E4%B8%ADxml%E7%9A%84%E8%AF%BB%E5%8F%96%E3%80%81%E8%A7%A3%E6%9E%90%E3%80%81%E7%94%9F%E6%88%90%E5%92%8C%E6%9F%A5%E6%89%BE/
 
 if __name__=='__main__':
