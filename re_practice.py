@@ -1,5 +1,6 @@
 import re
-
+from datetime import datetime
+from lxml import etree
 reformat = r"^b'\<([0-9]{1,3})\>([A-Za-z]{3} [0-9 ]{2} \d{2}:\d{2}:\d{2}) ((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])) ([\S\s]+)"
 
 pattern = r'Setting: "<([^>]+)>([^<]+)</\1>"'
@@ -9,7 +10,39 @@ path2 = r"C:\Users\Username\Documents"    # 原始字串，反斜線保持原樣
 # print("C:\\Users\\Username\\Documents")
 # print(r"C:\Users\Username\Documents")
 
-file = "D:\\Old\H13SRD-F\\01.01.05\\bmccfg_0712_1558.xml"
-num = file.index('d')
-file[25:-14]
-print(num)
+Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
+
+TagName = []
+TagValue = []
+
+def Get_Extra_Tag():
+    tree = etree.parse(Ori_xml)
+    root = tree.getroot()
+    for child in root.iter('User'):
+        user_tag  = child.find('Name')
+        # user_tag.text = f'<![CDATA[{user_tag.text}]]>'
+        user_tag.text = '<![CDATA[' + user_tag.text + ']]>'
+        # print(user_tag.text)
+        TagName.append('Name')
+        TagValue.append(user_tag.text)
+        pass_tag = child.find('Password')
+        if pass_tag.text == '':
+            pass_tag.text = '<![CDATA[]]>'
+        # print(pass_tag.text)
+        TagName.append('Password')
+        TagValue.append(pass_tag.text)
+
+
+def Modify_test():
+    tree = etree.parse(Ori_xml)
+    root = tree.getroot()
+    for i in range(len(TagName)):
+        for child in root.iter(TagName[i]):
+            if child.tag in TagName[i] and child.text == TagValue[i][9:-3]:
+                # print(child.tag, child.text)
+                child.text = TagValue[i]
+    tree.write('test.xml', encoding='utf-8', xml_declaration=True, pretty_print=True, method="xml")
+
+Get_Extra_Tag()
+Modify_test()
+

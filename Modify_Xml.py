@@ -25,13 +25,6 @@ def Modify_Name():
         return f'{date_time.replace(date_time, f"{prefix}_{date_time}.xml")}'
     else:
         print(f'File name error! {prefix}_{date_time}.xml')
-
-def Check_Name():
-    if New_XMLName[0:3] in ['bmc', 'bio']:
-        return True
-    else:
-        print(f'File name error! {New_XMLName}')
-        return False
     
 # 根據txt檔案內容判斷要執行哪一種方法
 def WhichData():
@@ -137,9 +130,9 @@ def GetBiosTagData():
 
 
 def Modify_test():
-    # tree = ElementTree.parse(Ori_xml)
+    tree = etree.parse(Ori_xml)
     # tree = ElementTree.parse('test.xml')
-    tree = etree.parse('test.xml')
+    # tree = etree.parse('test.xml')
     root = tree.getroot()
     # print(root.tag)
     
@@ -185,5 +178,12 @@ if __name__=='__main__':
     TagName, TagValue = WhichData()
     # for i in range(len(TagName)):
     #     print(f'{TagName[i]} : {TagValue[i]}')
-    if Check_Name():
-        Modify_test()
+    Modify_test()
+
+
+# <Name> all
+# <Password> all
+# <CertFile/>
+# <PrivKeyFile/>
+# <HostName/>
+# <Address/> 2nd
