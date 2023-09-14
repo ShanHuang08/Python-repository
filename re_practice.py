@@ -12,11 +12,12 @@ path2 = r"C:\Users\Username\Documents"    # 原始字串，反斜線保持原樣
 
 Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 
-TagName = []
-TagValue = []
+TagName = ['child8', 'child9']
+TagValue = ['Newtest', 'test9']
 
 def Get_Extra_Tag():
-    tree = etree.parse(Ori_xml)
+    # tree = etree.parse(Ori_xml)
+    tree = etree.parse('test.xml')
     root = tree.getroot()
     for child in root.iter('User'):
         user_tag  = child.find('Name')
@@ -34,15 +35,16 @@ def Get_Extra_Tag():
 
 
 def Modify_test():
-    tree = etree.parse(Ori_xml)
+    parser = etree.XMLParser(strip_cdata=False)
+    # tree = etree.parse(Ori_xml)
+    tree = etree.parse('test.xml', parser=parser)
     root = tree.getroot()
     for i in range(len(TagName)):
         for child in root.iter(TagName[i]):
-            if child.tag in TagName[i] and child.text == TagValue[i][9:-3]:
-                # print(child.tag, child.text)
-                child.text = TagValue[i]
-    tree.write('test.xml', encoding='utf-8', xml_declaration=True, pretty_print=True, method="xml")
+            # print(child.tag, child.text)
+            child.text = TagValue[i]
+    tree.write('bmcccfg.xml', encoding='utf-8', xml_declaration=True, pretty_print=True, method="xml")
 
-Get_Extra_Tag()
+# Get_Extra_Tag()
 Modify_test()
 
