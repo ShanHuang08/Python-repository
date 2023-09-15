@@ -6,7 +6,7 @@ from Library.Redfish_requests import *
 from Library.SMASH import SMASH
 
 
-BMC_ip = '10.184.30.82'
+BMC_ip = '10.184.19.24'
 url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
 Account=Password='ADMIN'
 auth = ('ADMIN', 'ADMIN')

@@ -21,13 +21,13 @@ def Get_Extra_Tag():
     for child in root.iter('User'):
         user_tag  = child.find('Name')
         # user_tag.text = f'<![CDATA[{user_tag.text}]]>'
-        user_tag.text = '<![CDATA[' + user_tag.text + ']]>'
+        user_tag.text = etree.CDATA(user_tag.text)
         # print(user_tag.text)
         TagName.append('Name')
         TagValue.append(user_tag.text)
         pass_tag = child.find('Password')
         if pass_tag.text == '':
-            pass_tag.text = '<![CDATA[]]>'
+            pass_tag.text = etree.CDATA('')
         # print(pass_tag.text)
         TagName.append('Password')
         TagValue.append(pass_tag.text)

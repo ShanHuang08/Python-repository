@@ -7,7 +7,7 @@ import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.16.44'
+server_ip = '172.31.37.193'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"

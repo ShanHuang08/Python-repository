@@ -34,7 +34,7 @@ def Chrome_LaunchConsole():
         # browser.find_element(By.ID,value='consoleImg').click()
         # Remote Control Launch console
         browser.execute_script(goPage['Remote Control'])
-        sleep(5)
+        sleep(7)
     
         browser.find_element(By.XPATH, value='//button[@id="launchConsole"]').click()
         print(f'NO.{i+1} times')
