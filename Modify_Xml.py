@@ -134,8 +134,8 @@ def GetBiosTagData():
 
 def Modify_test():
     parser = etree.XMLParser(strip_cdata=False) #保留CDATA section
-    # tree = etree.parse(Ori_xml, parser=parser)
-    tree = etree.parse('test.xml', parser=parser)
+    tree = etree.parse(Ori_xml, parser=parser)
+    # tree = etree.parse('test.xml', parser=parser)
     root = tree.getroot()
     # print(root.tag)
     
