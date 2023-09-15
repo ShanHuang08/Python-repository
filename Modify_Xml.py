@@ -1,10 +1,9 @@
 from datetime import datetime
-# from xml.etree import ElementTree
 from lxml import etree
 
 Change_FileName = 'BMC_Change.txt'
+Empty_Tag = ['CertFile','PrivKeyFile','HostName','Address']
 Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
-
 
 def TXT_to_List():
     file = open(Change_FileName, 'r', encoding='utf-8')
@@ -76,8 +75,12 @@ def GetBMCTagData():
                 Tag_Value_List.append(Tag_Value)
         else:
             print(f'More_List length:{len(More_List)} not equal Less_List length:{len(Less_List)}')
-    # Tag_Name_List.append('child10')
-    # Tag_Value_List.append('')
+    
+    for check in Empty_Tag:  #空的標籤
+        if check not in Tag_Name_List:    
+            Tag_Name_List.append(check)
+            Tag_Value_List.append('')
+
     if len(Tag_Name_List) == len(Tag_Value_List):
         return Tag_Name_List, Tag_Value_List
     else:
@@ -130,9 +133,9 @@ def GetBiosTagData():
 
 
 def Modify_test():
-    tree = etree.parse(Ori_xml)
-    # tree = ElementTree.parse('test.xml')
-    # tree = etree.parse('test.xml')
+    parser = etree.XMLParser(strip_cdata=False) #保留CDATA section
+    # tree = etree.parse(Ori_xml, parser=parser)
+    tree = etree.parse('test.xml', parser=parser)
     root = tree.getroot()
     # print(root.tag)
     
@@ -176,15 +179,8 @@ def Modify_test():
 if __name__=='__main__':
     DataList = TXT_to_List()
     New_XMLName = Modify_Name()
-    TagName, TagValue = WhichData()
+    # TagName, TagValue = WhichData()
+    TagName, TagValue = GetBMCTagData()
     # for i in range(len(TagName)):
     #     print(f'{TagName[i]} : {TagValue[i]}')
     Modify_test()
-
-
-# <Name> all
-# <Password> all
-# <CertFile/>
-# <PrivKeyFile/>
-# <HostName/>
-# <Address/> 2nd
