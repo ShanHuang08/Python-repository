@@ -43,7 +43,8 @@ goPage = {
     'Dashboard' : 'goPage("dashboard")',
     'Component info' : 'goPage("sys_cmpn_overview")',
     'Account Services' : 'goPage("config_account_overview")',
-    'Remote Control' : 'goPage("remote")'
+    'Remote Control' : 'goPage("remote")',
+    'Storage' : 'goPage("sys_storage")'
 }
 
 
