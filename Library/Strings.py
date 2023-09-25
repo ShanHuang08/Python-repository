@@ -72,8 +72,12 @@ def StringGenerator():
     
     print(result)
 
+def StrReverse(Strin):
+    return Strin[::-1]
+
 
 if __name__=='__main__':
     # print(KeyGenerator())
-    StringGenerator()
+    # StringGenerator()
+    pass
 
