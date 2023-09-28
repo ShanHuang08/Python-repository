@@ -1,29 +1,36 @@
 from dictionary import SUT
 from pprint import pprint
 from Redfish_requests import *
-import json
-BMC_IP = '10.184.30.32'
+
+BMC_IP = '10.184.28.110'
 FW_url = 'https://'+BMC_IP+'/redfish/v1/UpdateService/FirmwareInventory/'
 auth = ('ADMIN','ADMIN')
+Check_SUT = GET(url='https://'+BMC_IP+'/redfish/v1//Systems', auth=auth)
+
 def PrintSUT():
     pprint(SUT)
     return SUT
 
 def GetFWInfo():
-    # 要用GUID分類, 所以要找GUID的網址
-    BMC_Data = json.loads(GET(url=FW_url+'BMC', auth=auth)[-1])
-    BIOS_Data = json.loads(GET(url=FW_url+'BIOS', auth=auth)[-1])
-    # print(BMC_Data['Version'])
-    BMC_FW = BMC_Data['Oem']['Supermicro']['UniqueFilename']
-    BIOS_FW = BIOS_Data['Oem']['Supermicro']['UniqueFilename']
-    return print(f"{BMC_FW}\n{BIOS_FW}")
-# X12
-# Traceback (most recent call last):
-#   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 21, in <module> 
-#     GetFWInfo()
-#   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 16, in GetFWInfo
-#     BMC_FW = BMC_Data['Oem']['Supermicro']['UniqueFilename']
-# KeyError: 'Oem'
+    if Check_SUT[0] == 200:
+        BMC_Data = GET(url=FW_url+'BMC', auth=auth)
+        BIOS_Data = GET(url=FW_url+'BIOS', auth=auth)
+        # print(BMC_Data['Version'])
+        BMC_FW = BMC_Data[-1]['Oem']['Supermicro']['UniqueFilename']
+        BIOS_FW = BIOS_Data[-1]['Oem']['Supermicro']['UniqueFilename']
+        return print(f"Server IP: {BMC_IP}\n{BMC_FW}\n{BIOS_FW}")
+    else:
+        New_pw = input('Input Unique Password: ')
+        auth2 = ('ADMIN', New_pw)
+        BMC_Data = GET(url=FW_url+'BMC', auth=auth2)
+        BIOS_Data = GET(url=FW_url+'BIOS', auth=auth2)
+
+        if BMC_Data[0] == 200:
+            BMC_FW = BMC_Data[-1]['Oem']['Supermicro']['UniqueFilename']
+            BIOS_FW = BIOS_Data[-1]['Oem']['Supermicro']['UniqueFilename']
+            return print(f"Server IP: {BMC_IP}\n{BMC_FW}\n{BIOS_FW}")
+        else:
+            return print(f"Server IP: {BMC_IP}\nStatus code: {BMC_Data[0]}\n{BMC_Data}")
 
 if __name__=='__main__':
     GetFWInfo()

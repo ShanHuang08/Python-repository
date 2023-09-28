@@ -6,15 +6,22 @@ import urllib3
 urllib3.disable_warnings()
 
 def GET(url, auth):
+    """
+    `GET()`[0] : `Status code`
+
+    `GET()`[1] : `text`
+
+    `GET()`[-1] : `json()`
+    """
     try:
         Get_data = requests.get(url=url, auth=auth, verify=False)
     except requests.exceptions.HTTPError as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectTimeout as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectionError as e:
-        print(str(e))
-    return [Get_data.status_code, Get_data.text]
+        print(e)
+    return [Get_data.status_code, Get_data.text, Get_data.json()]
 
 def GET_Data(url, auth):
     try:
@@ -22,42 +29,60 @@ def GET_Data(url, auth):
         print(f"HTTP Status: {Get_data.status_code}\nBody:\n")
         pprint(Get_data.text)
     except requests.exceptions.HTTPError as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectTimeout as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectionError as e:
-        print(str(e))
-    return [Get_data.status_code, Get_data.text]
+        print(e)
 
 def PATCH(url, auth, body):
+    """
+    `PATCH()`[0] : `Status code`
+
+    `PATCH()`[1] : `text`
+
+    `PATCH()`[-1] : `json()`
+    """
     try:
         Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False)
     except requests.exceptions.HTTPError as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectTimeout as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectionError as e:
-        print(str(e))
-    return [Patch_data.status_code, Patch_data.text]
+        print(e)
+    return [Patch_data.status_code, Patch_data.text, Patch_data.json()]
 
 def POST(url, auth, body):
+    """
+    `POST()`[0] : `Status code`
+
+    `POST()`[1] : `text`
+
+    `POST()`[-1] : `json()`
+    """
     try:
         Post_data = requests.post(url=url, auth=auth, json=body, verify=False)
     except requests.exceptions.HTTPError as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectTimeout as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectionError as e:
-        print(str(e))
-    return [Post_data.status_code, Post_data.text]
+        print(e)
+    return [Post_data.status_code, Post_data.text, Post_data.json()]
 
 def DELETE(url, auth):
+    """
+    `DELETE()`[0] : `Status code`
+
+    `DELETE()`[1] : `text`
+    """
     try:
         Delete_data = requests.delete(url=url, auth=auth, verify=False)
     except requests.exceptions.HTTPError as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectTimeout as e:
-        print(str(e))
+        print(e)
     except requests.exceptions.ConnectionError as e:
-        print(str(e))      
+        print(e)    
     return [Delete_data.status_code, Delete_data.text]  
