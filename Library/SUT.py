@@ -26,11 +26,12 @@ def GetFWInfo():
     else:
         New_pw = input('Input Unique Password: ')
         auth2 = ('ADMIN', New_pw)
-        BMC_Data = GET(url=FW_url+'BMC', auth=auth2)
-        BIOS_Data = GET(url=FW_url+'BIOS', auth=auth2)
-
-        if BMC_Data[0] == 200:
+        Check_Again = GET(url='https://'+BMC_IP+'/redfish/v1//Systems', auth=auth2)
+        
+        if Check_Again[0] == 200:
             try:
+                BMC_Data = GET(url=FW_url+'BMC', auth=auth2)
+                BIOS_Data = GET(url=FW_url+'BIOS', auth=auth2)
                 BMC_FW = BMC_Data[-1]['Oem']['Supermicro']['UniqueFilename']
                 BIOS_FW = BIOS_Data[-1]['Oem']['Supermicro']['UniqueFilename']
                 return print(f"{BMC_FW}\n{BIOS_FW}")
