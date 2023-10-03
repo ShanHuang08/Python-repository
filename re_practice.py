@@ -18,19 +18,11 @@ Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
 
-ip = '10.140.176.153'
+ip = '10.184.30.32'
 path = '/redfish/v1/Managers/1/Oem/Supermicro/NTP'
-auth = ('ADMIN', 'ADMIN')
-url = 'https://'+ip+path
-# data = GET_Data(url=url, auth=auth)[1]
+FW_url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
+auth = ('ADMIN','ADMIN')
 
+GetFWInfo(ip, FW_url, auth)
 
-# session = requests.session().get('http://www.google.com').json()
-
-data = requests.get(url=url, auth=auth, verify=False).json()
-
-
-
-print(type(data))
-print(data)
 
