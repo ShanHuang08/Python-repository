@@ -2,11 +2,6 @@ from Library.dictionary import SUT
 from pprint import pprint
 from Library.Redfish_requests import *
 
-# BMC_IP = '10.184.28.110'
-# FW_url = 'https://'+BMC_IP+'/redfish/v1/UpdateService/FirmwareInventory/'
-# auth = ('ADMIN','ADMIN')
-# Check_SUT = GET(url='https://'+BMC_IP+'/redfish/v1//Systems', auth=auth)
-
 def PrintSUT():
     pprint(SUT)
     return SUT
