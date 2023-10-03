@@ -41,3 +41,8 @@ def GetFWInfo():
 
 if __name__=='__main__':
     GetFWInfo()
+
+# Traceback (most recent call last):
+#   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
+#     from Library.dictionary import SUT
+# ModuleNotFoundError: No module named 'Library'
