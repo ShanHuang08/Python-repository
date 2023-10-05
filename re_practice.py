@@ -18,7 +18,7 @@ Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
 
-ip = '10.184.30.32'
+ip = '172.31.32.89'
 path = '/redfish/v1/Managers/1/Oem/Supermicro/NTP'
 FW_url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
 auth = ('ADMIN','ADMIN')
