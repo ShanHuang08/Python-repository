@@ -1,4 +1,5 @@
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
+from time import sleep
 
 def SMASH(ip):
     accounts = ['Admin', 'Operator', 'User']
@@ -8,7 +9,8 @@ def SMASH(ip):
             ssh = SSHClient()
             ssh.set_missing_host_key_policy(AutoAddPolicy())
             ssh.connect(hostname=ip, username=account, password=pwd, port=22)
-            ssh.exec_command('show')
+            ssh.exec_command('exit')
+            sleep(2)
             ssh.close()
             print(f'SMASH run {account} Success')
         except ssh_exception.SSHException as e:

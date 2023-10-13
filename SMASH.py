@@ -2,8 +2,8 @@ import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import subprocess
 
-BMC_IP = '10.184.22.196'
-OS_IP = '172.31.41.47'
+BMC_IP = '10.140.178.255'
+OS_IP = '10.184.21.100'
 SUT_Name = 'SUT info.txt'
 ssh_port = 22
 def LDAPLogin():
@@ -89,7 +89,7 @@ def ssh_os():
     print(f"Server: {OS_IP}")
     account = 'root'
     pwd = '111111'
-    commands = ['cat /etc/system-release', 'rpm -q ipmitool', 'rpm -q tar','rpm -q tcpdump', 'ipmitool lan print', 'ls -l']
+    commands = ['cat /etc/system-release', 'rpm -q ipmitool', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 'ipmitool lan print', 'ls -l']
     try:
         file = open(SUT_Name,'w')
         ssh = SSHClient()
