@@ -88,6 +88,29 @@ def POST(url, auth, body):
     else:
         return Post_data
 
+def POST_Action(url, auth):
+    """
+    `POST()[0]` : `Status code`
+
+    `POST()[1]` : `text`
+
+    `POST()[-1]` : `json()`
+    """
+    Post_data = None
+    try:
+        Post_data = requests.post(url=url, auth=auth, verify=False)
+    except requests.exceptions.HTTPError as e:
+        print(e)
+    except requests.exceptions.ConnectTimeout as e:
+        print(e)
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+    if Post_data is not None:
+        return [Post_data.status_code, Post_data.text, Post_data.json()]
+    else:
+        return Post_data
+
+
 def DELETE(url, auth):
     """
     `DELETE()[0]` : `Status code`

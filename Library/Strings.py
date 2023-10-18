@@ -1,4 +1,4 @@
-from random import choice, randint
+from random import choice, randint, sample
 import string
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -75,9 +75,16 @@ def StringGenerator():
 def StrReverse(Strin):
     return Strin[::-1]
 
+def get_a_random_ip():
+    return ".".join(str(randint(173, 255)) for _ in range(4))
+
+def generate_special_char():
+    return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
+
 
 if __name__=='__main__':
     # print(KeyGenerator())
-    # StringGenerator()
+    StringGenerator()
+    # print(get_a_random_ip())
     pass
 
