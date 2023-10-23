@@ -42,7 +42,7 @@ def Chrome_LaunchConsole():
     print(f'{i+1} times')
     # browsers[0].find_element(By.XPATH, value='//button[@id="launchConsole"]').click()
     print('Waiting...')
-    sleep(600)
+    sleep(6000)
 
     # browser.execute_script('doLogout()')
     # sleep(5)

@@ -7,12 +7,12 @@ auth = ('ADMIN', 'ADMIN')
 
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
-    for i in range(30):
+    text = ''
+    for i in range(40):
         jdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1]
-        print(f"{i+1}. PostCode = {jdata['PostCode']}")
-        sleep(6)
+        print(f"{i+1}. PostCode = {jdata['PostCode']}, {type(jdata['PostCode'])}")
+        text = jdata['PostCode']
+        # print(text)
+        sleep(5)
 
 Get_PostCode(ip, auth)
-
-
-

@@ -94,8 +94,7 @@ if __name__=='__main__':
     ip = input('ip address: ')
     check_pwd = input('Login via Unique Password (y/n)')
     OriginalDir = 'C:\\Users\\Stephenhuang\\' #sum跟SMCIPMITOOL都放在同一個資料夾之下
-    filename = ip+' CheckVersion.txt'
-    Check_ipaddr(ip)
+    filename = ip+'_CheckVersion.txt'
     if Check_ipaddr(ip):
         SumFolder = GetDirectory(OriginalDir, Dircom='dir sum*')
         SMCFolder = GetDirectory(OriginalDir, Dircom='dir SMC*')
