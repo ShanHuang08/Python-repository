@@ -1,10 +1,12 @@
-from Library.dictionary import SUT
-from pprint import pprint
-from Library.Redfish_requests import *
+from dictionary import SUT
+from Redfish_requests import *
 
-def PrintSUT():
-    pprint(SUT)
-    return SUT
+def AddSUT():
+    key = input("SUT: ")
+    BMC_IP = input("BMC IP: ")
+    OS_IP = input("OS IP: ")
+    SUT_info = {key : {"BMC" : BMC_IP, "OS" : OS_IP}}
+    print(str(SUT_info)[1:-1])
 
 def Check_PWD(ip):
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
@@ -35,6 +37,9 @@ def GetFWInfo():
     else:
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
+if __name__=='__main__':
+    AddSUT()
+    # GetFWInfo()
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>

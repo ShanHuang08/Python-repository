@@ -26,10 +26,6 @@ def enumerate_practice():
             # <class 'int'> <class 'str'>
     print(TestDict)
 
-
 path = '/redfish/v1/Managers/1/Oem/Supermicro/NTP'
 
 # enumerate_practice()
-GetFWInfo()
-
-dict.update()
