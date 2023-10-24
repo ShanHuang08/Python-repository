@@ -66,7 +66,7 @@ def PATCH(url, auth, body):
     else:
         return Patch_data
 
-def POST(url, auth, body):
+def POST(url, auth, body=None):
     """
     `POST()[0]` : `Status code`
 
