@@ -38,8 +38,8 @@ def GetFWInfo():
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
-    AddSUT()
-    # GetFWInfo()
+    # AddSUT()
+    GetFWInfo()
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
