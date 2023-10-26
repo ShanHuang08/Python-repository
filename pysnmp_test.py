@@ -3,7 +3,7 @@ from pysnmp.proto import rfc1902
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
 from sys import exit
-import json
+from Library.SUT import Check_PWD
 
 # Source:ChatGPT 2023/8/8
 
@@ -18,55 +18,74 @@ account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
 Account_Enable = True
-auth = ('ADMIN', 'ADMIN')
+auth = Check_PWD()
 
 def snmpv2_get(server_ip, port, community_key, oid):
-    # 定義 SNMP Community 和 SNMP 版本
+    
     community = CommunityData(community_key, mpModel=1)
     # print(f'community= {community}, {type(community)}')
     # community= CommunityData(communityIndex='s6959421844976907261', communityName=<COMMUNITY>, mpModel=1, contextEngineId=None, contextName=b'', tag=b'', securityName='s6959421844976907261'), <class 'pysnmp.hlapi.auth.CommunityData'>
     
-    # 定義目標設備
+    
     target = UdpTransportTarget((server_ip, port))
     # print(target)
     # UdpTransportTarget(('10.184.20.66', 161), timeout=1, retries=5, tagList=b'')
-    # 定義 SNMP 請求的 OID
+    
     oid_obj = ObjectType(ObjectIdentity(oid))
 
-    # 建立 SNMP GET 請求
-    get_request = getCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
+
     # print(get_request) 
     # <generator object getCmd at 0x00000204671C1D90>
 
-    # 執行 SNMP GET 請求
+    get_request = getCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
     error_indication, error_status, error_index, var_binds = next(get_request)
     print(f'SNMPv2 Get:\nLog: {var_binds}')
     # [ObjectType(ObjectIdentity(<ObjectName value object, tagSet <TagSet object, tags 0:0:6>, payload [1.3.6.1.4.1.21317.1.10.0]>), <Integer value object, tagSet <TagSet object, tags 0:0:2>, subtypeSpec <ConstraintsIntersection object, consts <ValueRangeConstraint object, consts -2147483648, 2147483647>>, payload [0]>)]
-    # 處理回應結果
+    
     if error_indication:
         print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
     elif error_status:
         print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
     else:
         for var_bind in var_binds:
-            # 取得 SNMP 回傳的值
+            
             print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')
 
-def snmpv2_set(server_ip, port, community_key, oid, value):
+def snmpv2_test(server_ip, port, community_key, oid, value=None):
+    # 定義 SNMP Community 和 SNMP 版本
     community = CommunityData(community_key, mpModel=1)
+    # 定義目標設備
     target = UdpTransportTarget((server_ip, port))
-    oid_obj = ObjectType(ObjectIdentity(oid), value)
-    set_request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
-    error_indication, error_status, error_index, var_binds = next(set_request)
-    print(f'SNMPv2 Set:\nLog: {var_binds}')
-
-    if error_indication:
-        print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
-    elif error_status:
-        print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+    # 定義 SNMP 請求的 OID
+    if value == None:
+        oid_obj = ObjectType(ObjectIdentity(oid))
+        # 建立 SNMP GET 請求
+        get_request = getCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
+        error_indication, error_status, error_index, var_binds = next(get_request)
+        print(f'SNMPv2 Get:\nLog: {var_binds}')
+        # 處理回應結果
+        if error_indication:
+            print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                # 取得 SNMP 回傳的值
+                print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')
     else:
-        for var_bind in var_binds:
-            print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')
+        oid_obj = ObjectType(ObjectIdentity(oid), value)
+        # 建立 SNMP SET 請求
+        set_request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
+        error_indication, error_status, error_index, var_binds = next(set_request)
+        print(f'SNMPv2 Set:\nLog: {var_binds}')
+
+        if error_indication:
+            print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')        
 
 def snmpv3_get(server_ip, port, account, v3_key, oid):
     MD5_DES_credential = UsmUserData(userName=account, authKey=v3_key, privKey=v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
@@ -85,23 +104,37 @@ def snmpv3_get(server_ip, port, account, v3_key, oid):
             value = var_bind[-1]
             print(f'OID: {var_bind[0]}, Value: {value}')
 
-def snmpv3_set(server_ip, port, account, v3_key, oid, value):
+def snmpv3_test(server_ip, port, account, v3_key, oid, value=None):
     MD5_DES_credential = UsmUserData(userName=account, authKey=v3_key, privKey=v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
     target = UdpTransportTarget((server_ip, port))
-    oid_obj = ObjectType(ObjectIdentity(oid), value)
-    set_request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
-    error_indication, error_status, error_index, var_binds = next(set_request)
-    print(f'SNMPv3 Set:\nLog: {var_binds}')
+    if value == None:
+        oid_obj = ObjectType(ObjectIdentity(oid))
+        get_request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+        error_indication, error_status, error_index, var_binds = next(get_request)
+        print(f'SNMPv3 Get:\nLog: {var_binds}')
 
-    if error_indication:
-        print(f"Error: {error_indication}")
-    elif error_status:
-        print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        if error_indication:
+            print(f"Error: {error_indication}")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                value = var_bind[-1]
+                print(f'OID: {var_bind[0]}, Value: {value}')
     else:
-        for var_bind in var_binds:
-            value = var_bind[-1]
-            print(f'OID: {var_bind[0]}, Value: {value}')
+        oid_obj = ObjectType(ObjectIdentity(oid), value)
+        set_request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+        error_indication, error_status, error_index, var_binds = next(set_request)
+        print(f'SNMPv3 Set:\nLog: {var_binds}')
 
+        if error_indication:
+            print(f"Error: {error_indication}")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                value = var_bind[-1]
+                print(f'OID: {var_bind[0]}, Value: {value}')
 
 def Redfish_setup(Disable_Account=None):
     print('Start setting up SNMP environment')
@@ -170,24 +203,24 @@ if __name__ == '__main__':
     Redfish_setup()
 
     if Get_Only:
-        snmpv2_get(server_ip, port, community_key, oid)
-        snmpv3_get(server_ip, port, account, v3_key, oid)  
+        snmpv2_test(server_ip, port, community_key, oid)
+        snmpv2_test(server_ip, port, account, v3_key, oid)  
     else:
-        snmpv2_set(server_ip, port, community_key, oid, value=uid_on)
-        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv2_test(server_ip, port, community_key, oid, value=uid_on)
+        snmpv2_test(server_ip, port, community_key, oid)
         # UID_Change(Change)
-        snmpv2_set(server_ip, port, community_key, oid, value=uid_off)
-        snmpv2_get(server_ip, port, community_key, oid)
+        snmpv2_test(server_ip, port, community_key, oid, value=uid_off)
+        snmpv2_test(server_ip, port, community_key, oid)
 
-        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_on)
-        snmpv3_get(server_ip, port, account, v3_key, oid)
+        snmpv3_test(server_ip, port, account, v3_key, oid, value=uid_on)
+        snmpv3_test(server_ip, port, account, v3_key, oid)
 
-        snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_off)
-        snmpv3_get(server_ip, port, account, v3_key, oid)
+        snmpv3_test(server_ip, port, account, v3_key, oid, value=uid_off)
+        snmpv3_test(server_ip, port, account, v3_key, oid)
         Change = "Off"
         print('Test Disable account')      
         Disable_Account(Account_Enable=False)
-        snmpv3_get(server_ip, port, account, v3_key, oid)
+        snmpv3_test(server_ip, port, account, v3_key, oid)
     Clear_setup()
 
 
