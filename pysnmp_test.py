@@ -7,7 +7,7 @@ import json
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '10.184.29.149'
+server_ip = '10.184.19.24'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
@@ -17,6 +17,7 @@ Change = "Blinking"  #For Redfish
 account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
+Account_Enable = True
 auth = ('ADMIN', 'ADMIN')
 
 def snmpv2_get(server_ip, port, community_key, oid):
@@ -102,7 +103,7 @@ def snmpv3_set(server_ip, port, account, v3_key, oid, value):
             print(f'OID: {var_bind[0]}, Value: {value}')
 
 
-def Redfish_setup():
+def Redfish_setup(Disable_Account=None):
     print('Start setting up SNMP environment')
     Create = POST(url='https://'+server_ip+ redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
     if Create[0] == 201:
@@ -132,6 +133,20 @@ def UID_Change(Change):
     else:
         print(f'Failed, Status: {uid_patch[0]}\n Body:{uid_patch[1]}')
 
+def Disable_Account(Account_Enable=None):
+    if Account_Enable == False:
+        print('Disable account')
+        jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1]
+        count = str(jdata['Members@odata.count']+1)
+        redfish['MD5_DES']['Enabled'] = Account_Enable
+        Modify = PATCH(url='https://'+server_ip+ redfish['Accounts'] + count, auth=auth, body=redfish['MD5_DES'])
+        if Modify[0] == 200:
+            print('Account has disabled')
+        else:
+            print(f'Failed, Status code: {Modify[0]}\n{Modify[-1]}')
+    else:
+        pass
+
 def Clear_setup():
     print('Clear SNMP environment')
     Disable_SNMP = PATCH(url='https://'+server_ip+ redfish['SNMP'], auth=auth, body=redfish['Disable SNMP'])
@@ -141,8 +156,7 @@ def Clear_setup():
         print(f'Failed, Status code: {Disable_SNMP[0]}')
 
     # 找到Account建立在哪個Link, 針對Link做Delete
-    data = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)
-    jdata = json.loads(data[1])
+    jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1]
     count = str(jdata['Members@odata.count']+1)
     Delete = DELETE(url='https://'+server_ip+ redfish['Accounts'] + count, auth=auth)
     if Delete[0] == 200:
@@ -170,8 +184,10 @@ if __name__ == '__main__':
 
         snmpv3_set(server_ip, port, account, v3_key, oid, value=uid_off)
         snmpv3_get(server_ip, port, account, v3_key, oid)
-        Change = "Off"      
-
+        Change = "Off"
+        print('Test Disable account')      
+        Disable_Account(Account_Enable=False)
+        snmpv3_get(server_ip, port, account, v3_key, oid)
     Clear_setup()
 
 
