@@ -1,5 +1,7 @@
 from random import choice, randint, sample
 import string
+from Library.Redfish_requests import *
+
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
 def KeyGenerator():
@@ -81,10 +83,12 @@ def get_a_random_ip():
 def generate_special_char():
     return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
 
+def Check_PWD(ip):
+    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
+    if Check_Network[0] == 200:
+        return ('ADMIN', 'ADMIN')
+    else:
+        pwd = input('Input unique password: ')
+        return ('ADMIN', pwd)
 
-if __name__=='__main__':
-    # print(KeyGenerator())
-    StringGenerator()
-    # print(get_a_random_ip())
-    pass
 
