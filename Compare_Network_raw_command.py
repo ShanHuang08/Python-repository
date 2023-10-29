@@ -1,6 +1,42 @@
+from Library.dictionary import RawCommands
+from Library.Strings import Check_PWD
+
+server_ip = input('Input SUT ip: ')
+
+
 
 def ShowRawCommands():
-    server_ip = input('Input SUT ip: ')
+    # auth = Check_PWD(server_ip)
+    auth = ('ADMIN', 'ADMIN')
+    print(RawCommands["0A"] + ' Get:')
+    for cmd in RawCommands['DNS Mode']:    
+        if cmd != '20':
+            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {cmd}')  
+            
+    print(RawCommands["0A"] + ' Set:')
+    for name, num in RawCommands['DNS']:
+        if num == '01':
+            print(name)
+        else:
+            print(name)             
+        for ip in RawCommands['ipv4']:
+            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {num} 00 00 {ip}')
+        for ip in RawCommands['ipv6']:
+            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {num} 01 00 {ip}')
+    
+    for name, cmd in RawCommands['09 Get Set']:
+        if name in ['Add IPv6', 'Delete IPv6']:
+            if name == 'Add IPv6':
+                print(RawCommands["09"] + ' Set:')
+            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd} {RawCommands["ipv6"][0]} {hex(64)[2:]}')
+        elif 'Set Gateway' in name:
+            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd} {RawCommands["ipv6"][3]}')
+        else:
+            if cmd == '00 00':
+                print(RawCommands["09"] + ' Get:')
+            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd}')   
+
+ShowRawCommands()
 
 def set_ipv6_data(dhcp_mode:str, auto_config:str, ipv6_opation:str, address:str, prefix:str):
     print((f'30 68 09 01 {dhcp_mode} {auto_config} {ipv6_opation} {address} {prefix}'))
@@ -11,6 +47,9 @@ def set_ipv6_gateway(gateway:str):
 def get_ipv6_data(data:str):
     print(f'30 68 09 00 {data}')
     pass
+
+def prefix(num):
+    return hex(num)[2:]
 
 def test_smcipmitool_30_68_09_set():
     # DHCPv6 Modes + Auto Config
@@ -67,15 +106,10 @@ def test_smcipmitool_30_68_09_set():
     set_ipv6_data('02', '00', '00', add_address, '40') #True
 
 def test_smcipmitool_30_68_09_get():
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 00 00"
     dhcp_mode = get_ipv6_data('00')
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 00 01"
     auto_config = get_ipv6_data('01')
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 00 02"
     address_list_str = get_ipv6_data('02')
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 00 03"
     duid_value = get_ipv6_data('03')
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 00 04"
     gateway = get_ipv6_data('04')
 
 def test_smcipmitool_30_68_0a_set():
@@ -95,7 +129,7 @@ def test_smcipmitool_30_68_0a_set():
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01" #::1 DNS1
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 01 01 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00" #ff00:: DNS1
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 01 01 00 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF" #ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff DNS1
-    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 01 01 00 Ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01" #ff00::1 DNS1
+    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 01 01 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01" #ff00::1 DNS1
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 03 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02" #::2 DNS2 BMC會reset(HW1)
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 03 01 00 FE FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF" #feff:ffff:ffff:ffff:ffff:ffff:ffff:ffff DNS2
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 03 01 00 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01" #2000::1 DNS2 BMC會reset
@@ -122,9 +156,9 @@ def test_smcipmitool_30_68_0a_set():
 
 
 def test_smcipmitool_30_68_0a_get():
-    f"SMCIPMITool.exe 1.2.3.4 ADMIN ADMIN ipmi raw 30 68 0A 10" #AUTO
-    f"SMCIPMITool.exe 1.2.3.4 ADMIN ADMIN ipmi raw 30 68 0A 20" #MANUAL
-    f"SMCIPMITool.exe 1.2.3.4 ADMIN ADMIN ipmi raw 30 68 0A 00 00"
+    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 10" #AUTO
+    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 20" #MANUAL
+    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 00 00"
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 02 00"
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 00 01"
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 0A 02 01"
