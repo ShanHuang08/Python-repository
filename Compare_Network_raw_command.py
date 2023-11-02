@@ -1,13 +1,11 @@
 from Library.dictionary import RawCommands
 from Library.Strings import Check_PWD
+import subprocess
 
 server_ip = input('Input SUT ip: ')
 
-
-
 def ShowRawCommands():
-    # auth = Check_PWD(server_ip)
-    auth = ('ADMIN', 'ADMIN')
+    auth = Check_PWD(server_ip)
     print(RawCommands["0A"] + ' Get:')
     for cmd in RawCommands['DNS Mode']:    
         if cmd != '20':
@@ -38,18 +36,23 @@ def ShowRawCommands():
 
 ShowRawCommands()
 
+def prefix(num):
+    return hex(num)[2:]
+
 def set_ipv6_data(dhcp_mode:str, auto_config:str, ipv6_opation:str, address:str, prefix:str):
+    # 會放在for loop裡面, 要跟dic list對得上
+    result = subprocess.run()
+    result.stdout
     print((f'30 68 09 01 {dhcp_mode} {auto_config} {ipv6_opation} {address} {prefix}'))
 
 def set_ipv6_gateway(gateway:str):
+    result = subprocess.run()
     print(f'30 68 09 02 {gateway}')
 
 def get_ipv6_data(data:str):
+    result = subprocess.run()
     print(f'30 68 09 00 {data}')
     pass
-
-def prefix(num):
-    return hex(num)[2:]
 
 def test_smcipmitool_30_68_09_set():
     # DHCPv6 Modes + Auto Config
@@ -76,6 +79,8 @@ def test_smcipmitool_30_68_09_set():
 
     # Delete IPv6 Address
     f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 01 02 00 01 20 11 00 00 00 00 00 00 00 00 00 00 00 00 11 11 40"
+    #test
+    f"SMCIPMITool.exe 172.31.40.95 ADMIN ADMIN ipmi raw 30 68 09 01 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
     set_ipv6_data('02', '00', '01', add_address, '40')
     # Check ip Address in smcipmitool or redfish
     # making GET request on /redfish/v1/Managers/1/EthernetInterfaces/1/

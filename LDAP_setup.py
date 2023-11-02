@@ -4,12 +4,13 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from Library.Redfish_requests import *
 from Library.SMASH import SMASH
+from Library.Strings import Check_PWD
 
 
-BMC_ip = '10.184.16.44'
+BMC_ip = '10.184.19.24'
 url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
 Account=Password='ADMIN'
-auth = ('ADMIN', 'ADMIN')
+auth = Check_PWD(BMC_ip)
 
 
 def Scrape(Account, Password):
