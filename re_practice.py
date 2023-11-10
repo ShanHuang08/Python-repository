@@ -35,12 +35,6 @@ path = '/redfish/v1/Managers/1/Oem/Supermicro/NTP'
 
 # enumerate_practice()
 # print(int('40', 16))
-# print(hex(192)[2:].upper())
-
-def set_ipv6_gateway(gateway:str):
-    print(f'30 68 09 02 {gateway}')
-# set_ipv6_gateway('test2')
-
 
 def raw_byte_array():
     value = input('Input 30 68 0A return code: ')
@@ -52,7 +46,15 @@ def raw_byte_array():
         print(f"Both values match")
     else:
         print(f"{Transfer_value} != {excepted}")
-    
-raw_byte_array()
-# StringGenerator()
 
+def ASCII_to_raw(url:str):
+    ASCII_code = [ord(r) for r in url]
+    result = ''
+    for i in ASCII_code:
+        result+=f"0x{hex(int(i))[2:]}" + ' '
+    print(result) 
+    return result
+
+# raw_byte_array()
+# StringGenerator()
+# raw = ASCII_to_raw('time.google.com')
