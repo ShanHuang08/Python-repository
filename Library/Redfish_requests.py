@@ -22,7 +22,7 @@ def GET(url, auth):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Get_data is not None:
+    if Get_data is not None and Get_data.status_code == 200:
         return [Get_data.status_code, Get_data.text, Get_data.json()]
     else:
         return Get_data
@@ -39,7 +39,7 @@ def GET_Data(url, auth):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Get_data is not None:
+    if Get_data is not None and Get_data.status_code == 200:
         return [Get_data.status_code, Get_data.text]
     else:
         return Get_data
@@ -61,7 +61,7 @@ def PATCH(url, auth, body):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Patch_data is not None:
+    if Patch_data is not None and Patch_data.status_code in [200, 202]:
         return [Patch_data.status_code, Patch_data.text, Patch_data.json()]
     else:
         return Patch_data
@@ -83,33 +83,10 @@ def POST(url, auth, body=None):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Post_data is not None:
+    if Post_data is not None and Post_data.status_code == 201:
         return [Post_data.status_code, Post_data.text, Post_data.json()]
     else:
         return Post_data
-
-def POST_Action(url, auth):
-    """
-    `POST()[0]` : `Status code`
-
-    `POST()[1]` : `text`
-
-    `POST()[-1]` : `json()`
-    """
-    Post_data = None
-    try:
-        Post_data = requests.post(url=url, auth=auth, verify=False)
-    except requests.exceptions.HTTPError as e:
-        print(e)
-    except requests.exceptions.ConnectTimeout as e:
-        print(e)
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-    if Post_data is not None:
-        return [Post_data.status_code, Post_data.text, Post_data.json()]
-    else:
-        return Post_data
-
 
 def DELETE(url, auth):
     """
@@ -126,7 +103,7 @@ def DELETE(url, auth):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)    
-    if Delete_data is not None:
+    if Delete_data is not None and Delete_data.status_code == 200:
         return [Delete_data.status_code, Delete_data.text]  
     else:
         return Delete_data

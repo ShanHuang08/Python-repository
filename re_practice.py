@@ -47,14 +47,18 @@ def raw_byte_array():
     else:
         print(f"{Transfer_value} != {excepted}")
 
+def AI_ASCII_to_raw(url: str) -> str:
+    return ' '.join([f"0x{hex(ord(r))[2:]}" for r in url])
+
 def ASCII_to_raw(url:str):
     ASCII_code = [ord(r) for r in url]
     result = ''
     for i in ASCII_code:
-        result+=f"0x{hex(int(i))[2:]}" + ' '
+        result+=f"0x{hex(int(i))[2:]}" + ' '   
     print(result) 
     return result
 
 # raw_byte_array()
 # StringGenerator()
-# raw = ASCII_to_raw('time.google.com')
+raw = ASCII_to_raw('time.google.com')
+
