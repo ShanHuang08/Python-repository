@@ -3,7 +3,7 @@ from time import sleep
 from Redfish_requests import *
 from SUT import Check_PWD
 
-ip = '10.184.28.110'
+ip = '10.184.26.167'
 auth = Check_PWD(ip)
 
 def Get_PostCode(ip, auth):
@@ -17,7 +17,7 @@ def Get_PostCode(ip, auth):
             print(f"{count}. PostCode = {kdata['PostCode']}")
             if kdata['PostCode'] == '00':
                 break
-            sleep(5)
+            sleep(3)
     else:
         print(jdata['PostCode'])
 

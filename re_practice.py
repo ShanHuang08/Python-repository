@@ -58,3 +58,4 @@ def ASCII_to_raw(url:str):
 # raw_byte_array()
 # StringGenerator()
 # raw = ASCII_to_raw('time.google.com')
+StringGenerator('128')
