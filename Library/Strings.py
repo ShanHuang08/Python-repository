@@ -44,11 +44,10 @@ def AI_StringGenerator():
                 result += choice(string.ascii_lowercase)
     print(result[0:Num])
 
-def StringGenerator():
-    Num = int(input("字串長度: "))
+def StringGenerator(Num:str):
     Start = 1
     result = ''
-
+    Num = int(Num)
     while Num > (5 * Start)-1:    
         if Start %2 != 0:
             # print("Num是英文")  #0-4, 10-14
@@ -90,5 +89,4 @@ def Check_PWD(ip):
     else:
         pwd = input('Input unique password: ')
         return ('ADMIN', pwd)
-
 
