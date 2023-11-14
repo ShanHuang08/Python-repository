@@ -16,8 +16,7 @@ def Check_PWD(ip):
         pwd = input('Input unique password: ')
         return ('ADMIN', pwd)
 
-def GetFWInfo():
-    ip = input('Input BMC IP: ')
+def GetFWInfo(ip:str):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     auth = Check_PWD(ip)
@@ -38,8 +37,8 @@ def GetFWInfo():
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
-    AddSUT()
-    # GetFWInfo()
+    # AddSUT()
+    GetFWInfo('172.31.32.94')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
