@@ -52,13 +52,13 @@ def AI_ASCII_to_raw(url: str) -> str:
 
 def ASCII_to_raw(url:str):
     ASCII_code = [ord(r) for r in url]
-    result = ''
-    for i in ASCII_code:
-        result+=f"0x{hex(int(i))[2:]}" + ' '   
+    result = ' '.join('0x'+hex(i)[2:] for i in ASCII_code)
+    # for i in ASCII_code:
+    #     result+=f"0x{hex(int(i))[2:]}" + ' '   
     print(result) 
     return result
 
 # raw_byte_array()
 # StringGenerator()
-# raw = ASCII_to_raw('time.google.com')
-StringGenerator('128')
+raw = ASCII_to_raw('time.google.com')
+# StringGenerator('128')
