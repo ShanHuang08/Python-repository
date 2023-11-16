@@ -61,6 +61,8 @@ def ASCII_to_raw(url:str):
 
 # raw_byte_array()
 # StringGenerator()
-raw = ASCII_to_raw('+0000')
+# raw = ASCII_to_raw('+0000')
 # StringGenerator('128')
 # print(hex(139))
+gen = '13' if '13' in ['1'] else '12'
+print(gen)
