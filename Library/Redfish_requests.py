@@ -11,7 +11,7 @@ def GET(url, auth=None):
 
     `GET()[1]` : `text`
 
-    `GET()[-1]` : `json()`
+    `GET()[-1]` : `Get_data`
     """
     Get_data = None
     try:
@@ -23,7 +23,7 @@ def GET(url, auth=None):
     except requests.exceptions.ConnectionError as e:
         print(e)
     if Get_data is not None:
-        return [Get_data.status_code, Get_data.text, Get_data.json()]
+        return [Get_data.status_code, Get_data.text, Get_data]
     else:
         return Get_data
 
