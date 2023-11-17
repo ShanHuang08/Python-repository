@@ -10,8 +10,8 @@ def SMASH(ip):
             ssh.set_missing_host_key_policy(AutoAddPolicy())
             ssh.connect(hostname=ip, username=account, password=pwd, port=22)
             ssh.exec_command('exit')
-            sleep(2)
             ssh.close()
+            sleep(3)
             print(f'SMASH run {account} Success')
         except ssh_exception.SSHException as e:
             print(f"SSHException occurred: {str(e)}")

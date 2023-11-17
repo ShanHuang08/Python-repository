@@ -5,7 +5,7 @@ import urllib3
 # 禁用所有警告 Idea from ChatGPT
 urllib3.disable_warnings()
 
-def GET(url, auth):
+def GET(url, auth=None):
     """
     `GET()[0]` : `Status code`
 

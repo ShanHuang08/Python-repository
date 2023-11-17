@@ -16,15 +16,35 @@ def Check_PWD(ip):
         pwd = input('Input unique password: ')
         return ('ADMIN', pwd)
 
+def GetGUID(ip, pwd):
+    Mongo_url = 'https://satc.supermicro.com/api/mongohelper/tools/sut/'+ip+'/ADMIN/'+pwd+'/'
+    First_Sector = ip.split()[0]
+    if First_Sector == '10':
+        Mongo_url = Mongo_url + '10.184.0.12'
+        Guid = requests.get(url=Mongo_url)
+        if Guid.status_code == 200:
+            return print(Guid.json()['guid'])
+        else:
+            print(f"Status code: {Guid[0]}\n{Guid[1]}")
+    else:
+        Mongo_url = Mongo_url + '172.31.2.47'
+        Guid = requests.get(url=Mongo_url)
+        if Guid.status_code == 200:
+            return print(Guid.json()['guid'])
+        else:
+            print(f"Status code: {Guid[0]}\n{Guid[1]}")
+
 def GetFWInfo(ip:str):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     auth = Check_PWD(ip)
     BMC_Data = None
+    BIOS_Data = None
     Check_Pwd = GET(url='https://'+ip+'/redfish/v1/Systems', auth=auth)
 
     if Check_Pwd[0] == 200:
         try:
+            GetGUID(ip, pwd=auth[1])
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
             # print(BMC_Data['Version'])
@@ -38,7 +58,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('172.31.32.94')
+    GetFWInfo('10.134.21.26')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
