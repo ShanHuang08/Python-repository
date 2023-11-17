@@ -3,7 +3,7 @@ from time import sleep
 from Redfish_requests import *
 from SUT import Check_PWD
 
-ip = '10.184.26.167'
+ip = '172.31.32.216'
 auth = Check_PWD(ip)
 
 def Get_PostCode(ip, auth):

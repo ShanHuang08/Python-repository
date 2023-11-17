@@ -64,5 +64,29 @@ def ASCII_to_raw(url:str):
 # raw = ASCII_to_raw('+0000')
 # StringGenerator('128')
 # print(hex(139))
-gen = '13' if '13' in ['1'] else '12'
-print(gen)
+
+
+
+import requests
+
+def GetGUID(ip):
+    Mongo_url = 'https://satc.supermicro.com/api/mongohelper/tools/sut/'+ip+'/ADMIN/'+'ADMIN'+'/'
+    print(Mongo_url)
+    First_Sector = ip.split('.')[0]
+    if First_Sector == '10':
+        Mongo_url+='10.184.0.12'
+        Guid = requests.get(url=Mongo_url)
+        print('test')
+        print(Guid.status_code)
+        print(Guid.text)
+
+    else:
+        Mongo_url+='172.31.2.47'
+        Guid = requests.get(url=Mongo_url)
+        print('test2')
+        print(Guid.status_code)
+        print(Guid.text)
+
+
+GetGUID(ip='10.184.25.25')
+
