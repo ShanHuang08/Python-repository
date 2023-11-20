@@ -1,7 +1,7 @@
 import pyghmi
 from pyghmi.ipmi import command
 
-BMC_IP = '10.184.23.83'
+BMC_IP = '10.140.178.255'
 rmcp_port = 623
 pwd = 'ADMIN'
 
