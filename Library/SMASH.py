@@ -17,3 +17,23 @@ def SMASH(ip):
             print(f"SSHException occurred: {str(e)}")
         except TimeoutError as e:
             print(f"Connection timed out: {e}")
+
+def ssh_reboot(ip, cmd):
+    account = 'root'
+    pwd = '111111'
+    try:
+        ssh = SSHClient()
+        ssh.set_missing_host_key_policy(AutoAddPolicy())
+        ssh.connect(hostname=ip, username=account, password=pwd, port=22)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        result = [out for out in stdout.readlines()]
+        if cmd == 'reboot':
+            sleep(10)      
+        ssh.close()
+        return result
+    except ssh_exception.SSHException as e:
+        print(f"SSHException occurred: {e}")
+    except ssh_exception.NoValidConnectionsError as e:
+        print(f'{e}, SSh port is closed!')
+    except TimeoutError as e:
+        print(f"Connection timed out: {e}")

@@ -1,6 +1,7 @@
 import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import subprocess
+from time import sleep
 
 BMC_IP = '10.140.178.255'
 OS_IP = '10.184.21.100'
@@ -62,28 +63,7 @@ def ssh_bmc():
 local_path = "D:/CentOS/Upload"
 remote_path = "/root"
 FileName = '/test1.txt'
-def ssh_updoad():
-    print(f"Server: {OS_IP}")
-    account = 'root'
-    pwd = '111111'
- 
-    try:
-        transport = paramiko.Transport((BMC_IP, ssh_port))
-        transport.connect(username=account, password=pwd)
-        sftp = paramiko.SFTPClient.from_transport(transport)
-        sftp.put(local_path+FileName, remote_path+FileName)
-        print(f'{FileName[1:]}檔案上傳成功')
-        sftp.close()
-        transport.close()
 
-    except ssh_exception.SSHException as e:
-        print(f"SSHException occurred: {str(e)}")
-    except ssh_exception.NoValidConnectionsError as e:
-        print(f'{str(e)}, SSh port is closed!')
-    except TimeoutError as e:
-        print(f"Connection timed out: {e}")
-    except Exception as e:
-        print(f"檔案上傳失敗：{e}")
 
 def ssh_os():
     print(f"Server: {OS_IP}")

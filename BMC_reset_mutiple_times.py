@@ -1,5 +1,5 @@
 import subprocess
-from Library.Redfish_requests import GET, POST_Action, PATCH
+from Library.Redfish_requests import GET, POST, PATCH
 from time import sleep
 from sys import exit
 import requests
@@ -27,7 +27,7 @@ def BMC_loop(ip, auth):
     try:
         print('Start executing BMC reset cycle')
         for i in range(50):
-            POST_Action(url='https://'+ip+'/redfish/v1/Managers/1/Actions/Manager.Reset', auth=auth)
+            POST(url='https://'+ip+'/redfish/v1/Managers/1/Actions/Manager.Reset', auth=auth)
             sleep(150) 
             count+=1
         print(f'Loop done, Execute {count} times')
