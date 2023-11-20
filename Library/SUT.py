@@ -21,16 +21,17 @@ def GetGUID(ip, pwd):
     First_Sector = ip.split()[0]
     if First_Sector == '10':
         Mongo_url = Mongo_url + '10.184.0.12'
-        Guid = requests.get(url=Mongo_url)
-        if Guid.status_code == 200:
-            return print(Guid.json()['guid'])
+        Guid = GET(url=Mongo_url)[-1].json()['guid']
+
+        if Guid[0] == 200:
+            return print(Guid)
         else:
             print(f"Status code: {Guid[0]}\n{Guid[1]}")
     else:
         Mongo_url = Mongo_url + '172.31.2.47'
-        Guid = requests.get(url=Mongo_url)
-        if Guid.status_code == 200:
-            return print(Guid.json()['guid'])
+        Guid = GET(url=Mongo_url)[-1].json()['guid']
+        if Guid[0] == 200:
+            return print(Guid)
         else:
             print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
@@ -48,11 +49,11 @@ def GetFWInfo(ip:str):
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
             # print(BMC_Data['Version'])
-            BMC_FW = BMC_Data[-1]['Oem']['Supermicro']['UniqueFilename']
-            BIOS_FW = BIOS_Data[-1]['Oem']['Supermicro']['UniqueFilename']
+            BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+            BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             return print(f"{BMC_FW}\n{BIOS_FW}")
         except KeyError as e:
-            print(f"{e}\nBMC Data: {BMC_Data[-1]}\nBIOS Data: {BIOS_Data[-1]}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}")
     else:
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 

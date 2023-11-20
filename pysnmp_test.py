@@ -121,7 +121,7 @@ def UID_Change(Change):
 def Disable_Account(Account_Enable=None):
     if Account_Enable == False:
         print('Disable account')
-        jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1]
+        jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1].json()
         count = str(jdata['Members@odata.count']+1)
         redfish['MD5_DES']['Enabled'] = Account_Enable
         Modify = PATCH(url='https://'+server_ip+ redfish['Accounts'] + count, auth=auth, body=redfish['MD5_DES'])
@@ -141,7 +141,7 @@ def Clear_setup():
         print(f'Failed, Status code: {Disable_SNMP[0]}')
 
     # 找到Account建立在哪個Link, 針對Link做Delete
-    jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1]
+    jdata = GET(url='https://'+server_ip+ redfish['Accounts'], auth=auth)[-1].json()
     count = str(jdata['Members@odata.count']+1)
     Delete = DELETE(url='https://'+server_ip+ redfish['Accounts'] + count, auth=auth)
     if Delete[0] == 200:
