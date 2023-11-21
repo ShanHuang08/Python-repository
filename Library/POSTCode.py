@@ -1,10 +1,10 @@
-# from Library.Redfish_requests import *
+from Library.Redfish_requests import *
 from time import sleep
-from Redfish_requests import *
-from SUT import Check_PWD
+# from Redfish_requests import *
+from Library.Strings import Check_PWD
 
 ip = '172.31.32.216'
-auth = Check_PWD(ip)
+
 
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
@@ -20,5 +20,6 @@ def Get_PostCode(ip, auth):
             sleep(3)
     else:
         print(jdata['PostCode'])
-
-Get_PostCode(ip, auth)
+if __name__=='__main__':
+    auth = Check_PWD(ip)
+    Get_PostCode(ip, auth)
