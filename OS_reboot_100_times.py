@@ -1,11 +1,13 @@
 from Library.SMASH import ssh_reboot
 from Library.POSTCode import Get_PostCode
-from Library.Redfish_requests import GET
+from Library.Redfish_requests import GET, PATCH
+from Library.Strings import Check_PWD
 import requests
 import subprocess
-os_ip = '10.184.22.137'
-bmc_ip = '10.184.25.25'
 
+bmc_ip = '10.184.25.25'
+os_ip = '10.184.22.137'
+auth = Check_PWD(ip=bmc_ip, unique='')
 """
 Reboot (cmd)
 Check PostCode to confirm whether reboot is completed, PostCode == 00 will finish the function.  (Get_PostCode) Need timeout
@@ -42,7 +44,7 @@ def Check_Host_Interface():
                 pass
                 #Use redfish to reboot
 
-            file.write(Get_PostCode(ip=bmc_ip, auth=('ADMIN', 'ADMIN')))
+            file.write(Get_PostCode(ip=bmc_ip, auth=auth))
 
             if Check_ipaddr(ip=os_ip):
                 file.write('Boot into OS')
@@ -52,10 +54,11 @@ def Check_Host_Interface():
                         file.write('Host interface Enable on OS\n') #Data write
                     else:
                         file.write('Host interface Disable on OS\n') #Data write
+                        Fail_list.append(f'NO.{count} Disable')
             else:
                 file.write('Boot failed')
 
-            Check = GET(url='https://'+bmc_ip+'/redfish/v1//Managers/1/EthernetInterfaces/ToHost', auth=('ADMIN', 'ADMIN'))
+            Check = GET(url='https://'+bmc_ip+'/redfish/v1//Managers/1/EthernetInterfaces/ToHost', auth=auth)
             if Check[0] == 200 and Check[-1].json()['InterfaceEnabled'] == True:
                 file.write('Host interface Enable on Redfish\n') #Data write
                 if count == 100 or count == 150:
@@ -70,19 +73,15 @@ def Check_Host_Interface():
             
         except requests.exceptions.HTTPError as e:
             file.write(str(e)+'\n')
-            Fail_list.append(f'NO.{count} {e}')
             continue
         except requests.exceptions.ConnectTimeout as e:
             file.write(str(e)+'\n')
-            Fail_list.append(f'NO.{count} {e}')
             continue
         except requests.exceptions.ConnectionError as e:
             file.write(str(e)+'\n')
-            Fail_list.append(f'NO.{count} {e}')
             continue
         except TypeError as e:
             file.write(str(e)+'\n')
-            Fail_list.append(f'NO.{count} {e}')
             continue
 
     file.close()

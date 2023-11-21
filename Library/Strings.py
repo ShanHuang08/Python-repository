@@ -82,11 +82,12 @@ def get_a_random_ip():
 def generate_special_char():
     return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
 
-def Check_PWD(ip):
+
+
+def Check_PWD(ip, unique):
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
     if Check_Network[0] == 200:
         return ('ADMIN', 'ADMIN')
     else:
         pwd = input('Input unique password: ')
-        return ('ADMIN', pwd)
-
+        return ('ADMIN', unique)

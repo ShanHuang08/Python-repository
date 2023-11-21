@@ -1,10 +1,16 @@
 from Library.Redfish_requests import *
 from time import sleep
 # from Redfish_requests import *
-from Library.Strings import Check_PWD
 
 ip = '172.31.32.216'
 
+def Check_PWD(ip):
+    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
+    if Check_Network[0] == 200:
+        return ('ADMIN', 'ADMIN')
+    else:
+        pwd = input('Input unique password: ')
+        return ('ADMIN', pwd)
 
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
