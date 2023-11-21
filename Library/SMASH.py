@@ -27,9 +27,9 @@ def ssh_reboot(ip, cmd):
         ssh.connect(hostname=ip, username=account, password=pwd, port=22)
         stdin, stdout, stderr = ssh.exec_command(cmd)
         result = [out for out in stdout.readlines()]
+        ssh.close()
         if cmd == 'reboot':
             sleep(10)      
-        ssh.close()
         return result
     except ssh_exception.SSHException as e:
         print(f"SSHException occurred: {e}")

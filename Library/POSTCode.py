@@ -14,12 +14,17 @@ def Get_PostCode(ip, auth):
         while True:
             kdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
             count+=1
-            print(f"{count}. PostCode = {kdata['PostCode']}")
+            # print(f"{count}. PostCode = {kdata['PostCode']}")
             if kdata['PostCode'] == '00':
-                break
+                return f"{count}. PostCode = {kdata['PostCode']}"
+            if count > 200 and kdata['PostCode'] != '00':
+                # use redfish to reboot and select OS
+                sleep(2)
             sleep(3)
     else:
-        print(jdata['PostCode'])
+        # print(jdata['PostCode'])
+        return f"1. PostCode = {jdata['PostCode']}"
+    
 if __name__=='__main__':
     auth = Check_PWD(ip)
     Get_PostCode(ip, auth)
