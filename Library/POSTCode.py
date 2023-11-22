@@ -24,7 +24,7 @@ def Get_PostCode(ip, auth):
             if kdata['PostCode'] == '00':
                 return f"{count}. PostCode = {kdata['PostCode']}"
             if count > 200 and kdata['PostCode'] != '00':
-                # use redfish to reboot and select OS
+                POST(url='https://'+ip+'/redfish/v1/Systems/1/Actions/ComputerSystem.Reset/', auth=auth, body={"ResetType": "ForceRestart"})
                 sleep(2)
             sleep(3)
     else:

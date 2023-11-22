@@ -59,7 +59,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.184.25.25')
+    GetFWInfo('10.184.21.109')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>

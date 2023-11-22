@@ -1,5 +1,5 @@
 from Library.dictionary import RawCommands
-from Library.Strings import Check_PWD
+from Library.POSTCode import Check_PWD
 import subprocess
 
 server_ip = input('Input SUT ip: ')
