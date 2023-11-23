@@ -2,7 +2,7 @@ from Library.SMASH import ssh_reboot
 from Library.POSTCode import Get_PostCode
 from Library.Redfish_requests import GET, POST
 from Library.Strings import Check_PWD
-import requests
+from requests.exceptions import HTTPError, ConnectTimeout, ConnectionError
 import subprocess
 import unittest
 from time import sleep
@@ -17,13 +17,29 @@ def Check_ipaddr(ip):
             Text+=line
     return len(Text) > 0
 
-def Check_Host_in_OS(ip):
+def Check_Host_in_OS(ip, file):
     Checkpoint = []
     stdout = ssh_reboot(ip=ip, cmd='ip add')
     for i in stdout:
         if '169.254.3' in i:
             Checkpoint.append('Enable')
-    return Checkpoint
+    if len(Checkpoint) > 0:
+        file.write('Host interface Enable on OS\n')
+    else:
+        file.write('Host interface Disable on OS\n') 
+    return len(Checkpoint) > 0
+
+def Check_Host_in_Redfish(ip, auth, file):
+    Check = GET(url='https://'+ip+'/redfish/v1//Managers/1/EthernetInterfaces/ToHost', auth=auth)
+    if Check[0] == 200 and Check[-1].json()['InterfaceEnabled'] == True:
+        file.write('Host interface Enable on Redfish\n') #Data write
+
+    elif Check[0] == 200 and Check[-1].json()['InterfaceEnabled'] == False:
+        file.write('Host interface Disable on Redfish\n') #Data write
+    else:
+        file.write(f'Status code: {Check[0]}\nContent:{Check[1]}\n')
+        
+    return Check[-1].json()['InterfaceEnabled'] == True
 
 def Check_Host_Interface():
     file = open('log.txt', 'w')
@@ -45,49 +61,36 @@ def Check_Host_Interface():
             PingOS = Check_ipaddr(ip=os_ip)
             if PingOS:
                 file.write('\nBoot into OS\n')
-
-                if len(Check_Host_in_OS(ip=os_ip)) > 0:
-                    file.write('Host interface Enable on OS\n') 
-                else:
-                    file.write('Host interface Disable on OS\n') 
+                if not Check_Host_in_OS(ip=os_ip, file=file):
                     Fail_list.append(f'NO.{count} Disable')
-
+       
             elif PingOS == False and '00' in Check_PostCode:
                 file.write('\nTry again!\n')
                 sleep(30)
                 if Check_ipaddr(ip=os_ip):
                     file.write('Boot into OS\n')
-
-                    if len(Check_Host_in_OS(ip=os_ip)) > 0:
-                        file.write('Host interface Enable on OS\n') 
-                    else:
-                        file.write('Host interface Disable on OS\n') 
+                    if not Check_Host_in_OS(ip=os_ip, file=file):
                         Fail_list.append(f'NO.{count} Disable')
                 else:
                     file.write('\nBoot failed\n')
             else:    
                 file.write('\nBoot failed\n')
 
-            Check = GET(url='https://'+bmc_ip+'/redfish/v1//Managers/1/EthernetInterfaces/ToHost', auth=auth)
-            if Check[0] == 200 and Check[-1].json()['InterfaceEnabled'] == True:
-                file.write('Host interface Enable on Redfish\n') #Data write
-                if count == 100 or count == 150:
+            if Check_Host_in_Redfish(ip=bmc_ip, auth=auth, file=file):
+                if count in [100, 150]:
                     print(f'NO.{count} Host interface Enable') 
-            elif Check[0] == 200 and Check[-1].json()['InterfaceEnabled'] == False:
-                file.write('Host interface Disable on Redfish\n') #Data write
-                Fail_list.append(f'NO.{count} Disable')
-                if count == 100 or count == 150:
-                    print(f'NO.{count} Host interface Disable') 
             else:
-                file.write(f'Status code: {Check[0]}\nContent:{Check[1]}\n')
-            
-        except requests.exceptions.HTTPError as e:
+                Fail_list.append(f'NO.{count} Disable')
+                if count in [100, 150]:
+                    print(f'NO.{count} Host interface Disable') 
+
+        except HTTPError as e:
             file.write(str(e)+'\n')
             continue
-        except requests.exceptions.ConnectTimeout as e:
+        except ConnectTimeout as e:
             file.write(str(e)+'\n')
             continue
-        except requests.exceptions.ConnectionError as e:
+        except ConnectionError as e:
             file.write(str(e)+'\n')
             continue
         except TypeError as e:
