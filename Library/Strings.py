@@ -89,5 +89,4 @@ def Check_PWD(ip, unique):
     if Check_Network[0] == 200:
         return ('ADMIN', 'ADMIN')
     else:
-        pwd = input('Input unique password: ')
         return ('ADMIN', unique)
