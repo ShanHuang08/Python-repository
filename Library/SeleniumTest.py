@@ -1,20 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
-from Library.Strings import Check_PWD
+from Library.Call_Method import Check_PWD
 
 class Selenium_test:
     def __init__(self) -> None:
         self.driver = webdriver
-        self.server_ip = input('Input server ip: ')
-        self.pwd = Check_PWD(self.server_ip)[1]
+        # self.server_ip = input('Input server ip: ')
+        # self.pwd = Check_PWD(self.server_ip)[1]
 
-    def Open_Chrome(self, url):
+    def Open_Chrome(self):
         self.browser = self.driver.Chrome('C:\\Users\\Stephenhuang\\Python\\chromedriver.exe')
-        self.browser.get(url=url)
+
     
-    def Open_Firefox(self):
-        self.browser = self.driver.Firefox()
+
     
     def find_ID(self, ID:str):
         self.browser.find_element(By.ID, value=ID)
@@ -33,3 +32,7 @@ class Selenium_test:
 
     def find_xpaths(self, xpath:str):
         self.browser.find_elements(By.XPATH, value=xpath)
+    
+    
+    def Open_Firefox(self):
+        self.browser = self.driver.Firefox()
