@@ -58,8 +58,8 @@ def GetFWInfo(ip:str):
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
-    # AddSUT()
-    GetFWInfo('10.184.21.109')
+    AddSUT()
+    # GetFWInfo('10.184.20.214')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
