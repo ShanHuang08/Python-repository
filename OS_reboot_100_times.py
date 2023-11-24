@@ -41,11 +41,11 @@ def Check_Host_in_Redfish(ip, auth, file):
         
     return Check[-1].json()['InterfaceEnabled'] == True
 
-def Check_Host_Interface():
+def OS_reboot_loop(times:int):
     file = open('log.txt', 'w')
     count = 0
     Fail_list = []
-    for _ in range(150):       
+    for _ in range(int(times)):       
         try:
             if Check_ipaddr(ip=os_ip):
                 ssh_reboot(ip=os_ip, cmd='reboot')
@@ -66,7 +66,7 @@ def Check_Host_Interface():
        
             elif PingOS == False and '00' in Check_PostCode:
                 file.write('\nTry again!\n')
-                sleep(30)
+                sleep(90)
                 if Check_ipaddr(ip=os_ip):
                     file.write('Boot into OS\n')
                     if not Check_Host_in_OS(ip=os_ip, file=file):
@@ -96,17 +96,16 @@ def Check_Host_Interface():
         except TypeError as e:
             file.write(str(e)+'\n')
             continue
-
     file.close()
-    print(f'Reboot {count} times\nRun PASS') if len(Fail_list) == 0 else print(f'Reboot {count} times\nRun FAIL')
+    print(f'Reboot {count} times\nRun PASS') if len(Fail_list) == 0 else print(f'{Fail_list}\nReboot {count} times\nRun FAIL')
 
 class BMCResetTest(unittest.TestCase):
     def test(self):
-        Check_Host_Interface()
+        OS_reboot_loop(5)
 
 if __name__=='__main__':
-    bmc_ip = '10.184.25.25'
-    os_ip = '10.184.22.137'
-    auth = Check_PWD(ip=bmc_ip, unique='SMUVZINHBZ')
+    bmc_ip = '10.184.16.55'
+    os_ip = '10.184.21.44'
+    auth = Check_PWD(ip=bmc_ip, unique='PEDRKBSHTO')
     unittest.main()   
 

@@ -65,3 +65,7 @@ def ASCII_to_raw(url:str):
 # StringGenerator('128')
 # print(hex(139))
 
+def OS_reboot_loop(times:int):
+    print(int(times))
+    print(type(int(times)))
+OS_reboot_loop('20')
