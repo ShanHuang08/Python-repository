@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from lxml import etree
 from Library.Redfish_requests import *
-from Library.Strings import StrReverse, StringGenerator
+from Library.Call_Method import StrReverse, StringGenerator
 
 
 reformat = r"^b'\<([0-9]{1,3})\>([A-Za-z]{3} [0-9 ]{2} \d{2}:\d{2}:\d{2}) ((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])) ([\S\s]+)"
@@ -59,13 +59,3 @@ def ASCII_to_raw(url:str):
     print(result) 
     return result
 
-# raw_byte_array()
-# StringGenerator()
-# raw = ASCII_to_raw('+0000')
-# StringGenerator('128')
-# print(hex(139))
-
-def OS_reboot_loop(times:int):
-    print(int(times))
-    print(type(int(times)))
-OS_reboot_loop('20')

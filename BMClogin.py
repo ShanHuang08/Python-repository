@@ -4,6 +4,7 @@ from time import sleep
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from Library.dictionary import *
+from selenium.webdriver.chrome.service import Service
 
 # https://gitlab.supermicro.com/swqa/ipmi-test-automation/-/blob/master/asset/xpath/webpagexpath.py
 ip = '10.184.14.49'
@@ -15,7 +16,7 @@ Login = Path['Login']
 def Chrome_LaunchConsole():
     browsers=[]
     for i in range(1):
-        browser=webdriver.Chrome('chromedriver.exe')
+        browser=webdriver.Chrome(service=Service('chromedriver.exe'))
         # browser=webdriver.Firefox(executable_path='geckodriver.exe')
         browser.get('http://'+ip)
         browser.maximize_window()

@@ -1,7 +1,7 @@
 from Library.SMASH import ssh_reboot
 from Library.POSTCode import Get_PostCode
 from Library.Redfish_requests import GET, POST
-from Library.Strings import Check_PWD
+from Library.Call_Method import Check_PWD
 from requests.exceptions import HTTPError, ConnectTimeout, ConnectionError
 import subprocess
 import unittest
@@ -11,18 +11,12 @@ def Check_ipaddr(ip):
     command = 'ping -n 3 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     List = Ping.stdout.splitlines()
-    Text=''
-    for line in List:
-        if "TTL=" in line:
-            Text+=line
+    Text =''.join(line for line in List if "TTL=" in line)
     return len(Text) > 0
 
 def Check_Host_in_OS(ip, file):
-    Checkpoint = []
     stdout = ssh_reboot(ip=ip, cmd='ip add')
-    for i in stdout:
-        if '169.254.3' in i:
-            Checkpoint.append('Enable')
+    Checkpoint = ['Enable' for i in stdout if '169.254.3' in i]
     if len(Checkpoint) > 0:
         file.write('Host interface Enable on OS\n')
     else:
@@ -99,7 +93,7 @@ def OS_reboot_loop(times:int):
     file.close()
     print(f'Reboot {count} times\nRun PASS') if len(Fail_list) == 0 else print(f'{Fail_list}\nReboot {count} times\nRun FAIL')
 
-class BMCResetTest(unittest.TestCase):
+class OSRebootTest(unittest.TestCase):
     def test(self):
         OS_reboot_loop(5)
 
