@@ -58,4 +58,3 @@ def ASCII_to_raw(url:str):
     #     result+=f"0x{hex(int(i))[2:]}" + ' '   
     print(result) 
     return result
-
