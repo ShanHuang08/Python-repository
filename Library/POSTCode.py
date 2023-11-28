@@ -1,8 +1,8 @@
-from Library.Redfish_requests import *
+# from Library.Redfish_requests import *
 from time import sleep
-# from Redfish_requests import *
+from Redfish_requests import *
 
-ip = '172.31.32.216'
+
 
 def Check_PWD(ip):
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
@@ -20,7 +20,7 @@ def Get_PostCode(ip, auth):
         while True:
             kdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
             count+=1
-            # print(f"{count}. PostCode = {kdata['PostCode']}")
+            print(f"{count}. PostCode = {kdata['PostCode']}")
             if kdata['PostCode'] == '00':
                 return f"{count}. PostCode = {kdata['PostCode']}"
             if count > 200 and kdata['PostCode'] != '00':
@@ -28,9 +28,10 @@ def Get_PostCode(ip, auth):
                 sleep(2)
             sleep(3)
     else:
-        # print(jdata['PostCode'])
+        print(f"PostCode = {jdata['PostCode']}")
         return f"1. PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
+    ip = '10.184.25.25'
     auth = Check_PWD(ip)
     Get_PostCode(ip, auth)
