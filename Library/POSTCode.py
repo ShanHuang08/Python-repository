@@ -15,23 +15,24 @@ def Check_PWD(ip):
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
     jdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
-    if jdata['PostCode'] != '00':
+    if jdata['PostCode'] not in ['00', '0000']:
         count = 0
         while True:
             kdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
             count+=1
             print(f"{count}. PostCode = {kdata['PostCode']}")
-            if kdata['PostCode'] == '00':
+            if kdata['PostCode'] in ['00']:
+                print(f"{count}. PostCode = {kdata['PostCode']}")
                 return f"{count}. PostCode = {kdata['PostCode']}"
-            if count > 200 and kdata['PostCode'] != '00':
+            if count > 300 and kdata['PostCode'] not in ['00', '0000']:
                 POST(url='https://'+ip+'/redfish/v1/Systems/1/Actions/ComputerSystem.Reset/', auth=auth, body={"ResetType": "ForceRestart"})
                 sleep(2)
             sleep(3)
     else:
         print(f"PostCode = {jdata['PostCode']}")
-        return f"1. PostCode = {jdata['PostCode']}"
+        return f"PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
-    ip = '10.184.25.25'
+    ip = '172.31.35.83'
     auth = Check_PWD(ip)
     Get_PostCode(ip, auth)

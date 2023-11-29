@@ -27,12 +27,6 @@ def enumerate_practice():
             # <class 'int'> <class 'str'>
     print(TestDict)
 
-def OcttoHex():
-    Oct = int(input('Input Oct: '))
-    return print(hex(Oct)[2:].upper())
-
-path = '/redfish/v1/Managers/1/Oem/Supermicro/NTP'
-
 # enumerate_practice()
 # print(int('40', 16))
 
@@ -58,3 +52,7 @@ def ASCII_to_raw(url:str):
     #     result+=f"0x{hex(int(i))[2:]}" + ' '   
     print(result) 
     return result
+
+# import os
+# os.path.exists('C:\\Users\\')
+# os.getcwd()
