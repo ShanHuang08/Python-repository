@@ -3,11 +3,11 @@ from pysnmp.proto import rfc1902
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
 from sys import exit
-from Library.Strings import Check_PWD
+from Library.Call_Method import Check_PWD
 
 # Source:ChatGPT 2023/8/8
 
-server_ip = '172.31.33.188'
+server_ip = '10.184.29.186'
 port = 161
 Get_Only = False
 oid = "1.3.6.1.4.1.21317.1.10.0"
@@ -18,7 +18,7 @@ account = 'SnmpUser'
 community_key='Public'
 v3_key = 'Aa123456' #MD5/DES
 Account_Enable = True
-auth = Check_PWD(server_ip)
+auth = Check_PWD(server_ip, unique='FFSTEPBSVQ')
 
 def snmpv2_test(server_ip, port, community_key, oid, value=None):
     # 定義 SNMP Community 和 SNMP 版本
