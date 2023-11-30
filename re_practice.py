@@ -56,3 +56,11 @@ def ASCII_to_raw(url:str):
 # import os
 # os.path.exists('C:\\Users\\')
 # os.getcwd()
+class TestError(Exception):
+    """Raise for `TestError` exceptions"""    
+
+class TestError2(AssertionError):
+    """Raise for `TestError2` exceptions"""   
+
+class TestFailedError(AssertionError):
+    """Raise for a test failed"""
