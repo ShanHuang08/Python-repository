@@ -2,7 +2,7 @@ from datetime import datetime
 from lxml import etree
 
 Change_FileName = 'BMC_Change.txt'
-Empty_Tag = ['CertFile','PrivKeyFile','HostName','Address']
+Empty_Tag = ['CertFile','PrivKeyFile','HostName','Address','child10']
 Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 
 def TXT_to_List():
@@ -134,8 +134,8 @@ def GetBiosTagData():
 
 def Modify_test():
     parser = etree.XMLParser(strip_cdata=False) #保留CDATA section
-    tree = etree.parse(Ori_xml, parser=parser)
-    # tree = etree.parse('test.xml', parser=parser)
+    # tree = etree.parse(Ori_xml, parser=parser)
+    tree = etree.parse('test.xml', parser=parser)
     root = tree.getroot()
     # print(root.tag)
     
@@ -145,7 +145,7 @@ def Modify_test():
             # print(child.tag, child.text) 
             count+=1
         if count > 1:
-            print(f'{TagName[i]} 重複--------------------')
+            # print(f'{TagName[i]} 重複--------------------')
             for child in root.iter(TagName[i]):
                 # 1.Tag value是Enable/Disable, 第二個value是數字
                 if child.text in ['Enable', 'Disable']:
@@ -164,7 +164,7 @@ def Modify_test():
                         print(f'{child.text} == {TagValue[i]}, {TagName[i]}不用更新')
                 # 2.<User UserID="2"> <User UserID="3">, 下面子節點全部一樣, 先get參數的值, 再去查看下一層的child.text, 修改text
         else:
-            print(f'{TagName[i]} 不重複--------------------')
+            # print(f'{TagName[i]} 不重複--------------------')
             # Bios都不重複, 用是否有attribute來篩選
             for child in root.iter(TagName[i]):
                 print(f'{child.text} != {TagValue[i]}, 更新{TagName[i]}')
