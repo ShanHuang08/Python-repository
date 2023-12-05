@@ -9,11 +9,8 @@ reformat = r"^b'\<([0-9]{1,3})\>([A-Za-z]{3} [0-9 ]{2} \d{2}:\d{2}:\d{2}) ((([a-
 
 pattern = r'Setting: "<([^>]+)>([^<]+)</\1>"'
 
-# print("C:\\Users\\Username\\Documents")
-# print(r"C:\Users\Username\Documents")
 import Library.dictionary as dic
 dic.RawCommands
-Ori_xml = r'D:\Old\H13SRD-F\01.01.05\bmccfg_0712_1558.xml'
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
