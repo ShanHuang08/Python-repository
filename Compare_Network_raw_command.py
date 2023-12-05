@@ -1,5 +1,6 @@
 from Library.dictionary import RawCommands
-from Library.POSTCode import Check_PWD
+from Library.SMCIPMITool import SMCIPMITool
+from Library.Call_Method import Check_PWD
 import subprocess
 
 server_ip = input('Input SUT ip: ')

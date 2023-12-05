@@ -53,14 +53,19 @@ def ASCII_to_raw(url:str):
     print(result) 
     return result
 
-# import os
-# os.path.exists('C:\\Users\\')
-# os.getcwd()
-class TestError(Exception):
-    """Raise for `TestError` exceptions"""    
 
-class TestError2(AssertionError):
-    """Raise for `TestError2` exceptions"""   
+from Library.SMCIPMITool import SMCIPMITool
+from Library.Call_Method import Check_PWD
+def testcmd():
+    ip='10.184.30.32'
+    pwd=Check_PWD(ip=ip, unique='PZSZWQVSSE')[1]
+    SMC_tool = SMCIPMITool(ip, pwd)
+    SMC_tool.Execute('ipmi power status')
+# testcmd()
 
-class TestFailedError(AssertionError):
-    """Raise for a test failed"""
+
+
+
+
+
+
