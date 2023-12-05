@@ -2,6 +2,7 @@ from random import choice, randint, sample
 import string
 from Library.Redfish_requests import *
 import subprocess
+import sys
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -84,16 +85,20 @@ def generate_special_char():
     return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
 
 
-def Check_PWD(ip, unique):
-    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
-    if Check_Network[0] == 200:
-        return ('ADMIN', 'ADMIN')
-    else:
-        return ('ADMIN', unique)
-
 def Check_ipaddr(ip):
     command = 'ping -n 3 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     List = Ping.stdout.splitlines()
     Text =''.join(line for line in List if "TTL=" in line)
     return len(Text) > 0
+
+def Check_PWD(ip, unique):
+    if Check_ipaddr(ip):
+        Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
+        if Check_Network[0] == 200:
+            return ('ADMIN', 'ADMIN')
+        else:
+            return ('ADMIN', unique)
+    else:
+        print('SUT is disconnected')
+        sys.exit()
