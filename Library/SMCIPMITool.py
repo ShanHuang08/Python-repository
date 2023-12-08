@@ -13,10 +13,8 @@ class SMCIPMITool():
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip +' ADMIN '+ self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             # print(self.ip, self.pwd, cmd)
             if execute.stderr == '':
-                print(execute.stdout)
                 return execute.stdout
             else:
-                print(execute.stderr)
                 return execute.stderr
         else:
             print(SMCError())

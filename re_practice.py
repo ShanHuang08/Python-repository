@@ -57,12 +57,11 @@ def testcmd():
     ip='10.184.30.32'
     pwd=Check_PWD(ip=ip, unique='PZSZWQVSSE')[1]
     SMC_tool = SMCIPMITool(ip, pwd)
-    SMC_tool.Execute('ipmi power status')
-# testcmd()
+    output = SMC_tool.Execute('bios postCode')
+    print(output)
+testcmd()
 
 
-
-
-
+# print(300//3)
 
 

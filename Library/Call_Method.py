@@ -47,6 +47,9 @@ def AI_StringGenerator():
     print(result[0:Num])
 
 def StringGenerator(Num:str):
+    """
+    Input str number
+    """
     Start = 1
     result = ''
     Num = int(Num)
