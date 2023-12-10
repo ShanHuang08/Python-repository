@@ -6,7 +6,7 @@ import subprocess
 server_ip = input('Input SUT ip: ')
 
 def ShowRawCommands():
-    auth = Check_PWD(server_ip)
+    auth = Check_PWD(server_ip, unique='ADMIN')
     print(RawCommands["0A"] + ' Get:')
     for cmd in RawCommands['DNS Mode']:    
         if cmd != '20':

@@ -13,36 +13,27 @@ def GET(url, auth=None):
 
     `GET()[-1]` : `Get_data`
     """
-    Get_data = None
     try:
-        Get_data = requests.get(url=url, auth=auth, verify=False)
+        Get_data = requests.get(url=url, auth=auth, verify=False, timeout=10)
+        return [Get_data.status_code, Get_data.text, Get_data]
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Get_data is not None:
-        return [Get_data.status_code, Get_data.text, Get_data]
-    else:
-        return Get_data
 
 def GET_Data(url, auth):
-    Get_data = None
     try:
-        Get_data = requests.get(url=url, auth=auth, verify=False)
-        print(f"HTTP Status: {Get_data.status_code}\nBody:\n")
-        pprint(Get_data.text)
+        GET(url=url, auth=auth)
+        pprint(f"HTTP Status: {GET[0]}\nBody:\n{GET[1]}")
+        return GET[-1]
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Get_data is not None:
-        return [Get_data.status_code, Get_data.text]
-    else:
-        return Get_data
 
 def PATCH(url, auth, body):
     """
@@ -52,19 +43,16 @@ def PATCH(url, auth, body):
 
     `PATCH()[-1]` : `json()`
     """
-    Patch_data = None
     try:
-        Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False)
+        Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False, timeout=10)
+        return [Patch_data.status_code, Patch_data.text, Patch_data.json()]
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Patch_data is not None:
-        return [Patch_data.status_code, Patch_data.text, Patch_data.json()]
-    else:
-        return Patch_data
+
 
 def POST(url, auth, body=None):
     """
@@ -74,19 +62,15 @@ def POST(url, auth, body=None):
 
     `POST()[-1]` : `json()`
     """
-    Post_data = None
     try:
-        Post_data = requests.post(url=url, auth=auth, json=body, verify=False)
+        Post_data = requests.post(url=url, auth=auth, json=body, verify=False, timeout=10)
+        return [Post_data.status_code, Post_data.text, Post_data.json()]
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if Post_data is not None:
-        return [Post_data.status_code, Post_data.text, Post_data.json()]
-    else:
-        return Post_data
 
 def DELETE(url, auth):
     """
@@ -94,16 +78,12 @@ def DELETE(url, auth):
 
     `DELETE()[1]` : `text`
     """
-    Delete_data = None
     try:
-        Delete_data = requests.delete(url=url, auth=auth, verify=False)
+        Delete_data = requests.delete(url=url, auth=auth, verify=False, timeout=10)
+        return [Delete_data.status_code, Delete_data.text] 
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)    
-    if Delete_data is not None:
-        return [Delete_data.status_code, Delete_data.text]  
-    else:
-        return Delete_data

@@ -6,7 +6,7 @@ def timeout(ip):
     return 150 if ip.split('.')[0] == '10' else 160
 
 def Check_Mel(SMC_Tool):
-    response = SMC_Tool.Execute('mel list 10')
+    response = SMC_Tool.Execute('mel list')
     if 'unauthorized' in response.splitlines()[0]:
         pwd2 = Check_PWD(ip=ip, unique=Uni_pwd)[1]
         SMC_Tool2 = SMCIPMITool(ip, pwd2)
