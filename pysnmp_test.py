@@ -92,7 +92,7 @@ class snmp():
     def Redfish_setup(self):
         print(f'Server: {self.ip}')
         print('Start setting up SNMP environment')
-        Create = POST(url='https://'+self.ip+ redfish['Accounts'], auth=auth, body=redfish['MD5_DES'])
+        Create = POST(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd, body=redfish['MD5_DES'])
         if Create[0] == 201:
             print('Account has created')
         else:
@@ -155,8 +155,8 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.16.44'
-    pwd = Check_PWD(ip, unique='FFSTEPBSVQ')
+    ip = '10.184.26.116'
+    pwd = Check_PWD(ip, unique='NUJUTXSBJF')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 
