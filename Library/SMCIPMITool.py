@@ -22,16 +22,10 @@ class SMCIPMITool():
     def raw(self, cmd:str):
         self.Execute('ipmi raw '+cmd)
 
-    def get_30_68_09(self, cmd:str):
+    def raw_30_68_09(self, cmd:str):
         self.raw('30 68 09 '+cmd)
 
-    def set_30_68_09(self, cmd:str):
-        self.raw('30 68 09 '+cmd)
-
-    def get_30_68_0A(self, cmd:str):
+    def raw_30_68_0A(self, cmd:str):
         self.raw('30 68 0A '+cmd)       
-
-    def set_30_68_0A(self, cmd:str):
-        self.raw('30 68 0A '+cmd)
 
 # SMC_tool = SMCIPMITool()

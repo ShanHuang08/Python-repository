@@ -30,64 +30,44 @@ class snmp():
         if value == None:
             oid_obj = ObjectType(ObjectIdentity(self.oid))
             # 建立 SNMP GET 請求
-            get_request = getCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
-            error_indication, error_status, error_index, var_binds = next(get_request)
-            print(f'SNMPv2 Get:\nLog: {var_binds}')
-            # 處理回應結果
-            if error_indication:
-                print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
-            elif error_status:
-                print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
-            else:
-                for var_bind in var_binds:
-                    # 取得 SNMP 回傳的值
-                    print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')
+            request = getCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
         else:
             oid_obj = ObjectType(ObjectIdentity(self.oid), value)
             # 建立 SNMP SET 請求
-            set_request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
-            error_indication, error_status, error_index, var_binds = next(set_request)
-            print(f'SNMPv2 Set:\nLog: {var_binds}')
+            request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
 
-            if error_indication:
-                print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
-            elif error_status:
-                print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
-            else:
-                for var_bind in var_binds:
-                    print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')        
+        error_indication, error_status, error_index, var_binds = next(request)
+        print(f'SNMPv2 Get:\nLog: {var_binds}') if value == None else print(f'SNMPv2 Set:\nLog: {var_binds}')
+
+        if error_indication:
+            print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')        
 
     def snmpv3_test(self, value=None):
         MD5_DES_credential = UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
         target = UdpTransportTarget((self.ip, self.port))
         if value == None:
             oid_obj = ObjectType(ObjectIdentity(self.oid))
-            get_request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
-            error_indication, error_status, error_index, var_binds = next(get_request)
-            print(f'SNMPv3 Get:\nLog: {var_binds}')
-
-            if error_indication:
-                print(f"Error: {error_indication}")
-            elif error_status:
-                print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
-            else:
-                for var_bind in var_binds:
-                    value = var_bind[-1]
-                    print(f'OID: {var_bind[0]}, Value: {value}')
+            request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
         else:
             oid_obj = ObjectType(ObjectIdentity(self.oid), value)
-            set_request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
-            error_indication, error_status, error_index, var_binds = next(set_request)
-            print(f'SNMPv3 Set:\nLog: {var_binds}')
+            request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+        
+        error_indication, error_status, error_index, var_binds = next(request)
+        print(f'SNMPv3 Get:\nLog: {var_binds}') if value == None else print(f'SNMPv3 Set:\nLog: {var_binds}')
 
-            if error_indication:
-                print(f"Error: {error_indication}")
-            elif error_status:
-                print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
-            else:
-                for var_bind in var_binds:
-                    value = var_bind[-1]
-                    print(f'OID: {var_bind[0]}, Value: {value}')
+        if error_indication:
+            print(f"Error: {error_indication}")
+        elif error_status:
+            print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
+        else:
+            for var_bind in var_binds:
+                value = var_bind[-1]
+                print(f'OID: {var_bind[0]}, Value: {value}')
 
     def Redfish_setup(self):
         print(f'Server: {self.ip}')
@@ -155,7 +135,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.26.116'
+    ip = '10.184.12.155'
     pwd = Check_PWD(ip, unique='NUJUTXSBJF')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()

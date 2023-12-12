@@ -53,7 +53,7 @@ def ASCII_to_raw(url:str):
 
 from Library.SMCIPMITool import SMCIPMITool
 from Library.Call_Method import Check_PWD
-ip='10.184.28.113'
+ip='10.184.26.116'
 pwd=Check_PWD(ip=ip, unique='XFFXGWHUVY')[1]
 def Check_Fru1():
     SMC_tool = SMCIPMITool(ip, pwd)
@@ -66,6 +66,5 @@ def smc_command():
     SMC_tool = SMCIPMITool(ip, pwd)
     output = SMC_tool.Execute('bios postcode')
     print(output)
-smc_command()
-
+# smc_command()
 
