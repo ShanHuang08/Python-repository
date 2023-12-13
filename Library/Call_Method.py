@@ -46,7 +46,7 @@ def AI_StringGenerator():
                 result += choice(string.ascii_lowercase)
     print(result[0:Num])
 
-def StringGenerator(Num:str):
+def StringGenerator(Num):
     """
     Input str number
     """
@@ -98,10 +98,7 @@ def Check_ipaddr(ip):
 def Check_PWD(ip, unique):
     if Check_ipaddr(ip):
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
-        if Check_Network[0] == 200:
-            return ('ADMIN', 'ADMIN')
-        else:
-            return ('ADMIN', unique)
+        return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
     else:
         print('SUT is disconnected')
         sys.exit()
