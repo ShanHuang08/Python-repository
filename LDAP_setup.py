@@ -4,13 +4,13 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from Library.Redfish_requests import *
 from Library.SMASH import SMASH
-from Library.Strings import Check_PWD
+from Library.Call_Method import Check_PWD
 
 
 BMC_ip = '10.184.19.24'
 url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
 Account=Password='ADMIN'
-auth = Check_PWD(BMC_ip)
+auth = Check_PWD(BMC_ip, unique='test')
 
 
 def Scrape(Account, Password):
@@ -46,6 +46,7 @@ def Scrape(Account, Password):
     browser.quit()
 
 def Redfish_setup():
+    print(f"Server: {BMC_ip}")
     setup = PATCH(url=url, auth=auth, body=redfish['LDAP Setup'])
     if setup[0] == 200:
         print('LDAP setup success')
@@ -61,7 +62,6 @@ def Clear_setup():
         print(f'Clear failed, Status code: {clear[0]}\n{clear[-1]}')
 
 if __name__=='__main__':
-    print(f"Server: {BMC_ip}")
     Redfish_setup()
     SMASH(ip=BMC_ip)
     Clear_setup()

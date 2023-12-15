@@ -4,12 +4,11 @@ from Redfish_requests import *
 
 
 
-def Check_PWD(ip):
+def Check_PWD(ip, pwd):
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
     if Check_Network[0] == 200:
         return ('ADMIN', 'ADMIN')
     else:
-        pwd = input('Input unique password: ')
         return ('ADMIN', pwd)
 
 def Get_PostCode(ip, auth):
@@ -33,6 +32,6 @@ def Get_PostCode(ip, auth):
         return f"PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
-    ip = '172.31.35.83'
-    auth = Check_PWD(ip)
+    ip = '172.31.34.91'
+    auth = Check_PWD(ip, pwd='WCTFDPTATX')
     Get_PostCode(ip, auth)

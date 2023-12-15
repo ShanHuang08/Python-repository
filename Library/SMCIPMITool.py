@@ -44,5 +44,13 @@ class SUMTool():
         else:
             print(SUMError())
 
+    def get_bmc_info(self):
+        self.Execute('GetBmcInfo')
+    
+    def get_bios_info(self):
+        self.Execute('GetBiosInfo --showall')
+    
+    def get_cpld_info(self):
+        self.Execute('GetCpldInfo')
 
 # SMC_tool = SMCIPMITool()
