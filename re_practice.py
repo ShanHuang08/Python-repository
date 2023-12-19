@@ -106,8 +106,11 @@ def pick_peaks(arr):
                 Lists.append(arr[min_pos[i]:min_pos[i+1]+1])
         
         for List in Lists:
+            for i in range(len(List)):
+                if len(List) > 2:
+                    if List[0] == max(List): List.pop(0)
+                    elif List[-1] == max(List): List.pop(1)
             print(List)
-
 
 
     print(f'波谷位置= {min_pos}\n波谷: {min_num}') #波谷定義: 這個數字比兩邊數字都小
