@@ -1,4 +1,3 @@
-from dictionary import SUT
 from Redfish_requests import *
 
 def AddSUT():
@@ -59,7 +58,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.184.12.155')
+    GetFWInfo('172.31.34.91')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>

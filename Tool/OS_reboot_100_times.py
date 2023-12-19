@@ -1,5 +1,6 @@
+import sys
+sys.path.append('C:\\Users\\Stephenhuang\\Python')
 from Library.SMASH import ssh_reboot
-from Library.POSTCode import Get_PostCode
 from Library.Redfish_requests import GET, POST
 from Library.Call_Method import Check_PWD
 from requests.exceptions import HTTPError, ConnectTimeout, ConnectionError
@@ -35,6 +36,42 @@ def Check_Host_in_Redfish(ip, auth, file):
         
     return Check[-1].json()['InterfaceEnabled'] == True
 
+def Get_PostCode(ip, auth, file):
+    # 寫個while loop, power state on = False. off = True
+    jdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
+    if jdata['PostCode'] not in ['00', '0000']:
+        count = 0
+        reboot_count = 0
+        POST_collection = []
+        while True:
+            kdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
+            count+=1
+            if reboot_count < 10:
+                # print(f"{count}. PostCode = {kdata['PostCode']}")
+                file.write(str(count)+". PostCode = "+str(kdata['PostCode'])+'\n')
+
+                if kdata['PostCode'] in ['00', '0000']:
+                    file.write(str(count)+". PostCode = "+str(kdata['PostCode'])+'\n')
+                    return f"{count}. PostCode = {kdata['PostCode']}"
+                
+                if count >= 200 and kdata['PostCode'] not in ['00', '0000']:
+                    # print(f"Current Post Code is {kdata['PostCode']}")
+                    file.write("Current Post Code is "+str(kdata['PostCode'])+'\n'+'ForceRestart')
+                    POST_collection.append(kdata['PostCode'])
+                    reboot_count+=1
+                    POST(url='https://'+ip+'/redfish/v1/Systems/1/Actions/ComputerSystem.Reset/', auth=auth, body={"ResetType": "ForceRestart"})
+                    sleep(2)
+                    count = 0
+            else:
+                # print(f"Reboot {reboot_count} times but unable to boot into OS\nPOST Code on each time {POST_collection}")
+                file.write(f"Reboot {reboot_count} times but unable to boot into OS\nPOST Code on each time {POST_collection}")
+                file.write(str(POST_collection))
+                return POST_collection
+            sleep(3)
+    else:
+        # print(f"PostCode = {jdata['PostCode']}")
+        return f"PostCode = {jdata['PostCode']}"
+
 def OS_reboot_loop(times:int):
     file = open('log.txt', 'w')
     count = 0
@@ -49,7 +86,7 @@ def OS_reboot_loop(times:int):
             count+=1
             file.write(f'NO.{count}\n')
 
-            Check_PostCode = Get_PostCode(ip=bmc_ip, auth=auth)
+            Check_PostCode = Get_PostCode(ip=bmc_ip, auth=auth, file=file)
             file.write(Check_PostCode)
 
             PingOS = Check_ipaddr(ip=os_ip)
@@ -70,14 +107,6 @@ def OS_reboot_loop(times:int):
             else:    
                 file.write('\nBoot failed\n')
 
-            if Check_Host_in_Redfish(ip=bmc_ip, auth=auth, file=file):
-                if count in [100, 150]:
-                    print(f'NO.{count} Host interface Enable') 
-            else:
-                Fail_list.append(f'NO.{count} Disable')
-                if count in [100, 150]:
-                    print(f'NO.{count} Host interface Disable') 
-
         except HTTPError as e:
             file.write(str(e)+'\n')
             continue
@@ -95,11 +124,11 @@ def OS_reboot_loop(times:int):
 
 class OSRebootTest(unittest.TestCase):
     def test(self):
-        OS_reboot_loop(5)
+        OS_reboot_loop(2)
 
 if __name__=='__main__':
-    bmc_ip = '10.184.16.55'
-    os_ip = '10.184.21.44'
-    auth = Check_PWD(ip=bmc_ip, unique='PEDRKBSHTO')
+    bmc_ip = '172.31.34.91'
+    os_ip = '172.31.32.118'
+    auth = Check_PWD(ip=bmc_ip, unique='WCTFDPTATX')
     unittest.main()   
 

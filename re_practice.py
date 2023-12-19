@@ -54,8 +54,8 @@ def ASCII_to_raw(url:str):
 from Library.SMCIPMITool import SMCIPMITool
 from Library.Call_Method import Check_PWD
 ip='10.135.172.111'
-pwd=Check_PWD(ip=ip, unique='XFFXGWHUVY')[1]
 def Check_Fru1():
+    pwd=Check_PWD(ip=ip, unique='XFFXGWHUVY')[1]
     SMC_tool = SMCIPMITool(ip, pwd)
     fru1 = SMC_tool.Execute('ipmi fru1')
     for out in fru1.splitlines():
@@ -63,8 +63,33 @@ def Check_Fru1():
             print(out)       
 # Check_Fru1()
 def smc_command():
+    pwd=Check_PWD(ip=ip, unique='XFFXGWHUVY')[1]
     SMC_tool = SMCIPMITool(ip, pwd)
     output = SMC_tool.Execute('redfish firmwareInventory info')
     print(output)
-smc_command()
+# smc_command()
+
+arr = [13,2,3,3,4,5]
+
+def Adsusted_list(arr):
+    for i in range(len(arr)):
+        print(i)
+        if len(arr) > 3:
+            for j in arr:
+                if j == max(arr) and j == arr[0]: arr.remove(j)
+                elif j == max(arr) and j == arr[len(arr)-1]: arr.remove(j)
+                print(arr)
+        else: break
+
+
+Adsusted_list(arr)
+
+# print(arr[len(arr)-1])
+
+class Raw():
+    def is_rot_system():
+        return 
+
+
+# if Raw().is_rot_system() == 'nonROT': print('skip', 'non-RoT system not support Resiliency')
 
