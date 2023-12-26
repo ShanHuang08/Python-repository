@@ -18,14 +18,20 @@ def pick_peaks(arr):
     if len(arr) == 0 or max(arr) == min(arr):
         return {'pos':[], 'peaks':[]}
     else:
-        # 跟左邊右邊比就好 所以左右邊都要有數字
+        # 跟左邊右邊比就好 所以左右邊都要有數字, 波谷會有兩個一樣的數字, 這兩個數字都比左右邊數字小
         for i in range(len(arr)):
             min_count = 0
             max_count = 0
             if i-1 >= 0 and i+1 != len(arr): #邊角不算
+                # 波谷一個數字, 需要做if arr[i] == arr[j]
                 for j in range(i-1, i+2, 2):
-                    if arr[i] < arr[j]: min_count+=1
-                    if arr[i] > arr[j]: max_count+=1
+                    if j-1 >= 0 and j+1 != len(arr):
+                        if arr[i] < arr[j]: min_count+=1
+                        if arr[i] > arr[j]: max_count+=1
+                        if j+1 < len(arr):
+                            if arr[i] == arr[j] and arr[i] and arr[i] < arr[i-1] and arr[j] < arr[j+1]: min_count+=1
+                        if i+1 < len(arr):
+                            if arr[i] == arr[j] and arr[i] and arr[i] < arr[i+1] and arr[j] < arr[j-1]: min_count+=1
                 if min_count == 2:
                     min_pos.append(i)
                     min_num += str(arr[i]) + ', '   
@@ -69,17 +75,42 @@ def pick_peaks(arr):
                         pos.append(List_Pos + k - i) #5 + 1 - 1
                         non_added = False
                 peaks.append(max(Lists[i]))
-
             List_Pos+=count
     return {'pos':pos, 'peaks':peaks}
 
 
+# [1,2,3,6,4,1,2,3,2,1]
+# [1,2,3,6,4,1] [1,2,3,2,1]
 
-basic = [-2, 20, 11, -2, -2, 14, 17, 7]
-# [-2, 20, 11, -2] [-2] [-2, 14, 17, 7]
+basic = [3, 4, 9, 13, 0, -3]
+ans = {'pos': [3], 'peaks': [13]}
 
 test = [-4, 8, 7, -1, 11, 12, -2, -5, 5, -2, 20, 11, -2, -2, 14, 17, 7, 16, -4, 3, 5, -5, 1, 2, -3, -4, 17, -1, 20, 5] #要拆開來
 ans = {'pos': [1, 5, 8, 10, 15, 17, 20, 23, 26, 28], 'peaks': [8, 12, 5, 20, 17, 16, 5, 2, 17, 20]}
 # -2,-2 沒分割到
 
-print(pick_peaks(basic))
+test2 = [18, 14, -1, 11, 5, 5, 17, 19, 16, 16]
+ans = {'pos': [3, 7], 'peaks': [11, 19]}
+
+test3 = [19, 6, 6, 16, 12, 0, 15, 17]
+ans = {'pos': [3], 'peaks': [16]}
+
+test4 = [16, 3, 16, -2, 15, 18, 11, -3, 16, 1, -2, 3, 14, 8, 19, 10, -1, -5, 11, 4, 4, 1, 1, 15, 2, 2]
+
+print(pick_peaks(test))
+
+
+[19, 6, 6, 16, 12, 0, 15, 17]
+[19, 6, 6, 16, 12, 0, 15, 17]
+
+
+def pick_peaks_best(arr):
+    pos = []
+    prob_peak = False
+    for i in range(1, len(arr)):
+        if arr[i] > arr[i-1]:
+            prob_peak = i
+        elif arr[i] < arr[i-1] and prob_peak:
+            pos.append(prob_peak)
+            prob_peak = False
+    return {'pos':pos, 'peaks':[arr[i] for i in pos]}
