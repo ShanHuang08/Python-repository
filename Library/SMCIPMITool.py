@@ -20,13 +20,13 @@ class SMCIPMITool():
             print(SMCError())
 
     def raw(self, cmd:str):
-        self.Execute('ipmi raw '+cmd)
-
+        return self.Execute('ipmi raw '+cmd)
+    
     def raw_30_68_09(self, cmd:str):
-        self.raw('30 68 09 '+cmd)
+        return self.raw('30 68 09 '+cmd)
 
     def raw_30_68_0A(self, cmd:str):
-        self.raw('30 68 0A '+cmd)
+        return self.raw('30 68 0A '+cmd)
 
 class SUMTool():
     def __init__(self, ip, pwd) -> None:
