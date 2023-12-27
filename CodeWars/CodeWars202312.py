@@ -55,7 +55,8 @@ def pick_peaks(arr):
                 elif i == len(min_pos)-1:
                     Lists.append(arr[min_pos[i]:])
                 else:
-                    Lists.append(arr[min_pos[i]:min_pos[i+1]+1])
+                    Lists.append(arr[min_pos[i]:min_pos[i+1]+1])  
+        if len(Lists) == 0 : Lists = [arr]
         print(f'Lists: {Lists}')
 
         
@@ -97,7 +98,7 @@ ans = {'pos': [3], 'peaks': [16]}
 
 test4 = [16, 3, 16, -2, 15, 18, 11, -3, 16, 1, -2, 3, 14, 8, 19, 10, -1, -5, 11, 4, 4, 1, 1, 15, 2, 2]
 
-print(pick_peaks(test))
+print(pick_peaks(basic))
 
 
 [19, 6, 6, 16, 12, 0, 15, 17]
