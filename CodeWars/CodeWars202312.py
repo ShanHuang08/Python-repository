@@ -98,7 +98,7 @@ ans = {'pos': [3], 'peaks': [16]}
 
 test4 = [16, 3, 16, -2, 15, 18, 11, -3, 16, 1, -2, 3, 14, 8, 19, 10, -1, -5, 11, 4, 4, 1, 1, 15, 2, 2]
 
-print(pick_peaks(basic))
+# print(pick_peaks(basic))
 
 
 [19, 6, 6, 16, 12, 0, 15, 17]
@@ -115,3 +115,5 @@ def pick_peaks_best(arr):
             pos.append(prob_peak)
             prob_peak = False
     return {'pos':pos, 'peaks':[arr[i] for i in pos]}
+
+print(pick_peaks_best(test4))

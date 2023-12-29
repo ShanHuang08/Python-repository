@@ -4,38 +4,12 @@ from Library.Call_Method import Check_PWD
 import subprocess
 
 server_ip = input('Input SUT ip: ')
+zA_get = RawCommands['30 68 0A']['Get']
+zA_set = RawCommands['30 68 0A']['Set']
+z9_get = RawCommands['30 68 09']['Get']
+z9_set = RawCommands['30 68 09']['Set']
 
-def ShowRawCommands():
-    auth = Check_PWD(server_ip, unique='ADMIN')
-    print(RawCommands["0A"] + ' Get:')
-    for cmd in RawCommands['DNS Mode']:    
-        if cmd != '20':
-            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {cmd}')  
-            
-    print(RawCommands["0A"] + ' Set:')
-    for name, num in RawCommands['DNS']:
-        if num == '01':
-            print(name)
-        else:
-            print(name)             
-        for ip in RawCommands['ipv4']:
-            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {num} 00 00 {ip}')
-        for ip in RawCommands['ipv6']:
-            print(f'SMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["0A"]} {num} 01 00 {ip}')
-    
-    for name, cmd in RawCommands['09 Get Set']:
-        if name in ['Add IPv6', 'Delete IPv6']:
-            if name == 'Add IPv6':
-                print(RawCommands["09"] + ' Set:')
-            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd} {RawCommands["ipv6"][0]} {hex(64)[2:]}')
-        elif 'Set Gateway' in name:
-            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd} {RawCommands["ipv6"][3]}')
-        else:
-            if cmd == '00 00':
-                print(RawCommands["09"] + ' Get:')
-            print(f'{name}\nSMCIPMITool.exe {server_ip} ADMIN {auth[1]} {RawCommands["09"]} {cmd}')   
 
-ShowRawCommands()
 
 def prefix(num):
     return hex(num)[2:]
@@ -48,7 +22,7 @@ def set_ipv6_data(dhcp_mode:str, auto_config:str, ipv6_opation:str, address:str,
 
 def set_ipv6_gateway(gateway:str):
     result = subprocess.run()
-    print(f'30 68 09 02 {gateway}')
+    print(f'30 68 09 {z9_set["Gateway"]} {gateway}')
 
 def get_ipv6_data(data:str):
     result = subprocess.run()
