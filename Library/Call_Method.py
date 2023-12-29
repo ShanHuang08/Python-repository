@@ -102,3 +102,21 @@ def Check_PWD(ip, unique):
     else:
         print('SUT is disconnected')
         sys.exit()
+
+def AI_ASCII_to_raw(url: str) -> str:
+    return ' '.join([f"0x{hex(ord(r))[2:]}" for r in url])
+
+def ASCII_to_raw(url:str):
+    ASCII_code = [ord(r) for r in url]
+    result = ' '.join(f'0x{hex(i)[2:]}' for i in ASCII_code)
+    # result = ''
+    # for i in ASCII_code:
+    #     result+=f"0x{hex(int(i))[2:]}" + ' '   
+    return result
+
+def CN_Generator(num):
+    num = int(num)
+    text = ''
+    for _ in range(num):
+        text+=choice(al)
+    print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com') 

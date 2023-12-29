@@ -148,5 +148,14 @@ def test_smcipmitool_30_68_0a_get():
     dns_ipv6_1 = ''
     dns_ipv6_2 = ''
 
-
+def raw_byte_array():
+    value = input('Input 30 68 0A return code: ')
+    excepted = input('Input IP address: ')
+    value = value.strip()
+    Value_NoSpace = ''.join(value.split())
+    Transfer_value = bytearray.fromhex(Value_NoSpace).decode()
+    if Transfer_value == excepted:
+        print(f"Both values match")
+    else:
+        print(f"{Transfer_value} != {excepted}")
 
