@@ -11,9 +11,8 @@ def Check_Mel(SMC_Tool):
         pwd2 = Check_PWD(ip=ip, unique=Uni_pwd)[1]
         SMC_Tool2 = SMCIPMITool(ip, pwd2)
         response = SMC_Tool2.Execute('mel list')
-    Pass_Check = ['PASS' for i in response.splitlines() if 'MEL-0056' in i]
-    if len(Pass_Check) == 0:
-        print(response)
+    Pass_Check = ['PASS' for i in response.splitlines() if 'IPMI configuration was restored to default successfully' in i]
+    if len(Pass_Check) == 0: print(response)
     return len(Pass_Check) > 0
 
 def FactoryDefault():
@@ -29,9 +28,9 @@ def FactoryDefault():
             raw = SMC_Tool.raw(cmd)
             print(raw)
         sleep(timeout(ip))
-        print('MEL-0056 has found\nPASS') if Check_Mel(SMC_Tool) else print('FAIL')
+        print('PASS') if Check_Mel(SMC_Tool) else print('FAIL')
 
 if __name__=='__main__':
-    ip = '10.184.16.44'
-    Uni_pwd = 'FPNKDBUBWY'
+    ip = '10.140.172.172'
+    Uni_pwd = 'DSUQUBFEPJ'
     FactoryDefault()
