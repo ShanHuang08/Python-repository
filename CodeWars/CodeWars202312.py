@@ -83,7 +83,7 @@ def pick_peaks(arr):
 # [1,2,3,6,4,1,2,3,2,1]
 # [1,2,3,6,4,1] [1,2,3,2,1]
 
-basic = [3, 4, 9, 13, 0, -3]
+basic = [3, 4, 9, 8, 4, -3]
 ans = {'pos': [3], 'peaks': [13]}
 
 test = [-4, 8, 7, -1, 11, 12, -2, -5, 5, -2, 20, 11, -2, -2, 14, 17, 7, 16, -4, 3, 5, -5, 1, 2, -3, -4, 17, -1, 20, 5] #要拆開來
@@ -98,20 +98,21 @@ ans = {'pos': [3], 'peaks': [16]}
 
 test4 = [16, 3, 16, -2, 15, 18, 11, -3, 16, 1, -2, 3, 14, 8, 19, 10, -1, -5, 11, 4, 4, 1, 1, 15, 2, 2]
 
-print(pick_peaks(basic))
+# print(pick_peaks(basic))
 
 
-[19, 6, 6, 16, 12, 0, 15, 17]
-[19, 6, 6, 16, 12, 0, 15, 17]
 
 
+[3, 4, 9, 8, 4, -3]
 def pick_peaks_best(arr):
     pos = []
     prob_peak = False
     for i in range(1, len(arr)):
         if arr[i] > arr[i-1]:
             prob_peak = i
+            print(f'prob_peak = {prob_peak}\n{arr[i]}')
         elif arr[i] < arr[i-1] and prob_peak:
             pos.append(prob_peak)
             prob_peak = False
     return {'pos':pos, 'peaks':[arr[i] for i in pos]}
+print(pick_peaks_best(basic))
