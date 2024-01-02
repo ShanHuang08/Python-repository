@@ -106,6 +106,7 @@ class snmp():
         if Account_Enable == False:
             print('Disable account')
             jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
+            #count要重寫, 如果從中間刪掉的話無法判斷, 因為只抓得到最後一個account
             count = str(jdata['Members@odata.count']+1)
             redfish['MD5_DES']['Enabled'] = Account_Enable
             Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish['MD5_DES'])
@@ -126,6 +127,7 @@ class snmp():
 
         # 找到Account建立在哪個Link, 針對Link做Delete
         jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
+        #count要重寫, 如果從中間刪掉的話無法判斷, 因為只抓得到最後一個account
         count = str(jdata['Members@odata.count']+1)
         Delete = DELETE(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd)
         if Delete[0] == 200:
@@ -135,7 +137,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.12.155'
+    ip = '10.135.172.111'
     pwd = Check_PWD(ip, unique='NUJUTXSBJF')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
