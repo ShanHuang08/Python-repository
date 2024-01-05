@@ -5,7 +5,7 @@ import urllib3
 # 禁用所有警告 Idea from ChatGPT
 urllib3.disable_warnings()
 
-def GET(url, auth=None):
+def GET(url, auth=None, timeout=10):
     """
     `GET()[0]` : `Status code`
 
@@ -14,7 +14,7 @@ def GET(url, auth=None):
     `GET()[-1]` : `Get_data`
     """
     try:
-        Get_data = requests.get(url=url, auth=auth, verify=False, timeout=10)
+        Get_data = requests.get(url=url, auth=auth, verify=False, timeout=timeout)
         return [Get_data.status_code, Get_data.text, Get_data]
     except requests.exceptions.HTTPError as e:
         print(e)
