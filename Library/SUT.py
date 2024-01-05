@@ -20,15 +20,14 @@ def GetGUID(ip, pwd):
     First_Sector = ip.split()[0]
     if First_Sector == '10':
         Mongo_url = Mongo_url + '10.184.0.12'
-        Guid = GET(url=Mongo_url)
-
+        Guid = GET(url=Mongo_url, timeout=30)
         if Guid[0] == 200:
             return print(Guid[-1].json()['guid'])
         else:
             print(f"Status code: {Guid[0]}\n{Guid[1]}")
     else:
         Mongo_url = Mongo_url + '172.31.2.47'
-        Guid = GET(url=Mongo_url)
+        Guid = GET(url=Mongo_url, timeout=30)
         if Guid[0] == 200:
             return print(Guid[-1].json()['guid'])
         else:
@@ -58,7 +57,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.184.29.149')
+    GetFWInfo('10.184.29.232')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
