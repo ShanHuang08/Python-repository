@@ -4,7 +4,7 @@ from Library.Execeptions import SMCError, SUMError
 
 class SMCIPMITool():
     def __init__(self, ip, pwd) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.231120_bundleJRE_Windows'
+        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240103_bundleJRE_Windows'
         self.ip = ip
         self.pwd = pwd
 
