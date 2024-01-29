@@ -6,6 +6,7 @@ import sys
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
+al_digit = 'abcdefghijklmnopqrstuvwxyz1234567890'
 def KeyGenerator():
 
     result=''
@@ -118,5 +119,5 @@ def CN_Generator(num):
     num = int(num)
     text = ''
     for _ in range(num):
-        text+=choice(al)
+        text+=choice(al_digit)
     print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com') 
