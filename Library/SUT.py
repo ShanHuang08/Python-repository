@@ -46,18 +46,23 @@ def GetFWInfo(ip:str):
             # GetGUID(ip, pwd=auth[1])
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
+            CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD'
             # print(BMC_Data['Version'])
             BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-            return print(f"{BMC_FW}\n{BIOS_FW}")
+            
+            CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
+                   
+            return print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
         except KeyError as e:
-            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {CPLD_Data[-1].json()}")
+        
     else:
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.184.29.232')
+    GetFWInfo('172.31.35.46')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
