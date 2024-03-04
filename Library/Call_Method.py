@@ -119,15 +119,19 @@ def ASCII_to_raw(url:str):
 def CN_Generator(num):
     num = int(num)
     text = ''
+    swicher = bool
     for _ in range(num):
         random_al_digit = choice(al_digit)
         if random_al_digit in '1234567890':
             digit = random_al_digit
             text+=digit
         else:
-            Upper_al = random_al_digit.upper()
-            Lower_al = random_al_digit.lower()
-            if len(Upper_al) != 0: text+=Upper_al
-            if len(Lower_al) != 0: text+=Lower_al
+            if swicher:
+                text+=random_al_digit.upper()
+                swicher = False
+            else:
+                text+=random_al_digit.lower()
+                swicher = True
 
-    print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com\nText={text}') 
+
+    print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com\n{text}') 
