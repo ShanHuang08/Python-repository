@@ -109,7 +109,8 @@ def AI_ASCII_to_raw(url: str) -> str:
 
 def ASCII_to_raw(url:str):
     ASCII_code = [ord(r) for r in url]
-    result = ' '.join(f'0x{hex(i)[2:]}' for i in ASCII_code)
+    # result = ' '.join(f'0x{hex(i)[2:]}' for i in ASCII_code)
+    result = ' '.join(f'{hex(i)[2:]}' for i in ASCII_code)
     # result = ''
     # for i in ASCII_code:
     #     result+=f"0x{hex(int(i))[2:]}" + ' '   
@@ -119,5 +120,14 @@ def CN_Generator(num):
     num = int(num)
     text = ''
     for _ in range(num):
-        text+=choice(al_digit)
-    print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com') 
+        random_al_digit = choice(al_digit)
+        if random_al_digit in '1234567890':
+            digit = random_al_digit
+            text+=digit
+        else:
+            Upper_al = random_al_digit.upper()
+            Lower_al = random_al_digit.lower()
+            if len(Upper_al) != 0: text+=Upper_al
+            if len(Lower_al) != 0: text+=Lower_al
+
+    print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com\nText={text}') 
