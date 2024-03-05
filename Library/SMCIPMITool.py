@@ -6,11 +6,12 @@ class SMCIPMITool():
     def __init__(self, ip, pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240103_bundleJRE_Windows'
         self.ip = ip
+        self.accout = ' ADMIN '
         self.pwd = pwd
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip +' ADMIN '+ self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             # print(self.ip, self.pwd, cmd)
             if execute.stderr == '':
                 return execute.stdout

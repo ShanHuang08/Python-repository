@@ -41,10 +41,11 @@ def smc_command():
     print(output)
 # smc_command()
 
-# CN_Generator(20)
 
 
-# """
+# testapi = PATCH(url=url, auth=('user01', 'Suser123'), body="{{test}}")
+# print(testapi[0])
+
 # Traceback (most recent call last):
 #   File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\models.py", line 971, in json
 #     return complexjson.loads(self.text, **kwargs)
@@ -55,4 +56,8 @@ def smc_command():
 # json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
 # During handling of the above exception, another exception occurred:
-# """
+
+CN_Generator(10)
+
+if isinstance():
+    pass
