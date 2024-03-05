@@ -41,22 +41,23 @@ def smc_command():
     print(output)
 # smc_command()
 
-# CN_Generator(200)
 
-bmcip = '10.184.29.133'
-url = 'http://' + bmcip + '/redfish/v1/TelemetryService/MetricReports/MaxPowerConsumptionDay'
-testapi = PATCH(url=url, auth=('user01', 'Suser123'), body="{{test}}")
-print(testapi[0])
 
-"""
-Traceback (most recent call last):
-  File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\models.py", line 971, in json
-    return complexjson.loads(self.text, **kwargs)
-  File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\json\__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-  File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\json\decoder.py", line 337, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+# testapi = PATCH(url=url, auth=('user01', 'Suser123'), body="{{test}}")
+# print(testapi[0])
 
-During handling of the above exception, another exception occurred:
-"""
+# Traceback (most recent call last):
+#   File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\models.py", line 971, in json
+#     return complexjson.loads(self.text, **kwargs)
+#   File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\json\__init__.py", line 346, in loads
+#     return _default_decoder.decode(s)
+#   File "C:\Users\Stephenhuang\AppData\Local\Programs\Python\Python310\lib\json\decoder.py", line 337, in decode
+#     obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+# json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+# During handling of the above exception, another exception occurred:
+
+CN_Generator(10)
+
+if isinstance():
+    pass
