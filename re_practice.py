@@ -56,8 +56,35 @@ def smc_command():
 # json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
 # During handling of the above exception, another exception occurred:
+    
+# https://en.wikipedia.org/wiki/Email_address
+    
+def Email_Format():
+    text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe@'
+    # text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert1'
+    # text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qw'
+    # text = 'hi-there-yes-you-information-abcdefghijklmnopqrstuvwxyz@please-try-to.send-me-an-email-if-you-can-possibly-begin-to-remember-this-coz.this-is-the-longest-email-address-known-to-man-but-to-be-honest.this-is-such-a-stupidly-long-sub-domain-forever.parco.com'
 
-CN_Generator(10)
+    first_text_cut = text.split('@')[0]
+    length = text.split('.')
+    second_text_cut = text.split('@')[1].split('.')[0] if len(length) > 0 else None
+    Third_text_cut = text.split('@')[1].split('.')[1] if len(length) > 1 else None
+    forth_text_cut = text.split('@')[1].split('.')[2] if len(length) > 2 else None
 
-if isinstance():
-    pass
+    if len(text) < 255:
+        print(f'Email length is {len(text)} < 255\n') #length == 198
+    else:
+        print(f'Email length is {len(text)}\n')
+
+    print(f"Local-part: {first_text_cut}") 
+    print(f"Local-part length is {len(first_text_cut)}\n") #length == 64 
+
+    if len(length) > 0:
+        print(f"Domain 1st label: {second_text_cut}")
+        print(f"Domain 1st label length is {len(second_text_cut)}\n") # length == 63
+    if len(length) > 1:
+        print(f"Domain 2nd label: {Third_text_cut}")
+        print(f"Domain 2nd label length is {len(Third_text_cut)}\n") # length == 63
+    if len(length) > 2:
+        print(f"Domain 3rd label: {forth_text_cut}")
+        print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
