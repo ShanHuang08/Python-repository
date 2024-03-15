@@ -44,7 +44,8 @@ goPage = {
     'Component info' : 'goPage("sys_cmpn_overview")',
     'Account Services' : 'goPage("config_account_overview")',
     'Remote Control' : 'goPage("remote")',
-    'Storage' : 'goPage("sys_storage")'
+    'Storage' : 'goPage("sys_storage")',
+    'Multi Node' : 'goPage("sys_multinode")'
 }
 
 
@@ -136,7 +137,24 @@ redfish = {
             }
         }
     }
-    }
+    },
+    "Alert SNMPv1" : {
+        "Destination" : "10.184.11.130",
+        "Protocol": "SNMPv1",
+        "EventTypes": [
+            "Alert"
+        ],
+        "SNMP": {
+            "TrapCommunity": "test"
+        },
+        "Oem": {
+            "Supermicro": {
+                "Severity": "Information",
+                "EnableSubscription": True
+            }
+        }
+    },
+    "Create user1" : {"UserName": "user01", "Password": "Suser123", "RoleId": "Operator", "Enabled": True, "AccountTypes": ["Redfish"]}
 
 
 }
