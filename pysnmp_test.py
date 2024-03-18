@@ -87,14 +87,14 @@ class snmp():
         
         bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], redfish['Enable SNMPv3']]
         for body in bodies:
-            Snmp = PATCH(url='https://'+self.ip + redfish['SNMP'], auth=self.pwd, body=body)
+            Snmp = PATCH(url='https://'+self.ip + redfish['SNMP'], auth=self.pwd, body=body, timeout=30)
             if Snmp[0] not in [200,202]:
                 print(f'SNMP set-up failed\nStatus: {Snmp[0]}\n{Snmp[1]}')
                 exit()
 
     def UID_Change(self, Change):
         body = {"IndicatorLED" : Change}
-        uid_patch = PATCH(url='https://'+self.ip+ redfish['Systems'], auth=self.pwd, body=body)
+        uid_patch = PATCH(url='https://'+self.ip+ redfish['Systems'], auth=self.pwd, body=body, timeout=30)
         if uid_patch[0] == 200 and Change == "Blinking":
             print('UID Control enable')
         elif uid_patch[0] == 200 and Change == "Off":
@@ -109,7 +109,7 @@ class snmp():
             #count要重寫, 如果從中間刪掉的話無法判斷, 因為只抓得到最後一個account
             count = str(jdata['Members@odata.count']+1)
             redfish['MD5_DES']['Enabled'] = Account_Enable
-            Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish['MD5_DES'])
+            Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish['MD5_DES'], timeout=30)
             if Modify[0] == 200:
                 print('Account has disabled')
             else:
@@ -119,7 +119,7 @@ class snmp():
 
     def Clear_setup(self):
         print('Clear SNMP environment')
-        Disable_SNMP = PATCH(url='https://'+self.ip+ redfish['SNMP'], auth=self.pwd, body=redfish['Disable SNMP'])
+        Disable_SNMP = PATCH(url='https://'+self.ip+ redfish['SNMP'], auth=self.pwd, body=redfish['Disable SNMP'], timeout=30)
         if Disable_SNMP[0] == 200:
             print('SNMP disabled')
         else:
@@ -137,8 +137,8 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.135.172.111'
-    pwd = Check_PWD(ip, unique='NUJUTXSBJF')
+    ip = '172.31.34.91'
+    pwd = Check_PWD(ip, unique='WCTFDPTATX')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 

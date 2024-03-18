@@ -43,6 +43,5 @@ def Get_PostCode(ip, auth):
     
 if __name__=='__main__':
     ip = '172.31.34.91'
-    auth = Check_PWD(ip, pwd='WCTFDPTATX')
-    for _ in range(3):
-        Get_PostCode(ip, auth)
+    auth = Check_PWD(ip, pwd='GCKFKYBCIM')
+    Get_PostCode(ip, auth)

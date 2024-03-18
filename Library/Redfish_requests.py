@@ -35,7 +35,7 @@ def GET_Data(url, auth):
     except requests.exceptions.ConnectionError as e:
         print(e)
 
-def PATCH(url, auth, body):
+def PATCH(url, auth, body, timeout=10):
     """
     `PATCH()[0]` : `Status code`
 
@@ -44,7 +44,7 @@ def PATCH(url, auth, body):
     `PATCH()[-1]` : `json()`
     """
     try:
-        Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False, timeout=10)
+        Patch_data = requests.patch(url=url, auth=auth, json=body, verify=False, timeout=timeout)
         return [Patch_data.status_code, Patch_data.text, Patch_data.json()]
     except requests.exceptions.HTTPError as e:
         print(e)
