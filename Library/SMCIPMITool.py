@@ -11,7 +11,7 @@ class SMCIPMITool():
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=60)
             # print(self.ip, self.pwd, cmd)
             if execute.stderr == '':
                 return execute.stdout

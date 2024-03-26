@@ -83,3 +83,5 @@ def Email_Format():
     if len(length) > 2:
         print(f"Domain 3rd label: {forth_text_cut}")
         print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
+
+StringGenerator(64)

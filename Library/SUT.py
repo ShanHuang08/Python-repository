@@ -8,12 +8,17 @@ def AddSUT():
     print(str(SUT_info)[1:-1])
 
 def Check_PWD(ip):
+
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
-    if Check_Network[0] == 200:
-        return ('ADMIN', 'ADMIN')
+    if Check_Network == None: #會造成GetFWInfo()出現TypeError: 'NoneType' object is not subscriptable
+        print('SUT is diconnected')
+        exit()
     else:
-        pwd = input('Input unique password: ')
-        return ('ADMIN', pwd)
+        if Check_Network[0] == 200:
+            return ('ADMIN', 'ADMIN')
+        else:
+            pwd = input('Input unique password: ')
+            return ('ADMIN', pwd)
 
 def GetGUID(ip, pwd):
     Mongo_url = 'https://satc.supermicro.com/api/mongohelper/tools/sut/'+ip+'/ADMIN/'+pwd+'/'
@@ -37,6 +42,7 @@ def GetFWInfo(ip:str):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     auth = Check_PWD(ip)
+    # auth = ('admin', '2wsx#EDC')
     BMC_Data = None
     BIOS_Data = None
     Check_Pwd = GET(url='https://'+ip+'/redfish/v1/Systems', auth=auth)
@@ -62,7 +68,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('172.31.35.46')
+    GetFWInfo('10.184.27.169')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
