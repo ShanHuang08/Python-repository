@@ -60,7 +60,7 @@ def smc_command():
 # https://en.wikipedia.org/wiki/Email_address
     
 def Email_Format():
-    text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe@'
+    text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@abc.com'
     # text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert1'
     # text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qw'
     # text = 'hi-there-yes-you-information-abcdefghijklmnopqrstuvwxyz@please-try-to.send-me-an-email-if-you-can-possibly-begin-to-remember-this-coz.this-is-the-longest-email-address-known-to-man-but-to-be-honest.this-is-such-a-stupidly-long-sub-domain-forever.parco.com'
@@ -84,4 +84,22 @@ def Email_Format():
         print(f"Domain 3rd label: {forth_text_cut}")
         print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
 
-StringGenerator(64)
+# Email_Format()
+# StringGenerator(64)
+
+test_dict = {"A": ["avv", "sss"], "B" : "sdd"}
+
+# for k, v in test_dict.items():
+#     print(v)
+#     print(len(v))
+
+
+import re
+
+def RStringCheck():
+    regex = r"(\d+(?:.\d+)?(?:[a-zA-Z]|.\w+)?)"
+    
+    for string in ["123", "3.14", "2.7a", "5.", "1.4b.V3"]:
+        match = re.match(regex, string)
+        print(f"Input: {string}, Match: {match.group()}") if match else print(f"Input: {string}, Not match")
+        
