@@ -85,7 +85,7 @@ def Email_Format():
         print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
 
 # Email_Format()
-# StringGenerator(64)
+StringGenerator(64)
 
 test_dict = {"A": ["avv", "sss"], "B" : "sdd"}
 
