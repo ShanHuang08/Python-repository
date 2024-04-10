@@ -99,10 +99,13 @@ def Check_ipaddr(ip):
 def Check_PWD(ip, unique):
     if Check_ipaddr(ip):
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
-        if Check_Network == None:
+        # if Check_Network == None:
+        if isinstance(Check_Network, list):
+            return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
+        else:
             print('SUT is disconnected')
             exit()
-        return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
+        # return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
     else:
         print('SUT is disconnected')
         sys.exit()
