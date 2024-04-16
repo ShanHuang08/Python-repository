@@ -4,21 +4,22 @@ from Library.Execeptions import SMCError, SUMError
 
 class SMCIPMITool():
     def __init__(self, ip, pwd) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240103_bundleJRE_Windows'
+        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240411_bundleJRE_Windows'
         self.ip = ip
         self.accout = ' ADMIN '
         self.pwd = pwd
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=60)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             # print(self.ip, self.pwd, cmd)
             if execute.stderr == '':
                 return execute.stdout
             else:
                 return execute.stderr
         else:
-            print(SMCError())
+            print(SMCError(f'{self.Path} is not found'))
+            exit()
 
     def raw(self, cmd:str):
         return self.Execute('ipmi raw '+cmd)

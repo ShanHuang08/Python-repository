@@ -1,5 +1,5 @@
 from Library.SMCIPMITool import SMCIPMITool
-from Library.Call_Method import Check_PWD
+from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict
 
 
 TagName = ['child8', 'child9']
@@ -98,7 +98,11 @@ def Email_Format():
         print(f"Domain 3rd label: {forth_text_cut}")
         print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
 
-Email_Format()
+# Email_Format()
         
 # StringGenerator(64)
 
+from Library.dictionary import *
+
+
+print(Get_Dict(redfish, 'Enable SNMP.SNMP.ProtocolEnabled'))

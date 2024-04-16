@@ -1,6 +1,7 @@
 from random import choice, randint, sample
 import string
 from Library.Redfish_requests import *
+from Library.dictionary import *
 import subprocess
 import sys
 
@@ -114,6 +115,7 @@ def AI_ASCII_to_raw(url: str) -> str:
     return ' '.join([f"0x{hex(ord(r))[2:]}" for r in url])
 
 def ASCII_to_raw(url:str):
+    print(url)
     ASCII_code = [ord(r) for r in url]
     # result = ' '.join(f'0x{hex(i)[2:]}' for i in ASCII_code)
     result = ' '.join(f'{hex(i)[2:]}' for i in ASCII_code)
@@ -139,5 +141,12 @@ def CN_Generator(num):
                 text+=random_al_digit.lower()
                 swicher = True
 
-
     print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com\n{text}') 
+
+def Get_Dict(DictName, Path):
+    key_list = Path.split('.')
+    current = DictName
+    for cp in key_list: 
+        if isinstance(current, dict):       
+            current = current[cp]
+    return current
