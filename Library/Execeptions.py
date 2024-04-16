@@ -1,4 +1,4 @@
-class SMCError(Exception, RuntimeError):
+class SMCError(RuntimeError):
     """Raise for `SMCIPMITool Error` exceptions"""   
 
 class SUMError(Exception):
