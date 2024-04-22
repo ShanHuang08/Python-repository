@@ -4,6 +4,8 @@ from Library.Redfish_requests import *
 from Library.dictionary import *
 import subprocess
 import sys
+from Library.SMCIPMITool import SMCIPMITool
+import re
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -143,6 +145,27 @@ def CN_Generator(num):
 
     print(f'CN={text},CN=Users,DC=ad,DC=satc,DC=com\n{text}') 
 
+def Email_Format(text):
+    first_text_cut = text.split('@')[0]
+    length = text.split('.')
+    second_text_cut = text.split('@')[1].split('.')[0] if len(length) > 0 else None
+    Third_text_cut = text.split('@')[1].split('.')[1] if len(length) > 1 else None
+    forth_text_cut = text.split('@')[1].split('.')[2] if len(length) > 2 else None
+
+    print(f"Local-part: {first_text_cut}") 
+    print(f"Local-part length is {len(first_text_cut)}\n") #length == 64 
+
+    if len(length) > 0:
+        print(f"Domain 1st label: {second_text_cut}")
+        print(f"Domain 1st label length is {len(second_text_cut)}\n") # length == 63
+    if len(length) > 1:
+        print(f"Domain 2nd label: {Third_text_cut}")
+        print(f"Domain 2nd label length is {len(Third_text_cut)}\n") # length == 63
+    if len(length) > 2:
+        print(f"Domain 3rd label: {forth_text_cut}")
+        print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
+
+
 def Get_Dict(DictName, Path):
     key_list = Path.split('.')
     current = DictName
@@ -150,3 +173,12 @@ def Get_Dict(DictName, Path):
         if isinstance(current, dict):       
             current = current[cp]
     return current
+
+def get_lani_id(ip, uni_pwd):
+    pwd = Check_PWD(ip, uni_pwd)[1]
+    lani_output = SMCIPMITool(ip, pwd).Execute('ipmi oem lani')
+    # print(lani_output)
+    regex = r"\d"
+    result = re.findall(regex, lani_output)
+    return result
+
