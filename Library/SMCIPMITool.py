@@ -30,6 +30,15 @@ class SMCIPMITool():
     def raw_30_68_0A(self, cmd:str):
         return self.raw('30 68 0A '+cmd)
 
+    def raw_30_41(self):
+        print('Execute ipmi raw 30 41')
+        print(self.raw('30 41'))
+
+    def raw_30_48_1(self):
+        print('Execute ipmi raw 30 48 1')
+        print(self.raw('30 48 1'))
+
+
 class SUMTool():
     def __init__(self, ip, pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.11.0_Win_x86_64'

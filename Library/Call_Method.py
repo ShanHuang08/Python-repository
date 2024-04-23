@@ -93,7 +93,7 @@ def generate_special_char():
 
 
 def Check_ipaddr(ip):
-    command = 'ping -n 3 ' + ip
+    command = 'ping -n 1 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     List = Ping.stdout.splitlines()
     Text =''.join(line for line in List if "TTL=" in line)
@@ -174,7 +174,7 @@ def Get_Dict(DictName, Path):
             current = current[cp]
     return current
 
-def get_lani_id(ip, uni_pwd):
+def get_lani_id_list(ip, uni_pwd):
     pwd = Check_PWD(ip, uni_pwd)[1]
     lani_output = SMCIPMITool(ip, pwd).Execute('ipmi oem lani')
     # print(lani_output)
@@ -182,3 +182,7 @@ def get_lani_id(ip, uni_pwd):
     result = re.findall(regex, lani_output)
     return result
 
+def smc_command(ip, uni_pwd, cmd):
+    pwd=Check_PWD(ip, uni_pwd)[1]
+    output = SMCIPMITool(ip, pwd).Execute(cmd)
+    print(output)
