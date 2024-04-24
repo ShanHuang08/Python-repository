@@ -22,6 +22,7 @@ class SMCIPMITool():
             exit()
 
     def raw(self, cmd:str):
+        print(f'Execute ipmi raw {cmd}')
         return self.Execute('ipmi raw '+cmd)
     
     def raw_30_68_09(self, cmd:str):
@@ -31,11 +32,9 @@ class SMCIPMITool():
         return self.raw('30 68 0A '+cmd)
 
     def raw_30_41(self):
-        print('Execute ipmi raw 30 41')
         print(self.raw('30 41'))
 
     def raw_30_48_1(self):
-        print('Execute ipmi raw 30 48 1')
         print(self.raw('30 48 1'))
 
 

@@ -186,3 +186,18 @@ def smc_command(ip, uni_pwd, cmd):
     pwd=Check_PWD(ip, uni_pwd)[1]
     output = SMCIPMITool(ip, pwd).Execute(cmd)
     print(output)
+
+def hex_to_dec(digit:str):
+    answer = ''
+    for dec in digit.split(' '):
+        answer += str(int(dec, 16)) + ' '
+    print(answer)
+
+def AI_hex_to_dec(hex_str:str):
+    answer = ' '.join(str(int(dec, 16)) for dec in hex_str.split(' '))
+    print(answer)
+
+def AI_hex_to_unicode(hex_str):
+    unicode_str = ''.join(chr(int(hex_v, 16)) for hex_v in hex_str.split(' '))
+    print(unicode_str)
+    return unicode_str
