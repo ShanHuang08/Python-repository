@@ -188,14 +188,20 @@ def smc_command(ip, uni_pwd, cmd):
     print(output)
 
 def hex_to_dec(digit:str):
-    answer = ''
+    answer = []
     for dec in digit.split(' '):
-        answer += str(int(dec, 16)) + ' '
-    print(answer)
+        answer.append(str(int(dec, 16)))
+    result = ' '.join(answer)
+    print(result)
 
 def AI_hex_to_dec(hex_str:str):
     answer = ' '.join(str(int(dec, 16)) for dec in hex_str.split(' '))
     print(answer)
+
+def hex_to_unicode(digit:str):
+    unicode_list = [chr(int(hexv, 16)) for hexv in digit.split(' ')]
+    unicode_str = ''.join(unicode_list)
+    print(unicode_str)
 
 def AI_hex_to_unicode(hex_str):
     unicode_str = ''.join(chr(int(hex_v, 16)) for hex_v in hex_str.split(' '))

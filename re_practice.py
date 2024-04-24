@@ -21,8 +21,11 @@ info = "build date: 2023/01/01 version: 1.0"
 # regex = r"[a-c]"
 
 
-regex = r"Current LAN interface is \[ ((Failover)|(Shared)|(Dedicated)|(Failover-OnBoard)|(Shared-OnBoard)) \].*"
-string = 'Current LAN interface is [ Failover-OnBoard ]'
+regex = r"\[ ((Failover)|(Shared)|(Dedicated)|(Failover-OnBoard)|(Shared-OnBoard)) \].*"
+string = '[ Failover-OnBoard ]'
 
 match = re.match(regex, string)
-print(f"Input: {string}, Match: {match.group()}") if match else print(f"Input: {string}, Not match")
+print(match)
+if match: print(f"Input: {string}, Match: {match.group()}")
+else: 
+    print(f"Input: {string}, Not match")
