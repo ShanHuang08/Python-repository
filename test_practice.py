@@ -40,7 +40,7 @@ text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert.q
 # Email_Format(text)
 
 def raw_Factory_Default(ip, uni_pwd):
-    print(f'Server Address: {ip}')
+    print(f'Server IP: {ip}')
     auth = Check_PWD(ip, uni_pwd)
     timeout = 150 if ip.split('.')[0] == '10' else 160
     SMC_tool = SMCIPMITool(ip, auth[1])
@@ -49,26 +49,14 @@ def raw_Factory_Default(ip, uni_pwd):
     SMC_tool2 = SMCIPMITool(ip, uni_pwd)
     SMC_tool2.raw_30_48_1()
 
-from Library.Redfish_requests import GET
-def multiple_raw_test(cmd):
-    ips = [('X12SPW-TF', '10.184.17.90'), ('H12SSFF-AN6', '10.184.11.104'), ('X13SAZ-F', '10.184.30.66'), ('X13SEED-F', '10.184.26.175'), ('X14DBG-AP', '172.31.50.236')]
-    # ips = [('X14DBG-AP', '172.31.50.236')]
-    for ip in ips:
-        url = 'https://'+ip[1]+'/redfish/v1/UpdateService/FirmwareInventory/'
-        BMC_Data = GET(url=url+'BMC', auth=auth)
-        BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-        print(f'{ip[0]} ({BMC_FW})\nServer IP: {ip[1]}\n')
-
-        output = SMCIPMITool(ip[1], auth[1]).raw(cmd)
-        print(output)
 
 
 if __name__=='__main__':
-    ip = '10.184.11.104'
-    uni_pwd = 'RXKUWCCGAA'
+    ip = '10.184.18.55'
+    uni_pwd = 'GXBGWWDHHK'
     auth = Check_PWD(ip, uni_pwd)
 
-    # multiple_raw_test('30 68 28 06 04 00')
+    # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # hex_to_unicode('42 49 4F 53 20 44 61 74 65 3A 20 30 31 2F 30 39 2F 32 30 32 33 20 56 65 72 20 31 2E 34 62')
 
     # raw_Factory_Default(ip, uni_pwd)

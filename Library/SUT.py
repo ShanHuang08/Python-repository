@@ -9,7 +9,7 @@ def AddSUT():
 
 def Check_PWD(ip):
 
-    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
+    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
     if Check_Network == None: #會造成GetFWInfo()出現TypeError: 'NoneType' object is not subscriptable
         print('SUT is diconnected')
         exit()
@@ -34,7 +34,7 @@ def GetGUID(ip, pwd):
         Mongo_url = Mongo_url + '172.31.2.47'
         Guid = GET(url=Mongo_url, timeout=30)
         if Guid[0] == 200:
-            return print(Guid[-1].json()['guid'])
+            return Guid[-1].json()['guid']
         else:
             print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
@@ -49,26 +49,30 @@ def GetFWInfo(ip:str):
 
     if Check_Pwd[0] == 200:
         try:
-            # GetGUID(ip, pwd=auth[1])
+            # print(GetGUID(ip, pwd=auth[1]))
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
             CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD'
             # print(BMC_Data['Version'])
             BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-            
+
             CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
                    
             return print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
         except KeyError as e:
-            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {CPLD_Data[-1].json()}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
         
     else:
         return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.140.171.186')
+    GetFWInfo('10.140.170.130')
+
+    # for i in ['10.184.17.90', '10.184.11.104', '10.184.26.175']:
+    #     GetFWInfo(i)
+    #     print('\n')
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
