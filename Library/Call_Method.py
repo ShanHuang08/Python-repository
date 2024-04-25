@@ -110,7 +110,7 @@ def Check_PWD(ip, unique):
             exit()
         # return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
     else:
-        print('SUT is disconnected')
+        print('Ping SUT failed')
         sys.exit()
 
 def AI_ASCII_to_raw(url: str) -> str:
@@ -166,11 +166,27 @@ def Email_Format(text):
         print(f"Domain 3rd label length is {len(forth_text_cut)}\n") # length == 5
 
 
-def Get_Dict(DictName, Path):
-    key_list = Path.split('.')
-    current = DictName
+def Get_Dict(DictVar, path):
+    key_list = path.split('.')
+    current = DictVar
     for cp in key_list: 
         if isinstance(current, dict):       
+            current = current[cp]
+    return current
+
+def GetPath(path):
+    key_list = path.split('.')
+    current = Path 
+    for cp in key_list:
+        if isinstance(current, dict):
+            current = current[cp]
+    return current
+
+def GetRedfish(path):
+    key_list = path.split('.')
+    current = redfish
+    for cp in key_list:
+        if isinstance(current, dict):
             current = current[cp]
     return current
 

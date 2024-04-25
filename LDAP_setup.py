@@ -1,26 +1,24 @@
-from Library.dictionary import Path, goPage, redfish
+from Library.dictionary import goPage, redfish
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from Library.Redfish_requests import *
 from Library.SMASH import SMASH
-from Library.Call_Method import Check_PWD
+from Library.Call_Method import Check_PWD, GetPath
 
 Account=Password='ADMIN'
 
 def Scrape(Account, Password):
-    Privacy = Path['Privacy']
-    Login = Path['Login']
-    Ldap = Path['Account Services']['Directory Services']['LDAP']
+    Ldap = GetPath('Account Services.Directory Services.LDAP')
 
     browser=webdriver.Chrome('chromedriver.exe')
-    browser.get('http://'+BMC_ip)
-    browser.find_element(By.ID,value=Privacy['Advance']).click()
-    browser.find_element(By.ID,value=Privacy['Go ahead']).click()
+    browser.get('http://'+ BMC_ip)
+    browser.find_element(By.ID,value=GetPath('Privacy.Advance')).click()
+    browser.find_element(By.ID,value=GetPath('Privacy.Advance.Go ahead')).click()
     sleep(2)
-    browser.find_element(By.ID,value=Login['username']).send_keys(Account)
-    browser.find_element(By.ID,value=Login['password']).send_keys(Password)
-    browser.find_element(By.ID,value=Login['Button']).click()
+    browser.find_element(By.ID,value=GetPath('Login.username')).send_keys(Account)
+    browser.find_element(By.ID,value=GetPath('Login.password')).send_keys(Password)
+    browser.find_element(By.ID,value=GetPath('Login.Button')).click()
     sleep(7)
     browser.maximize_window()
     browser.execute_script(goPage['Account Services'])
