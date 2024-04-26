@@ -52,16 +52,15 @@ def raw_Factory_Default(ip, uni_pwd):
 
 
 if __name__=='__main__':
-    ip = '10.184.11.71'
+    ip = '10.184.18.55'
     uni_pwd = 'GXBGWWDHHK'
-    # auth = Check_PWD(ip, uni_pwd)
+    auth = Check_PWD(ip, uni_pwd)
+    # ASCII_to_raw('EKKFSVGQRL')
 
-    print(GetPath('Account Services.Directory Services.LDAP')['Bind DN'])
 
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-    # hex_to_unicode('42 49 4F 53 20 44 61 74 65 3A 20 30 31 2F 30 39 2F 32 30 32 33 20 56 65 72 20 31 2E 34 62')
+    raw_Factory_Default(ip, uni_pwd)
 
-    # raw_Factory_Default(ip, uni_pwd)
     # smc_command(ip, uni_pwd, 'ipmi oem summary')
     # StringGenerator(64)
     

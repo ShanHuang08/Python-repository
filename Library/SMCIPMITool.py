@@ -38,6 +38,14 @@ class SMCIPMITool():
         print(self.raw('30 48 1'))
 
 
+class SMCIPMITool_Internal():
+    def __init__(self, ip, pwd) -> None:
+        self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
+        self.ip = ip
+        self.pwd = pwd
+    
+
+
 class SUMTool():
     def __init__(self, ip, pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.11.0_Win_x86_64'

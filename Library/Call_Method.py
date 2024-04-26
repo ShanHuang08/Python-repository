@@ -124,7 +124,7 @@ def ASCII_to_raw(url:str):
     # result = ''
     # for i in ASCII_code:
     #     result+=f"0x{hex(int(i))[2:]}" + ' '   
-    return result
+    return print(result)
 
 def CN_Generator(num):
     num = int(num)
