@@ -52,7 +52,7 @@ def raw_Factory_Default(ip, uni_pwd):
 
 
 if __name__=='__main__':
-    ip = '10.184.18.55'
+    ip = '10.184.11.71'
     uni_pwd = 'GXBGWWDHHK'
     auth = Check_PWD(ip, uni_pwd)
 

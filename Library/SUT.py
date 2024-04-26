@@ -68,7 +68,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.140.170.130')
+    GetFWInfo('10.184.11.71')
 
     # for i in ['10.184.17.90', '10.184.11.104', '10.184.26.175']:
     #     GetFWInfo(i)
