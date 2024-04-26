@@ -58,9 +58,9 @@ def Clear_setup():
         print(f'Clear failed, Status code: {clear[0]}\n{clear[-1]}')
 
 if __name__=='__main__':
-    BMC_ip = '172.31.34.91'
-    auth = Check_PWD(BMC_ip, unique='test')
+    BMC_ip = '10.148.173.54'
+    auth = Check_PWD(BMC_ip, unique='DWDKCNBMVW')
     url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
     Redfish_setup()
     SMASH(ip=BMC_ip)
-    Clear_setup()
+    # Clear_setup()
