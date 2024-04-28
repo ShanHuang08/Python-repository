@@ -13,10 +13,10 @@ class SMCIPMITool():
         if os.path.exists(self.Path):
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             # print(self.ip, self.pwd, cmd)
-            if execute.stderr == '':
+            if execute.returncode == 0:
                 return execute.stdout
             else:
-                return execute.stderr
+                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()
@@ -42,8 +42,20 @@ class SMCIPMITool_Internal():
     def __init__(self, ip, pwd) -> None:
         self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
         self.ip = ip
+        self.accout = ' ADMIN '
         self.pwd = pwd
-    
+
+    def Execute(self, cmd:str):
+        if os.path.exists(self.Path):
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
+            # print(self.ip, self.pwd, cmd)
+            if execute.returncode == 0:
+                return execute.stdout
+            else:
+                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
+        else:
+            print(SMCError(f'{self.Path} is not found'))
+            exit()    
 
 
 class SUMTool():
@@ -55,12 +67,12 @@ class SUMTool():
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
             execute = subprocess.run('sum.exe -i '+self.ip+' '+'-u ADMIN -p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
-            if execute.stderr == '':
+            if execute.returncode == 0:
                 return execute.stdout
             else:
-                return execute.stderr
+                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
         else:
-            print(SUMError())
+            print(SUMError(f'{self.Path} is not found'))
 
     def get_bmc_info(self):
         self.Execute('GetBmcInfo')
