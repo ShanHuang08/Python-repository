@@ -23,7 +23,6 @@ def Get_PostCode(ip, auth):
                 print(f"{count}. PostCode = {kdata['PostCode']}")
 
                 if kdata['PostCode'] in ['00', '0000']:
-                  print(f"{count}. PostCode = {kdata['PostCode']}")
                   return f"{count}. PostCode = {kdata['PostCode']}"
                 
                 if count >= 200 and kdata['PostCode'] not in ['00', '0000']:
@@ -42,6 +41,6 @@ def Get_PostCode(ip, auth):
         return f"PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
-    ip = '172.31.34.91'
-    auth = Check_PWD(ip, pwd='GCKFKYBCIM')
+    ip = '10.184.17.88'
+    auth = Check_PWD(ip, pwd='TSEDWYJMKS')
     Get_PostCode(ip, auth)

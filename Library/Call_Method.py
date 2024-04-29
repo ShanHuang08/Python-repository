@@ -100,6 +100,11 @@ def Check_ipaddr(ip):
     return len(Text) > 0
 
 def Check_PWD(ip, unique):
+    """
+    - Utilize `Redfish` check current password
+    - If `GET fail` return `unique password`
+    
+    """
     if Check_ipaddr(ip):
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
         # if Check_Network == None:

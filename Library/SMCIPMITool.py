@@ -37,6 +37,8 @@ class SMCIPMITool():
     def raw_30_48_1(self):
         print(self.raw('30 48 1'))
 
+    def get_sensors(self):
+        print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
 
 class SMCIPMITool_Internal():
     def __init__(self, ip, pwd) -> None:
@@ -60,7 +62,7 @@ class SMCIPMITool_Internal():
 
 class SUMTool():
     def __init__(self, ip, pwd) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\sum_2.11.0_Win_x86_64'
+        self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
         self.pwd = pwd
     
@@ -75,12 +77,22 @@ class SUMTool():
             print(SUMError(f'{self.Path} is not found'))
 
     def get_bmc_info(self):
-        self.Execute('GetBmcInfo')
+        print(self.Execute('GetBmcInfo'))
     
     def get_bios_info(self):
-        self.Execute('GetBiosInfo --showall')
+        print(self.Execute('GetBiosInfo --showall'))
     
     def get_cpld_info(self):
-        self.Execute('GetCpldInfo')
+        print(self.Execute('GetCpldInfo'))
+    
+    def get_psu_info(self):
+        print(self.Execute('GetPSUInfo'))
+
+    def SUT_info(self):
+        bmc = self.get_bmc_info()
+        bios = self.get_bios_info()
+        cpld = self.get_cpld_info()
+        psu = self.get_psu_info()
+        return f"{bmc}\n{bios}\n{cpld}\n{psu}"
 
 # SMC_tool = SMCIPMITool()

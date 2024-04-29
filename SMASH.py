@@ -3,10 +3,7 @@ from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import subprocess
 from time import sleep
 
-BMC_IP = '10.140.178.255'
-OS_IP = '10.184.21.100'
-SUT_Name = 'SUT info.txt'
-ssh_port = 22
+
 def LDAPLogin():
     print(f"Server: {BMC_IP}")
     accounts = ['Admin', 'Operator', 'User']
@@ -93,8 +90,12 @@ def ssh_os():
         print(f"Connection timed out: {e}")
 
 if __name__=='__main__':
+    BMC_IP = '10.184.25.127'
+    OS_IP = '10.184.21.100'
+    SUT_Name = 'SUT info.txt'
+    ssh_port = 22
     # LDAPLogin()
     # ADLogin()
-    # ssh_bmc()
+    ssh_bmc()
     # ssh_updoad()
-    ssh_os()
+    # ssh_os()
