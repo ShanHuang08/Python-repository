@@ -17,19 +17,21 @@ def enumerate_practice():
 # enumerate_practice()
     
 def Check_Fru1(ip, uni_pwd):
-    pwd=Check_PWD(ip, uni_pwd)[1]
+    pwd = Check_PWD(ip, uni_pwd)[1]
     SMC_tool = SMCIPMITool_Internal(ip, pwd)
     fru1 = SMC_tool.Execute('ipmi fru1')
     for output in fru1.splitlines():
-        if any(fru in output for fru in ['BPN','BS','BP','BV']):
-            print(output.splitlines())
-            # 如果BS是空值 or 長度小於10, 跳出input() 叫user輸入資訊, 帶入Execute()執行fru1w跟fruw      
-            # test1 = ['Board Product Name (BPN)       = '] #print(string[-1] == ' ') #True
-            # test2 = ['Board Serial Number (BS)       = WM233S009061'] #print(string[-1] == ' ') #False
-            # string1 = ' '.join(list(test1))
-            # string2 = ' '.join(list(test2))
-            # print(string1[-1] == ' ') #True
-            # print(string2[-1] == ' ') #False 
+        # if any(fru in output for fru in ['BPN','BS','BP','BV']):
+        if 'BS' in output:
+            print(output)
+            output_line = output.splitlines()
+            split_str = ''.join(output_line).split('=')
+            if len(split_str) < 10:
+                text = input('Input BS: ')
+                SMC_tool.Execute('ipmi fru1w BS '+ text + ' ')
+                print('\n')
+                SMC_tool.Execute('ipmi fruw BS ' + text)
+
             # string = ' '.join(test[:]) 也可以 XD
 
 
@@ -62,7 +64,6 @@ def raw_Factory_Default(ip, uni_pwd):
 if __name__=='__main__':
     ip = '10.184.25.127'
     uni_pwd = 'JDTZJGFQLC'
-
 
     # Check_Fru1(ip, uni_pwd)
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
