@@ -17,6 +17,7 @@ def enumerate_practice():
 # enumerate_practice()
     
 def Check_Fru1(ip, uni_pwd):
+    print(f'Server IP: {ip}')
     pwd = Check_PWD(ip, uni_pwd)[1]
     SMC_tool = SMCIPMITool_Internal(ip, pwd)
     fru1 = SMC_tool.Execute('ipmi fru1')
@@ -24,15 +25,21 @@ def Check_Fru1(ip, uni_pwd):
         # if any(fru in output for fru in ['BPN','BS','BP','BV']):
         if 'BS' in output:
             print(output)
-            output_line = output.splitlines()
-            split_str = ''.join(output_line).split('=')
-            if len(split_str) < 10:
+            SN_number = output.split('=')[-1]
+            if len(SN_number) < 10:
                 text = input('Input BS: ')
-                SMC_tool.Execute('ipmi fru1w BS '+ text + ' ')
-                print('\n')
-                SMC_tool.Execute('ipmi fruw BS ' + text)
+                bs1 = SMC_tool.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
+                bs = SMC_tool.Execute('ipmi fruw BS ' + text)
+                print(bs1+'\n'+bs)
+            else: print('BS is match')
 
-            # string = ' '.join(test[:]) 也可以 XD
+        if 'BM' in output:
+            if 'Supermicro' != output.split('=')[-1].lstrip():
+                print(f"BM doesn't match\nStart override")
+                bm1 = SMC_tool.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
+                bm = SMC_tool.Execute('ipmi fruw BM Supermicro')
+                print(bm1+'\n'+bm)
+            else: print(f"{output}\nBM is match")
 
 
 # lani = get_lani_id_list(ip, uni_pwd)
@@ -62,12 +69,13 @@ def raw_Factory_Default(ip, uni_pwd):
 
 
 if __name__=='__main__':
-    ip = '10.184.25.127'
-    uni_pwd = 'JDTZJGFQLC'
+    ip = '10.184.18.55'
+    uni_pwd = 'GXBGWWDHHK'
 
-    # Check_Fru1(ip, uni_pwd)
+
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-    # raw_Factory_Default(ip, uni_pwd)
+    # Check_Fru1(ip, uni_pwd)   
+    raw_Factory_Default(ip, uni_pwd)
 
     # smc_command(ip, uni_pwd, 'ipmi oem summary')
     # StringGenerator(64)
