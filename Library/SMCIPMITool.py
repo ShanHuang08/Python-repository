@@ -25,6 +25,16 @@ class SMCIPMITool():
         print(f'Execute ipmi raw {cmd}')
         return self.Execute('ipmi raw '+cmd)
     
+    def raw_06_01(self):
+        print(self.raw('06 01'))
+    
+    def raw_30_74_01(self):
+        """
+        - Check if unique password has been activated
+        - 01 activated
+        """
+        print(self.raw('30 74 01'))
+    
     def raw_30_68_09(self, cmd:str):
         return self.raw('30 68 09 '+cmd)
 

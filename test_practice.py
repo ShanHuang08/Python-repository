@@ -1,6 +1,6 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, get_lani_id_list, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath
+from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default
 from time import sleep
 
 TagName = ['child8', 'child9']
@@ -55,17 +55,6 @@ text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert.q
 # text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwe.qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qw'
 # text = 'hi-there-yes-you-information-abcdefghijklmnopqrstuvwxyz@please-try-to.send-me-an-email-if-you-can-possibly-begin-to-remember-this-coz.this-is-the-longest-email-address-known-to-man-but-to-be-honest.this-is-such-a-stupidly-long-sub-domain-forever.parco.com'
 # Email_Format(text)
-
-def raw_Factory_Default(ip, uni_pwd):
-    print(f'Server IP: {ip}')
-    auth = Check_PWD(ip, uni_pwd)
-    timeout = 150 if ip.split('.')[0] == '10' else 160
-    SMC_tool = SMCIPMITool(ip, auth[1])
-    SMC_tool.raw_30_41()
-    sleep(timeout)
-    SMC_tool2 = SMCIPMITool(ip, uni_pwd)
-    SMC_tool2.raw_30_48_1()
-
 
 
 if __name__=='__main__':

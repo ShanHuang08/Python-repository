@@ -6,6 +6,7 @@ import subprocess
 import sys
 from Library.SMCIPMITool import SMCIPMITool
 import re
+from time import sleep
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -101,7 +102,7 @@ def Check_ipaddr(ip):
 
 def Check_PWD(ip, unique):
     """
-    - Utilize `Redfish` check current password
+    - Utilize `Redfish` checking current password
     - If `GET fail` return `unique password`
     
     """
@@ -228,3 +229,11 @@ def AI_hex_to_unicode(hex_str):
     unicode_str = ''.join(chr(int(hex_v, 16)) for hex_v in hex_str.split(' '))
     print(unicode_str)
     return unicode_str
+
+def raw_Factory_Default(ip, uni_pwd):
+    print(f'Server IP: {ip}')
+    auth = Check_PWD(ip, uni_pwd)
+    timeout = 150 if ip.split('.')[0] == '10' else 160
+    SMCIPMITool(ip, auth[1]).raw_30_41()
+    sleep(timeout)
+    SMCIPMITool(ip, uni_pwd).raw_30_48_1()
