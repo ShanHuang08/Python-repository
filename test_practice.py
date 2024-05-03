@@ -45,8 +45,12 @@ def Check_Fru1(ip, uni_pwd):
 # lani = get_lani_id_list(ip, uni_pwd)
 # print(lani)
 
-def tinydict():
-    return {'Google': 'www.google.com', 'Runoob': 'www.runoob.com', 'taobao': 'www.taobao.com'}
+def AddList():
+    valid_kcsoption = ["Administrator", "Operator", "User"]
+    valid_kcsoption2 = ["Administrator", "Operator", "User"]
+    valid_kcsoption += ["DisableKCS"]
+    valid_kcsoption2.append("DisableKCS")
+    print(valid_kcsoption == valid_kcsoption2)
 
 
 text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert.qqq'
@@ -64,7 +68,7 @@ if __name__=='__main__':
 
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # Check_Fru1(ip, uni_pwd)   
-    raw_Factory_Default(ip, uni_pwd)
+    # raw_Factory_Default(ip, uni_pwd)
 
     # smc_command(ip, uni_pwd, 'ipmi oem summary')
     # StringGenerator(64)
