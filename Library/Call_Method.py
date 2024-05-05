@@ -3,10 +3,10 @@ import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
 import subprocess
-import sys
 from Library.SMCIPMITool import SMCIPMITool
 import re
 from time import sleep
+from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -117,7 +117,12 @@ def Check_PWD(ip, unique):
         # return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
     else:
         print('Ping SUT failed')
-        sys.exit()
+        osip = input("Input OS IP (press ENTER if you doesn't know it): ")
+        if osip:
+            print("In-band recover function is under development!")
+            exit()
+        else:
+            exit()
 
 def AI_ASCII_to_raw(url: str) -> str:
     return ' '.join([f"0x{hex(ord(r))[2:]}" for r in url])
@@ -237,3 +242,33 @@ def raw_Factory_Default(ip, uni_pwd):
     SMCIPMITool(ip, auth[1]).raw_30_41()
     sleep(timeout)
     SMCIPMITool(ip, uni_pwd).raw_30_48_1()
+
+def ssh_inband(osip):
+    print(f"Server: {osip}")
+    account = 'root'
+    pwd = '111111'
+    stdoutput = []
+    try:
+        ssh = SSHClient()
+        ssh.set_missing_host_key_policy(AutoAddPolicy())      
+        ssh.connect(hostname=osip, username=account, password=pwd, port=22)
+        for cmd in ['ls IPMI*', 'ipmitool']:
+            stdin, stdout1, stderr = ssh.exec_command(cmd)
+            stdoutput += stdout1.readlines()
+            stdoutput += stderr.readlines()
+        print(''.join(stdoutput))
+
+        for output in [' '.join(stdoutput)]:
+            if 'not' not in output:
+                stdin, stdout, stderr = ssh.exec_command('ipmitool lan print')
+                for result in stdout.readlines():
+                    print(result+'\n') #str
+            else:
+                print("Doesn't have IPMICFG tools")
+        ssh.close()
+    except ssh_exception.SSHException as e:
+        print(f"SSHException occurred: {str(e)}")
+    except ssh_exception.NoValidConnectionsError as e:
+        print(f'{str(e)}, SSh port is closed!')
+    except TimeoutError as e:
+        print(f"Connection timed out: {e}")

@@ -79,8 +79,10 @@ class SUMTool():
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
             execute = subprocess.run('sum.exe -i '+self.ip+' '+'-u ADMIN -p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
-            if execute.returncode == 0:
+            if execute.returncode == 0 and execute.stdout != '':
                 return execute.stdout
+            elif execute.returncode == 0 and execute.stdout == '':
+                return execute.stderr
             else:
                 return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
         else:
