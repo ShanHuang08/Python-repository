@@ -263,7 +263,7 @@ def ssh_inband(osip, ip):
             stdstrings = ' '.join(stdoutput)
             if not Tool_used:
                 if 'not' not in stdstrings:
-                    if 'ipmitool' in cmd:
+                    if 'command not found' not in cmd:
                         Tool_used = ipmitool_recover(ssh, ip, mask, gateway)
                     else:
                         Tool_used = IPMICFG_recover(ssh, ip, mask, gateway)
