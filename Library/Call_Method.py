@@ -243,11 +243,13 @@ def raw_Factory_Default(ip, uni_pwd):
     sleep(timeout)
     SMCIPMITool(ip, uni_pwd).raw_30_48_1()
 
-def ssh_inband(osip):
+def ssh_inband(osip, ip):
     print(f"Server: {osip}")
     account = 'root'
     pwd = '111111'
+    mask, gateway = ip_filter(ip)
     stdoutput = []
+    Tool_used = False
     try:
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())      
@@ -256,15 +258,19 @@ def ssh_inband(osip):
             stdin, stdout1, stderr = ssh.exec_command(cmd)
             stdoutput += stdout1.readlines()
             stdoutput += stderr.readlines()
-        print(''.join(stdoutput))
+            print(''.join(stdoutput))
 
-        for output in [' '.join(stdoutput)]:
-            if 'not' not in output:
-                stdin, stdout, stderr = ssh.exec_command('ipmitool lan print')
-                for result in stdout.readlines():
-                    print(result+'\n') #str
-            else:
-                print("Doesn't have IPMICFG tools")
+            stdstrings = ' '.join(stdoutput)
+            if not Tool_used:
+                if 'not' not in stdstrings:
+                    if 'ipmitool' in cmd:
+                        Tool_used = ipmitool_recover(ssh, ip, mask, gateway)
+                    else:
+                        Tool_used = IPMICFG_recover(ssh, ip, mask, gateway)
+                else:
+                    if not Tool_used:
+                        print(f"Doesn't have {cmd} tools")
+
         ssh.close()
     except ssh_exception.SSHException as e:
         print(f"SSHException occurred: {str(e)}")
@@ -272,3 +278,31 @@ def ssh_inband(osip):
         print(f'{str(e)}, SSh port is closed!')
     except TimeoutError as e:
         print(f"Connection timed out: {e}")
+    
+def ip_filter(ip):
+    """
+    return corresponding `netmask` and `gateway` IPs according to specific location 
+    """
+    One_Two = ip.split('.')[0]+'.'+ip.split('.')[1]
+    if ip.split('.')[0] == '10':
+        print('Bade ip') if One_Two == '10.184' else print('Zho ip')
+        mask = '255.255.224.0' if One_Two == '10.184' else '255.255.0.0'
+        gateway = '10.184.7.254' if One_Two == '10.184' else '10.140.0.0'
+        return mask, gateway
+    else: 
+        print('US ip')
+        return '255.255.0.0', '172.31.0.0'
+    
+def ipmitool_recover(ssh, ip, mask, gateway):
+    for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
+        stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
+        for result in stdout.readlines() + stderr.readlines():
+            print(result+'\n')
+    return True
+
+def IPMICFG_recover(ssh, ip, mask, gateway):
+    for ssh_cmd in ['./IPMICFG -dhcp off', f'./IPMICFG -m {ip}', f'./IPMICFG -k {mask}', f'./IPMICFG -g {gateway}']:
+        stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
+        for result in stdout.readlines() + stderr.readlines():
+            print(result+'\n')
+    return True
