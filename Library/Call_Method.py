@@ -244,33 +244,31 @@ def raw_Factory_Default(ip, uni_pwd):
     SMCIPMITool(ip, uni_pwd).raw_30_48_1()
 
 def ssh_inband(osip, ip):
+    """
+    Utilize `ipmitool` or `IPMICFG` to recover SUT via in-band
+    """
     print(f"Server: {osip}")
-    account = 'root'
-    pwd = '111111'
     mask, gateway = ip_filter(ip)
     stdoutput = []
     Tool_used = False
     try:
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())      
-        ssh.connect(hostname=osip, username=account, password=pwd, port=22)
-        for cmd in ['ls IPMI*', 'ipmitool']:
+        ssh.connect(hostname=osip, username='root', password='111111', port=22)
+        for cmd in ['ipmitool', 'ls IPMI*']:
             stdin, stdout1, stderr = ssh.exec_command(cmd)
             stdoutput += stdout1.readlines()
             stdoutput += stderr.readlines()
-            print(''.join(stdoutput))
-
+            # print(''.join(stdoutput))
             stdstrings = ' '.join(stdoutput)
-            if not Tool_used:
-                if 'not' not in stdstrings:
-                    if 'command not found' not in cmd:
-                        Tool_used = ipmitool_recover(ssh, ip, mask, gateway)
-                    else:
-                        Tool_used = IPMICFG_recover(ssh, ip, mask, gateway)
-                else:
-                    if not Tool_used:
-                        print(f"Doesn't have {cmd} tools")
 
+            if not Tool_used:
+                if 'command not found' not in stdstrings:
+                    Tool_used = ipmitool_recover(ssh, ip, mask, gateway)
+                elif 'IPMICFG' in stdstrings: #改成IPMICFG檔名 in stdstrings
+                    Tool_used = IPMICFG_recover(ssh, ip, mask, gateway)
+                else: print(f"Doesn't have {cmd} tools")  
+                
         ssh.close()
     except ssh_exception.SSHException as e:
         print(f"SSHException occurred: {str(e)}")
@@ -294,15 +292,17 @@ def ip_filter(ip):
         return '255.255.0.0', '172.31.0.0'
     
 def ipmitool_recover(ssh, ip, mask, gateway):
+    print('Execute ipmitool') # Debug only
     for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
         for result in stdout.readlines() + stderr.readlines():
-            print(result+'\n')
+            print(result)
     return True
 
 def IPMICFG_recover(ssh, ip, mask, gateway):
+    print('Execute IPMICFG') #Debug only
     for ssh_cmd in ['./IPMICFG -dhcp off', f'./IPMICFG -m {ip}', f'./IPMICFG -k {mask}', f'./IPMICFG -g {gateway}']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
         for result in stdout.readlines() + stderr.readlines():
-            print(result+'\n')
+            print(result)
     return True
