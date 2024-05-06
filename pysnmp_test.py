@@ -137,8 +137,8 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '172.31.34.91'
-    pwd = Check_PWD(ip, unique='WCTFDPTATX')
+    ip = '10.184.18.55'
+    pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 
@@ -146,16 +146,16 @@ if __name__ == '__main__':
         Snmp.snmpv2_test()
         Snmp.snmpv2_test()  
     else:
-        Snmp.snmpv2_test(value=uid_on)
+        Snmp.snmpv2_test(uid_on)
         Snmp.snmpv2_test()
         # Snmp.UID_Change(Change)
-        Snmp.snmpv2_test(value=uid_off)
+        Snmp.snmpv2_test(uid_off)
         Snmp.snmpv2_test()
 
-        Snmp.snmpv3_test(value=uid_on)
+        Snmp.snmpv3_test(uid_on)
         Snmp.snmpv3_test()
 
-        Snmp.snmpv3_test(value=uid_off)
+        Snmp.snmpv3_test(uid_off)
         Snmp.snmpv3_test()
         Change = "Off"
         print('Test Disable account')      

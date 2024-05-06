@@ -1,6 +1,6 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default
+from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, ip_filter
 from time import sleep
 
 TagName = ['child8', 'child9']
@@ -51,6 +51,8 @@ def AddList():
     valid_kcsoption += ["DisableKCS"]
     valid_kcsoption2.append("DisableKCS")
     print(valid_kcsoption == valid_kcsoption2)
+    test = [' '.join(valid_kcsoption)]
+    print(test)
 
 
 text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert.qqq'
@@ -64,7 +66,8 @@ text = 'qwert12345qwert12345qwert12345qwert12345qwert12345qwert12345qwer@qwert.q
 if __name__=='__main__':
     ip = '10.184.18.55'
     uni_pwd = 'GXBGWWDHHK'
-
+    
+    # print(ip_filter(ip))
 
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # Check_Fru1(ip, uni_pwd)   

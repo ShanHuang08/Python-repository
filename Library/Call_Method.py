@@ -242,7 +242,9 @@ def raw_Factory_Default(ip, uni_pwd):
     SMCIPMITool(ip, auth[1]).raw_30_41()
     sleep(timeout)
     SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-
+    sleep(timeout)
+    print('Completed') if Check_ipaddr(ip) else print(f"{ip} is still offline!")
+        
 def ssh_inband(osip, ip):
     """
     Utilize `ipmitool` or `IPMICFG` to recover SUT via in-band
@@ -255,7 +257,7 @@ def ssh_inband(osip, ip):
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())      
         ssh.connect(hostname=osip, username='root', password='111111', port=22)
-        for cmd in ['ipmitool', 'ls IPMI*']:
+        for cmd in ['ipmitool', './IPMICFG-Linux.x86_64']:
             stdin, stdout1, stderr = ssh.exec_command(cmd)
             stdoutput += stdout1.readlines()
             stdoutput += stderr.readlines()
@@ -265,7 +267,7 @@ def ssh_inband(osip, ip):
             if not Tool_used:
                 if 'command not found' not in stdstrings:
                     Tool_used = ipmitool_recover(ssh, ip, mask, gateway)
-                elif 'IPMICFG' in stdstrings: #改成IPMICFG檔名 in stdstrings
+                elif 'IPMICFG Version' in stdstrings: #改成IPMICFG檔名 in stdstrings
                     Tool_used = IPMICFG_recover(ssh, ip, mask, gateway)
                 else: print(f"Doesn't have {cmd} tools")  
                 
@@ -283,15 +285,19 @@ def ip_filter(ip):
     """
     One_Two = ip.split('.')[0]+'.'+ip.split('.')[1]
     if ip.split('.')[0] == '10':
-        print('Bade ip') if One_Two == '10.184' else print('Zho ip')
         mask = '255.255.224.0' if One_Two == '10.184' else '255.255.0.0'
-        gateway = '10.184.7.254' if One_Two == '10.184' else '10.140.0.0'
+        if One_Two == '10.184':
+            gateway = '10.184.7.254'
+        elif One_Two == '10.140':
+            gateway = '10.140.0.250'
+        elif One_Two == '10.135':
+            gateway = '10.135.0.253'
         return mask, gateway
     else: 
-        print('US ip')
         return '255.255.0.0', '172.31.0.0'
     
 def ipmitool_recover(ssh, ip, mask, gateway):
+    """Only for `ssh_inband`"""
     print('Execute ipmitool') # Debug only
     for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
@@ -300,6 +306,7 @@ def ipmitool_recover(ssh, ip, mask, gateway):
     return True
 
 def IPMICFG_recover(ssh, ip, mask, gateway):
+    """Only for `ssh_inband`"""
     print('Execute IPMICFG') #Debug only
     for ssh_cmd in ['./IPMICFG -dhcp off', f'./IPMICFG -m {ip}', f'./IPMICFG -k {mask}', f'./IPMICFG -g {gateway}']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
