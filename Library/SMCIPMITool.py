@@ -50,6 +50,12 @@ class SMCIPMITool():
     def get_sensors(self):
         print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
 
+    def Check_sensors_status(self):
+        """`1E`: No sensor, `1F`: has sensor"""
+        output = self.raw('30 68 F9')
+        print(output)
+        return output
+
 class SMCIPMITool_Internal():
     def __init__(self, ip, pwd) -> None:
         self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
