@@ -25,11 +25,11 @@ def Get_PostCode(ip, auth):
                 if kdata['PostCode'] in ['00', '0000']:
                   return f"{count}. PostCode = {kdata['PostCode']}"
                 
-                if count >= 200 and kdata['PostCode'] not in ['00', '0000']:
+                if count >= 2000 and kdata['PostCode'] not in ['00', '0000']:
                     print(f"Current Post Code is {kdata['PostCode']}\nForceRestart")
                     POST_collection.append(kdata['PostCode'])
                     reboot_count+=1
-                    POST(url='https://'+ip+'/redfish/v1/Systems/1/Actions/ComputerSystem.Reset/', auth=auth, body={"ResetType": "ForceRestart"})
+                    # POST(url='https://'+ip+'/redfish/v1/Systems/1/Actions/ComputerSystem.Reset/', auth=auth, body={"ResetType": "ForceRestart"})
                     sleep(2)
                     count = 0
             else:
@@ -41,6 +41,6 @@ def Get_PostCode(ip, auth):
         return f"PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
-    ip = '10.184.17.88'
-    auth = Check_PWD(ip, pwd='TSEDWYJMKS')
+    ip = '172.31.35.195'
+    auth = Check_PWD(ip, pwd='ALTWNBOQAN')
     Get_PostCode(ip, auth)

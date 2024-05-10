@@ -15,12 +15,12 @@ def Check_Mel(SMC_Tool):
     if len(Pass_Check) == 0: print(response)
     return len(Pass_Check) > 0
 
-def FactoryDefault():
+def FactoryDefault(ip, Uni_pwd):
     # commands = ['30 40', '30 41', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1', 'ipmi fd 2', 'ipmi fd 3']
-    commands = ['30 42', '30 48 0', 'ipmi fd 1', 'ipmi fd 2', '30 48 1']
+    commands = ['30 40', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1']
     for cmd in commands:
         pwd = Check_PWD(ip=ip, unique=Uni_pwd)[1] 
-        SMC_Tool = SMCIPMITool(ip=ip, pwd=pwd)
+        SMC_Tool = SMCIPMITool(ip, pwd)
         print('Start executing '+cmd)
         if 'ipmi' in cmd:
             exe = SMC_Tool.Execute(cmd)
@@ -32,6 +32,6 @@ def FactoryDefault():
         print('PASS') if Check_Mel(SMC_Tool) else print('FAIL')
 
 if __name__=='__main__':
-    ip = '10.184.17.88'
-    Uni_pwd = 'TSEDWYJMKS'
-    FactoryDefault()
+    ip = '10.184.29.12'
+    Uni_pwd = 'FSOQHIILQP'
+    FactoryDefault(ip, Uni_pwd)

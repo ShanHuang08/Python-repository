@@ -294,7 +294,7 @@ def ip_filter(ip):
             gateway = '10.135.0.253'
         return mask, gateway
     else: 
-        return '255.255.0.0', '172.31.0.0'
+        return '255.255.0.0', '172.31.0.1'
     
 def ipmitool_recover(ssh, ip, mask, gateway):
     """Only for `ssh_inband`"""
