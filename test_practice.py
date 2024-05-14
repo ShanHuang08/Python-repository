@@ -57,17 +57,16 @@ def AddList():
 
 
 if __name__=='__main__':
-    ip = '10.184.11.104'
-    uni_pwd = 'RXKUWCCGAA'
+    ip = '10.184.21.204'
+    uni_pwd = 'NLTAFRJLHJ'
 
 
     # print(ip_filter(ip))
 
-    # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
+    SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # Check_Fru1(ip, uni_pwd)   
     # raw_Factory_Default(ip, uni_pwd)
-
-    # smc_command(ip, uni_pwd, 'ipmi sensor --full')
+    # smc_command(ip, uni_pwd, 'ipmi raw 30 2a')
     # StringGenerator(64)
     
 

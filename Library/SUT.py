@@ -1,4 +1,5 @@
 from Redfish_requests import *
+import re
 
 def AddSUT():
     key = input("SUT: ")
@@ -8,7 +9,9 @@ def AddSUT():
     print(str(SUT_info)[1:-1])
 
 def Check_PWD(ip):
-
+    if not is_ipv4(ip):
+        print(f"Invalid IPv4 format: {ip}")
+        exit()
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
     if Check_Network == None: #會造成GetFWInfo()出現TypeError: 'NoneType' object is not subscriptable
         print('SUT is diconnected')
@@ -19,6 +22,14 @@ def Check_PWD(ip):
         else:
             pwd = input('Input unique password: ')
             return ('ADMIN', pwd)
+
+def is_ipv4(ip):
+    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
+    match = re.match(ipv4_pattern, ip)
+    if match: 
+        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
+        return len(Check) == 4
+    else: return False
 
 def GetGUID(ip, pwd):
     Mongo_url = 'https://satc.supermicro.com/api/mongohelper/tools/sut/'+ip+'/ADMIN/'+pwd+'/'
@@ -39,10 +50,10 @@ def GetGUID(ip, pwd):
             print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
 def GetFWInfo(ip:str):
-    print(f"Server IP: {ip}")
-    url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     auth = Check_PWD(ip)
     # auth = ('admin', '2wsx#EDC')
+    print(f"Server IP: {ip}")
+    url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     BMC_Data = None
     BIOS_Data = None
     Check_Pwd = GET(url='https://'+ip+'/redfish/v1/Systems', auth=auth)
@@ -68,8 +79,8 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('172.31.35.195')
-
+    GetFWInfo('')
+    
     # for info in ['10.184.11.104', '10.184.21.204']:
     #     GetFWInfo(info)
     #     print('\n')

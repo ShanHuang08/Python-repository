@@ -20,12 +20,21 @@ def RStringCheck():
 info = "build date: 2023/01/01 version: 1.0"
 # regex = r"[a-c]"
 
+def Check_lan_mode():
+    regex = r"\[ ((Failover)|(Shared)|(Dedicated)|(Failover-OnBoard)|(Shared-OnBoard)) \].*"
+    string = '[ Failover-OnBoard ]'
 
-regex = r"\[ ((Failover)|(Shared)|(Dedicated)|(Failover-OnBoard)|(Shared-OnBoard)) \].*"
-string = '[ Failover-OnBoard ]'
+    match = re.match(regex, string)
+    if match: print(f"Input: {string}, Match: {match.group()}")
+    else: 
+        print(f"Input: {string}, Not match")
 
-match = re.match(regex, string)
-print(match)
-if match: print(f"Input: {string}, Match: {match.group()}")
-else: 
-    print(f"Input: {string}, Not match")
+def is_ipv4(ip):
+    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
+    match = re.match(ipv4_pattern, ip)
+    if match: 
+        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
+        return len(Check) == 4
+    else: return False
+        
+print(is_ipv4('255.255.255.0'))
