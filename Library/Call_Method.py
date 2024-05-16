@@ -106,9 +106,6 @@ def Check_PWD(ip, unique):
     - If `GET fail` return `unique password`
     
     """
-    if not is_ipv4(ip):
-        print(f"Invalid IPv4 format: {ip}")
-        exit()
     if Check_ipaddr(ip):
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
         # if Check_Network == None:
@@ -316,11 +313,3 @@ def IPMICFG_recover(ssh, ip, mask, gateway):
         for result in stdout.readlines() + stderr.readlines():
             print(result)
     return True
-
-def is_ipv4(ip):
-    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
-    match = re.match(ipv4_pattern, ip)
-    if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
-        return len(Check) == 4
-    else: return False

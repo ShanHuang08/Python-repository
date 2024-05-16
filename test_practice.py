@@ -48,7 +48,14 @@ def Check_Fru1(ip, uni_pwd):
 def Search_FW_Type(type):
     try: print(f"{type}\nFW type: {FW_Type[type]['info'][0]}\n{FW_Type[type]['info'][-1]}")
     except KeyError: print(f"Branch {type} is not found!")
-    
+
+def String_Split(inputs:str):
+    inputs = ' '.join(inputs.lstrip().rstrip().upper().split(' '))
+    if ',' in inputs or '.' in inputs:
+        inputs = ' '.join(inputs.split(','))
+        inputs = ' '.join(inputs.split('.'))
+    return [s.lstrip() for s in inputs.split(' ') if s != '']
+
  
 if __name__=='__main__':
     ip = '172.31.35.195'
