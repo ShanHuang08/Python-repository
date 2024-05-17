@@ -1,6 +1,6 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, ip_filter
+from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, Modify_frus
 from SUT_IP import FW_Type
 
 TagName = ['child8', 'child9']
@@ -30,7 +30,9 @@ def Check_Fru1(ip, uni_pwd):
                 text = input('Input BS: ')
                 bs1 = SMC_tool.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
                 bs = SMC_tool.Execute('ipmi fruw BS ' + text)
-                print(bs1+'\n'+bs)
+                bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
+                bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
+                print(bs1_num+'\n'+bs_num)
             else: print('BS is match')
 
         if 'BM' in output:
@@ -38,7 +40,7 @@ def Check_Fru1(ip, uni_pwd):
                 print(f"BM doesn't match\nStart override")
                 bm1 = SMC_tool.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
                 bm = SMC_tool.Execute('ipmi fruw BM Supermicro')
-                print(bm1+'\n'+bm)
+                # print(bm1+'\n'+bm)
             else: print(f"{output}\nBM is match")
 
 
@@ -49,25 +51,20 @@ def Search_FW_Type(type):
     try: print(f"{type}\nFW type: {FW_Type[type]['info'][0]}\n{FW_Type[type]['info'][-1]}")
     except KeyError: print(f"Branch {type} is not found!")
 
-def String_Split(inputs:str):
-    inputs = ' '.join(inputs.lstrip().rstrip().upper().split(' '))
-    if ',' in inputs or '.' in inputs:
-        inputs = ' '.join(inputs.split(','))
-        inputs = ' '.join(inputs.split('.'))
-    return [s.lstrip() for s in inputs.split(' ') if s != '']
+
 
  
 if __name__=='__main__':
-    ip = '172.31.35.195'
-    uni_pwd = 'ALTWNBOQAN'
+    ip = '10.184.27.169'
+    uni_pwd = 'ZLGBDYZQTO'
     # uni_pwd = 'ADMIN'
 
-
+    
     # Search_FW_Type('F401MS')
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-    # Check_Fru1(ip, uni_pwd)   
+    # Check_Fru1(ip, uni_pwd)
     # raw_Factory_Default(ip, uni_pwd)
     # smc_command(ip, uni_pwd, 'ipmi raw 30 2a')
-    # StringGenerator(64)
+    Modify_frus(ip, uni_pwd, 'BM, BPN')
     
 

@@ -3,7 +3,7 @@ import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
 import subprocess
-from Library.SMCIPMITool import SMCIPMITool
+from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
 import re
 from time import sleep
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
@@ -324,3 +324,34 @@ def is_ipv4(ip):
         Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
         return len(Check) == 4
     else: return False
+
+def String_Split(inputs:str):
+    inputs = ' '.join(inputs.lstrip().rstrip().upper().split(' '))
+    if ',' in inputs or '.' in inputs:
+        inputs = ' '.join(inputs.split(','))
+        inputs = ' '.join(inputs.split('.'))
+    return [s.lstrip() for s in inputs.split(' ') if s != '']
+
+def Check_Frus(SMC_Tool, Types:list, Values:list):
+    fru1= SMC_Tool.Execute('ipmi fru1')
+    for Type, value in zip(Types, Values):
+        for output in fru1.splitlines():
+            if Type in output:
+                Actual_value = output.split('=')[-1].lstrip() # Remove left side space
+                print(f"{Type} output: {Actual_value}")
+                print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!')
+                    
+def Modify_frus(ip, uni_pwd, inputs):
+    pwd = Check_PWD(ip, uni_pwd)[1]
+    SMC_Tool = SMCIPMITool_Internal(ip, pwd)
+    Types = String_Split(inputs)
+    Values = [input(f"Input {inp} value: ") for inp in Types]
+
+    for inp, value in zip(Types, Values):
+        if value != '':
+            # print(f'Execute fruw {inp} {value}')
+            output = SMC_Tool.Execute(f'ipmi fru1w {inp} {value} Supermicro82265990')
+            # print(output)
+        else: print(f'{inp} value is empty!')
+    # Check if Fru1 values are match
+    Check_Frus(SMC_Tool, Types, Values)

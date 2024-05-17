@@ -14,13 +14,16 @@ def Check_PWD(ip):
         exit()
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
     if Check_Network == None: #會造成GetFWInfo()出現TypeError: 'NoneType' object is not subscriptable
-        print('SUT is diconnected')
+        print('SUT is disconnected')
         exit()
     else:
         if Check_Network[0] == 200:
             return ('ADMIN', 'ADMIN')
         else:
             pwd = input('Input unique password: ')
+            if pwd == '':
+                print('Password is empty!')
+                exit()
             return ('ADMIN', pwd)
 
 def is_ipv4(ip):
@@ -79,7 +82,7 @@ def GetFWInfo(ip:str):
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('')
+    GetFWInfo('10.184.18.55')
     
     # for info in ['10.184.11.104', '10.184.21.204']:
     #     GetFWInfo(info)
