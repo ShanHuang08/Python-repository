@@ -35,5 +35,5 @@ def Get_PostCode(ip, auth):
     
 if __name__=='__main__':
     ip = '172.31.35.195'
-    auth = Check_PWD(ip, pwd='ALTWNBOQAN')
+    auth = Check_PWD(ip, 'ALTWNBOQAN')
     Get_PostCode(ip, auth)
