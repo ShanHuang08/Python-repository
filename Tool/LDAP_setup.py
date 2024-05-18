@@ -1,3 +1,5 @@
+import sys
+sys.path.append('C:\\Users\\Stephenhuang\\Python')
 from Library.dictionary import goPage, redfish
 from selenium import webdriver
 from selenium.webdriver.common.by import By

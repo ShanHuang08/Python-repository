@@ -1,24 +1,6 @@
 from time import sleep
-from Redfish_requests import *
-import re
-
-def is_ipv4(ip):
-    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
-    match = re.match(ipv4_pattern, ip)
-    if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
-        return len(Check) == 4
-    else: return False
-
-def Check_PWD(ip, pwd):
-    if not is_ipv4(ip):
-        print(f"Invalid IPv4 format: {ip}")
-        exit()
-    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1/EthernetInterfaces/1', auth=('ADMIN', 'ADMIN'))
-    if Check_Network[0] == 200:
-        return ('ADMIN', 'ADMIN')
-    else:
-        return ('ADMIN', pwd)
+from Library.Redfish_requests import *
+from Library.Call_Method import Check_PWD
 
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
