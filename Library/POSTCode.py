@@ -52,6 +52,6 @@ def Get_PostCode(ip, auth):
         return f"PostCode = {jdata['PostCode']}"
     
 if __name__=='__main__':
-    ip = '172.31.35.195'
+    ip = '10.184.27.169'
     auth = Check_PWD(ip, pwd='ALTWNBOQAN')
     Get_PostCode(ip, auth)
