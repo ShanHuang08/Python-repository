@@ -1,7 +1,7 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, Check_BS, Modify_Frus
-from SUT_IP import FW_Type
+# from SUT_IP import FW_Type
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
