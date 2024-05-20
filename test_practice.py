@@ -20,24 +20,29 @@ def enumerate_practice():
 # lani = get_lani_id_list(ip, uni_pwd)
 # print(lani)
 
-def Search_FW_Type(type):
-    try: print(f"{type}\nFW type: {FW_Type[type]['info'][0]}\n{FW_Type[type]['info'][-1]}")
-    except KeyError: print(f"Branch {type} is not found!")
+def Search_FW_Type(types, mbd):
+    try: 
+        for keys, values in FW_Type.items():
+            print(keys)
+            print(type(values)) #dict 不重複, list重複
+        
+        if mbd in FW_Type[types]['MBDs']:
+            print(f"{types}\nFW type: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
+    except KeyError: print(f"Branch {types} is not found!")
 
 
 
  
 if __name__=='__main__':
-    ip = '10.184.27.169'
-    uni_pwd = 'ZLGBDYZQTO'
+    ip = '10.184.16.227'
+    uni_pwd = 'HIIVAZLVKX'
     # uni_pwd = 'ADMIN'
 
-    
-    # Search_FW_Type('F401MS')
+    Search_FW_Type('F201MS', 'X12STH')
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # raw_Factory_Default(ip, uni_pwd)
     # smc_command(ip, uni_pwd, 'ipmi raw 30 2a')
     # Check_BS(ip, uni_pwd)
-    Modify_Frus(ip, uni_pwd, 'BM, BDN')
+    # Modify_Frus(ip, uni_pwd, 'BM, BDN')
     
 
