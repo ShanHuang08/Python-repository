@@ -21,13 +21,15 @@ def enumerate_practice():
 # print(lani)
 
 def Search_FW_Type(types, mbd):
+    types = types.upper()
     try: 
-        for keys, values in FW_Type.items():
-            print(keys)
-            print(type(values)) #dict 不重複, list重複
-        
-        if mbd in FW_Type[types]['MBDs']:
+        if isinstance(FW_Type[types], list):
+            for dics in FW_Type[types]:
+                if mbd in dics['MBDs']:
+                    print(f"{types}\nFW type: {dics['info'][0]}\n{dics['info'][-1]}")
+        else:
             print(f"{types}\nFW type: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
+
     except KeyError: print(f"Branch {types} is not found!")
 
 
