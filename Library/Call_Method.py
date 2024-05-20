@@ -325,8 +325,39 @@ def is_ipv4(ip):
         return len(Check) == 4
     else: return False
 
+def Check_BS(ip, uni_pwd):
+    print(f'Server IP: {ip}')
+    pwd = Check_PWD(ip, uni_pwd)[1]
+    SMC_tool = SMCIPMITool_Internal(ip, pwd)
+    fru1 = SMC_tool.Execute('ipmi fru1')
+    for output in fru1.splitlines():
+        # if any(fru in output for fru in ['BPN','BS','BP','BV']):
+        if 'BS' in output:
+            print(output)
+            SN_number = output.split('=')[-1]
+            if len(SN_number) < 10:
+                text = input('Input BS: ')
+                bs1 = SMC_tool.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
+                bs = SMC_tool.Execute('ipmi fruw BS ' + text)
+                print(f'Fru1 BS modify success') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
+                print(f'Fru BS modify success') if 'Error' not in bs else print(f'Fru BS modify failed')
+                bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
+                bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
+                print(bs1_num+'\n'+bs_num)
+            else: print('BS is match')
+
+        if 'BM' in output:
+            if 'Supermicro' != output.split('=')[-1].lstrip():
+                print(f"BM doesn't match\nStart override")
+                bm1 = SMC_tool.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
+                bm = SMC_tool.Execute('ipmi fruw BM Supermicro')
+                print(f'Fru1 BM modify success') if 'Error' not in bm1 else print(f'Fru1 BM modify failed')
+                print(f'Fru BM modify success') if 'Error' not in bm else print(f'Fru BM modify failed')
+            else: print(f"{output}\nBM is match")
+
+
 def String_Split(inputs:str):
-    inputs = ' '.join(inputs.lstrip().rstrip().upper().split(' '))
+    inputs = ' '.join(inputs.lstrip().rstrip().split(' '))
     if ',' in inputs or '.' in inputs:
         inputs = ' '.join(inputs.split(','))
         inputs = ' '.join(inputs.split('.'))
@@ -341,17 +372,19 @@ def Check_Frus(SMC_Tool, Types:list, Values:list):
                 print(f"{Type} output: {Actual_value}")
                 print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!')
                     
-def Modify_frus(ip, uni_pwd, inputs):
+def Modify_Frus(ip, uni_pwd, input_type):
+    print(f'Server IP: {ip}')
     pwd = Check_PWD(ip, uni_pwd)[1]
     SMC_Tool = SMCIPMITool_Internal(ip, pwd)
-    Types = String_Split(inputs)
+    Types = String_Split(input_type)
     Values = [input(f"Input {inp} value: ") for inp in Types]
 
-    for inp, value in zip(Types, Values):
+    for typ, value in zip(Types, Values):
         if value != '':
-            # print(f'Execute fruw {inp} {value}')
-            output = SMC_Tool.Execute(f'ipmi fru1w {inp} {value} Supermicro82265990')
-            # print(output)
-        else: print(f'{inp} value is empty!')
+            output1 = SMC_Tool.Execute(f'ipmi fru1w {typ} {value} Supermicro82265990')
+            output = SMC_Tool.Execute(f'ipmi fruw {typ} {value}')
+            print(f'Fru1 {typ} modify success') if 'Error' not in output1 else print(f'Fru1 {typ} modify failed')
+            print(f'Fru {typ} modify success') if 'Error' not in output else print(f'Fru {typ} modify failed')         
+        else: print(f'{typ} value is empty!')
     # Check if Fru1 values are match
     Check_Frus(SMC_Tool, Types, Values)

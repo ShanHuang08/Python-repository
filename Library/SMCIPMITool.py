@@ -16,7 +16,7 @@ class SMCIPMITool():
             if execute.returncode == 0:
                 return execute.stdout
             else:
-                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
+                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()
@@ -70,7 +70,7 @@ class SMCIPMITool_Internal():
             if execute.returncode == 0:
                 return execute.stdout
             else:
-                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
+                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()    
