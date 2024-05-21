@@ -22,7 +22,6 @@ class SMCIPMITool():
             exit()
 
     def raw(self, cmd:str):
-        print(f'Execute ipmi raw {cmd}')
         return self.Execute('ipmi raw '+cmd)
     
     def raw_06_01(self):
@@ -33,7 +32,7 @@ class SMCIPMITool():
         - Check if unique password has been activated
         - 01 activated
         """
-        print(self.raw('30 74 01'))
+        print(f'Execute ipmi raw 30 74 01\n{self.raw('30 74 01')}')
     
     def raw_30_68_09(self, cmd:str):
         return self.raw('30 68 09 '+cmd)
@@ -42,16 +41,17 @@ class SMCIPMITool():
         return self.raw('30 68 0A '+cmd)
 
     def raw_30_41(self):
-        print(self.raw('30 41'))
+        print(f'Execute ipmi raw 30 41\n{self.raw('30 41')}')
+
 
     def raw_30_48_1(self):
-        print(self.raw('30 48 1'))
+        print(f'Execute ipmi raw 30 48 1\n{self.raw('30 48 1')}')
 
     def get_sensors(self):
         print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
 
     def Check_sensors_status(self):
-        """`1E`: No sensor, `1F`: has sensor"""
+        """`0E` or `1E`: No sensor, `0F` or `1F`: has sensor"""
         output = self.raw('30 68 F9')
         print(output)
         return output

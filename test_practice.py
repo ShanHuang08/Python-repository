@@ -1,7 +1,7 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, Check_BS, Modify_Frus
-# from SUT_IP import FW_Type
+from SUT_IP import FW_Type
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
@@ -22,25 +22,33 @@ def enumerate_practice():
 
 def Search_FW_Type(types, mbd):
     types = types.upper()
+    mbd = mbd.upper()
+    possible = []
+    meets = True
     try: 
         if isinstance(FW_Type[types], list):
             for dics in FW_Type[types]:
                 if mbd in dics['MBDs']:
-                    print(f"{types}\nFW type: {dics['info'][0]}\n{dics['info'][-1]}")
-        else:
-            print(f"{types}\nFW type: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
-
+                    print(f"{types}\nFW num: {dics['info'][0]}\n{dics['info'][-1]}")
+                    break
+                else: 
+                    possible.append(f"FW num: {dics['info'][0]}\n{dics['MBDs']}")
+                    meets = False
+            # if mbd not in dics['MBDs']: # dics變數在for loop外面仍然可以使用, 返回最後一個值 (Only Python and JS)
+            if not meets and len(possible) == len(FW_Type[types]):
+                print(types + '\nPossible FW numbers:\n' +'\n'.join(pos for pos in possible) + '\n' + FW_Type[types][-1]['info'][-1])
+        else: print(f"{types}\nFW num: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
     except KeyError: print(f"Branch {types} is not found!")
 
 
+        
 
- 
 if __name__=='__main__':
-    ip = '10.184.16.227'
-    uni_pwd = 'HIIVAZLVKX'
+    ip = '10.184.13.65'
+    uni_pwd = '2wsx#EDC'
     # uni_pwd = 'ADMIN'
 
-    Search_FW_Type('F201MS', 'X12STH')
+    # Search_FW_Type('F201MS', 'x12')
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # raw_Factory_Default(ip, uni_pwd)
     # smc_command(ip, uni_pwd, 'ipmi raw 30 2a')
