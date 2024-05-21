@@ -32,7 +32,7 @@ class SMCIPMITool():
         - Check if unique password has been activated
         - 01 activated
         """
-        print(f'Execute ipmi raw 30 74 01\n{self.raw('30 74 01')}')
+        print(f"Execute ipmi raw 30 74 01\n{self.raw('30 74 01')}")
     
     def raw_30_68_09(self, cmd:str):
         return self.raw('30 68 09 '+cmd)
@@ -41,11 +41,11 @@ class SMCIPMITool():
         return self.raw('30 68 0A '+cmd)
 
     def raw_30_41(self):
-        print(f'Execute ipmi raw 30 41\n{self.raw('30 41')}')
+        print(f"Execute ipmi raw 30 41\n{self.raw('30 41')}")
 
 
     def raw_30_48_1(self):
-        print(f'Execute ipmi raw 30 48 1\n{self.raw('30 48 1')}')
+        print(f"Execute ipmi raw 30 48 1\n{self.raw('30 48 1')}")
 
     def get_sensors(self):
         print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
