@@ -1,6 +1,6 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, GetPath, raw_Factory_Default, Check_BS, Modify_Frus
+from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, raw_Factory_Default, Check_BS, Modify_Frus
 from SUT_IP import FW_Type
 
 TagName = ['child8', 'child9']
@@ -48,11 +48,13 @@ if __name__=='__main__':
     uni_pwd = '2wsx#EDC'
     # uni_pwd = 'ADMIN'
 
-    # Search_FW_Type('F201MS', 'x12')
+    # Search_FW_Type('F201MS', 'x12sth')
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # raw_Factory_Default(ip, uni_pwd)
-    # smc_command(ip, uni_pwd, 'ipmi raw 30 2a')
+    # smc_command(ip, uni_pwd, 'ipmi power status')
     # Check_BS(ip, uni_pwd)
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
-    
+    # ASCII_to_raw('')
+    # Email_Format('UHtapQij@EfPnkRUp.c')
+
 

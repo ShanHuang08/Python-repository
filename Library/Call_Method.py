@@ -212,10 +212,15 @@ def get_lani_id_list(ip, uni_pwd):
     result = re.findall(regex, lani_output)
     return result
 
-def smc_command(ip, uni_pwd, cmd):
+def smc_command(ip, uni_pwd, cmd:str): 
     pwd=Check_PWD(ip, uni_pwd)[1]
     output = SMCIPMITool(ip, pwd).Execute(cmd)
     print(output)
+
+def smc_commands(ip, uni_pwd, cmds:str):
+    pass
+    # ['ipmi power status', ' ipmi', ' bios. test']
+
 
 def hex_to_dec(digit:str):
     answer = []
