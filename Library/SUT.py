@@ -73,16 +73,16 @@ def GetFWInfo(ip:str):
 
             CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
                    
-            return print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+            print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
         except KeyError as e:
             print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
         
     else:
-        return print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
+        print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
     # AddSUT()
-    GetFWInfo('10.184.18.55')
+    GetFWInfo('10.184.21.204')
     
     # for info in ['10.184.11.104', '10.184.21.204']:
     #     GetFWInfo(info)

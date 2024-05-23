@@ -1,6 +1,7 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, raw_Factory_Default, Check_BS, Modify_Frus
+from ssh_connect import ssh_os
 from SUT_IP import FW_Type
 
 TagName = ['child8', 'child9']
@@ -44,11 +45,11 @@ def Search_FW_Type(types, mbd):
         
 
 if __name__=='__main__':
-    ip = '10.184.13.65'
-    uni_pwd = '2wsx#EDC'
+    ip = '10.184.18.55'
+    uni_pwd = 'GXBGWWDHHK'
     # uni_pwd = 'ADMIN'
 
-    # Search_FW_Type('F201MS', 'x12sth')
+    Search_FW_Type('F401MS', 'h13sae')
     # SMCIPMITool(ip, uni_pwd).raw_30_48_1()
     # raw_Factory_Default(ip, uni_pwd)
     # smc_command(ip, uni_pwd, 'ipmi power status')
@@ -56,5 +57,6 @@ if __name__=='__main__':
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
     # ASCII_to_raw('')
     # Email_Format('UHtapQij@EfPnkRUp.c')
+    # ssh_os('10.184.16.94', 'SUT info.txt')
 
 
