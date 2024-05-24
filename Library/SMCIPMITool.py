@@ -3,6 +3,7 @@ import os
 import re
 from Library.Execeptions import SMCError, SUMError
 from Library.Redfish_requests import GET
+from Library.Common_Func import Check_ipaddr, Check_PWD, is_only_dot
 from time import sleep
 
 class SMCIPMITool():
@@ -66,7 +67,7 @@ class SMCIPMITool():
         result = re.findall(regex, lani_output)
         return result
 
-    def raw_Factory_Default(self):
+    def Raw_Factory_Default(self):
         print(f'Server IP: {self.ip}')
         timeout = 150 if self.ip.split('.')[0] == '10' else 160
         self.raw_30_41()
@@ -76,17 +77,18 @@ class SMCIPMITool():
         print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
 
     def smc_commands(self, cmds:str):
-        cmds = cmds.lstrip().rstrip()
+        """- Input: cmd A, cmd B, cmd C"""
+        cmds = cmds.strip()
         cmds_list = []
         if is_only_dot(cmds):
             cmds_list = cmds.split(',')
             for i in range(len(cmds_list)):
-                cmds_list[i] = cmds_list[i].lstrip().rstrip()
+                cmds_list[i] = cmds_list[i].strip()
             for cmd in cmds_list:
                 print(f"Execute {cmd}")
                 output = self.Execute(cmd)
                 print(output)
-        else: print('It must be splitted by Comma (,)')
+        else: print('Commands must be separated by commas (,)')
 
 
 class SMCIPMITool_Internal():
@@ -139,10 +141,10 @@ class SMCIPMITool_Internal():
 
 
 class SUMTool():
-    def __init__(self, ip, pwd) -> None:
+    def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
-        self.pwd = pwd
+        self.pwd = Check_PWD(ip, uni_pwd)[1]
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
@@ -174,54 +176,5 @@ class SUMTool():
         cpld = self.get_cpld_info()
         psu = self.get_psu_info()
         return f"{bmc}\n{bios}\n{cpld}\n{psu}"
-
-def Check_ipaddr(ip):
-    command = 'ping -n 1 ' + ip
-    Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
-    List = Ping.stdout.splitlines()
-    Text =''.join(line for line in List if "TTL=" in line)
-    return len(Text) > 0
-
-def is_ipv4(ip):
-    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
-    match = re.match(ipv4_pattern, ip)
-    if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
-        return len(Check) == 4
-    else: return False
-
-def Check_PWD(ip, unique):
-    """
-    - Utilize `Redfish` checking current password
-    - If `GET fail` return `unique password`
-    
-    """
-    if not is_ipv4(ip):
-        print(f"Invalid IPv4 format: {ip}")
-        exit()
-    if Check_ipaddr(ip):
-        Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
-        # if Check_Network == None:
-        if isinstance(Check_Network, list):
-            return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
-        else:
-            print('SUT is disconnected')
-            exit()
-        # return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
-    else:
-        print('Ping SUT failed')
-        osip = input("Input OS IP (press ENTER if you doesn't know it): ")
-        if osip:
-            print("In-band recover function is under development!")
-            exit()
-        else:
-            exit()
-
-def is_only_dot(cmd:str):
-    special_ch = '!@#$%^&*()_+<>?./:;'
-    no_err = True
-    for s in special_ch:
-        if s in cmd: no_err = False
-    return no_err
 
 # SMC_tool = SMCIPMITool()
