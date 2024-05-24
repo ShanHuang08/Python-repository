@@ -100,6 +100,14 @@ def Check_ipaddr(ip):
     Text =''.join(line for line in List if "TTL=" in line)
     return len(Text) > 0
 
+def is_ipv4(ip):
+    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
+    match = re.match(ipv4_pattern, ip)
+    if match: 
+        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
+        return len(Check) == 4
+    else: return False
+
 def Check_PWD(ip, unique):
     """
     - Utilize `Redfish` checking current password
@@ -204,22 +212,9 @@ def GetRedfish(path):
             current = current[cp]
     return current
 
-def get_lani_id_list(ip, uni_pwd):
-    pwd = Check_PWD(ip, uni_pwd)[1]
-    lani_output = SMCIPMITool(ip, pwd).Execute('ipmi oem lani')
-    # print(lani_output)
-    regex = r"\d"
-    result = re.findall(regex, lani_output)
-    return result
-
 def smc_command(ip, uni_pwd, cmd:str): 
-    pwd=Check_PWD(ip, uni_pwd)[1]
-    output = SMCIPMITool(ip, pwd).Execute(cmd)
+    output = SMCIPMITool(ip, uni_pwd).Execute(cmd)
     print(output)
-
-def smc_commands(ip, uni_pwd, cmds:str):
-    pass
-    # ['ipmi power status', ' ipmi', ' bios. test']
 
 
 def hex_to_dec(digit:str):
@@ -242,16 +237,6 @@ def AI_hex_to_unicode(hex_str):
     unicode_str = ''.join(chr(int(hex_v, 16)) for hex_v in hex_str.split(' '))
     print(unicode_str)
     return unicode_str
-
-def raw_Factory_Default(ip, uni_pwd):
-    print(f'Server IP: {ip}')
-    auth = Check_PWD(ip, uni_pwd)
-    timeout = 150 if ip.split('.')[0] == '10' else 160
-    SMCIPMITool(ip, auth[1]).raw_30_41()
-    sleep(timeout)
-    SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-    sleep(timeout)
-    print('Completed') if Check_ipaddr(ip) else print(f"{ip} is still offline!")
         
 def ssh_inband(osip, ip):
     """
@@ -321,45 +306,6 @@ def IPMICFG_recover(ssh, ip, mask, gateway):
         for result in stdout.readlines() + stderr.readlines():
             print(result)
     return True
-
-def is_ipv4(ip):
-    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
-    match = re.match(ipv4_pattern, ip)
-    if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
-        return len(Check) == 4
-    else: return False
-
-def Check_BS(ip, uni_pwd):
-    print(f'Server IP: {ip}')
-    pwd = Check_PWD(ip, uni_pwd)[1]
-    SMC_tool = SMCIPMITool_Internal(ip, pwd)
-    fru1 = SMC_tool.Execute('ipmi fru1')
-    for output in fru1.splitlines():
-        # if any(fru in output for fru in ['BPN','BS','BP','BV']):
-        if 'BS' in output:
-            print(output)
-            SN_number = output.split('=')[-1]
-            if len(SN_number) < 10:
-                text = input('Input BS: ')
-                bs1 = SMC_tool.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
-                bs = SMC_tool.Execute('ipmi fruw BS ' + text)
-                print(f'Fru1 BS modify success') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
-                print(f'Fru BS modify success') if 'Error' not in bs else print(f'Fru BS modify failed')
-                bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
-                bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
-                print(bs1_num+'\n'+bs_num)
-            else: print('BS is match')
-
-        if 'BM' in output:
-            if 'Supermicro' != output.split('=')[-1].lstrip():
-                print(f"BM doesn't match\nStart override")
-                bm1 = SMC_tool.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
-                bm = SMC_tool.Execute('ipmi fruw BM Supermicro')
-                print(f'Fru1 BM modify success') if 'Error' not in bm1 else print(f'Fru1 BM modify failed')
-                print(f'Fru BM modify success') if 'Error' not in bm else print(f'Fru BM modify failed')
-            else: print(f"{output}\nBM is match")
-
 
 def String_Split(inputs:str):
     inputs = ' '.join(inputs.lstrip().rstrip().split(' '))
