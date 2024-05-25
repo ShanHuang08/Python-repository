@@ -60,6 +60,10 @@ class SMCIPMITool():
         print(output)
         return output
 
+    def is_sensor_up(self):
+        check = self.Check_sensors_status()
+        return True if '0F' in check or '1F' in check else False
+
     def get_lani_id_list(self):
         lani_output = self.Execute('ipmi oem lani')
         # print(lani_output)
