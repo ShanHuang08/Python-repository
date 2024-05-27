@@ -29,7 +29,6 @@ def Search_FW_Type(types, mbd):
     types = types.upper()
     mbd = mbd.upper()
     possible = []
-    meets = True
     try: 
         if isinstance(FW_Type[types], list):
             for dics in FW_Type[types]:
@@ -38,9 +37,8 @@ def Search_FW_Type(types, mbd):
                     break
                 else: 
                     possible.append(f"FW num: {dics['info'][0]}\n{dics['MBDs']}")
-                    meets = False
             # if mbd not in dics['MBDs']: # dics變數在for loop外面仍然可以使用, 返回最後一個值 (Only Python and JS)
-            if not meets and len(possible) == len(FW_Type[types]):
+            if len(possible) == len(FW_Type[types]):
                 print(types + '\nPossible FW numbers:\n' +'\n'.join(pos for pos in possible) + '\n' + FW_Type[types][-1]['info'][-1])
         else: print(f"{types}\nFW num: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
     except KeyError: print(f"Branch {types} is not found!")

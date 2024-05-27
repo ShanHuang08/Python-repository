@@ -12,11 +12,11 @@ class SMCIPMITool():
         self.ip = ip
         self.accout = ' ADMIN '
         self.pwd = Check_PWD(ip, uni_pwd)[1]
+        self.uni_pwd = uni_pwd
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
-            # print(self.ip, self.pwd, cmd)
             if execute.returncode == 0:
                 return execute.stdout
             else:
@@ -76,7 +76,7 @@ class SMCIPMITool():
         timeout = 150 if self.ip.split('.')[0] == '10' else 160
         self.raw_30_41()
         sleep(timeout)
-        self.raw_30_48_1()
+        SMCIPMITool(self.ip, self.uni_pwd).raw_30_48_1()
         sleep(timeout)
         print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
 
