@@ -61,11 +61,7 @@ if __name__=='__main__':
     # smc.smc_commands('ipmi power status')
     # ASCII_to_raw('')
     # Email_Format('UHtapQij@EfPnkRUp.c')
-<<<<<<< HEAD
-    # ssh_os('10.184.16.94', 'H13SAE SUT info.txt')
-=======
     # ssh_os('10.184.16.94', 'SUT info.txt')
     
->>>>>>> 6d96cbdeb0c9943c264c31b33888382308351c34
 
 
