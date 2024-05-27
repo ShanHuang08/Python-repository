@@ -2,7 +2,6 @@ import subprocess
 import os
 import re
 from Library.Execeptions import SMCError, SUMError
-from Library.Redfish_requests import GET
 from Library.Common_Func import Check_ipaddr, Check_PWD, is_only_dot
 from time import sleep
 
@@ -73,10 +72,11 @@ class SMCIPMITool():
 
     def Raw_Factory_Default(self):
         print(f'Server IP: {self.ip}')
-        timeout = 150 if self.ip.split('.')[0] == '10' else 160
+        timeout = 130 if self.ip.split('.')[0] == '10' else 150
         self.raw_30_41()
         sleep(timeout)
-        SMCIPMITool(self.ip, self.uni_pwd).raw_30_48_1()
+        self.pwd = self.uni_pwd
+        self.raw_30_48_1()
         sleep(timeout)
         print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
 
