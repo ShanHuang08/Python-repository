@@ -1,14 +1,18 @@
 import subprocess
 import os
+import re
 from Library.Execeptions import SMCError, SUMError
+from Library.Redfish_requests import GET
+from Library.Common_Func import Check_ipaddr, Check_PWD, is_only_dot
+from time import sleep
 
 class SMCIPMITool():
-    def __init__(self, ip, pwd) -> None:
+    def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240411_bundleJRE_Windows'
         self.ip = ip
         self.accout = ' ADMIN '
-        self.pwd = pwd
-
+        self.pwd = Check_PWD(ip, uni_pwd)[1]
+    
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
@@ -56,12 +60,47 @@ class SMCIPMITool():
         print(output)
         return output
 
+    def is_sensor_up(self):
+        check = self.Check_sensors_status()
+        return True if '0F' in check or '1F' in check else False
+
+    def get_lani_id_list(self):
+        lani_output = self.Execute('ipmi oem lani')
+        # print(lani_output)
+        regex = r"\d"
+        result = re.findall(regex, lani_output)
+        return result
+
+    def Raw_Factory_Default(self):
+        print(f'Server IP: {self.ip}')
+        timeout = 150 if self.ip.split('.')[0] == '10' else 160
+        self.raw_30_41()
+        sleep(timeout)
+        self.raw_30_48_1()
+        sleep(timeout)
+        print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
+
+    def smc_commands(self, cmds:str):
+        """- Input: cmd A, cmd B, cmd C"""
+        cmds = cmds.strip()
+        cmds_list = []
+        if is_only_dot(cmds):
+            cmds_list = cmds.split(',')
+            for i in range(len(cmds_list)):
+                cmds_list[i] = cmds_list[i].strip()
+            for cmd in cmds_list:
+                print(f"Execute {cmd}")
+                output = self.Execute(cmd)
+                print(output)
+        else: print('Commands must be separated by commas (,)')
+
+
 class SMCIPMITool_Internal():
-    def __init__(self, ip, pwd) -> None:
+    def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
         self.ip = ip
         self.accout = ' ADMIN '
-        self.pwd = pwd
+        self.pwd = Check_PWD(ip, uni_pwd)[1]
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
@@ -75,12 +114,41 @@ class SMCIPMITool_Internal():
             print(SMCError(f'{self.Path} is not found'))
             exit()    
 
+    def Check_BS(self):
+        print(f'Server IP: {self.ip}')
+        fru1 = self.Execute('ipmi fru1')
+        for output in fru1.splitlines():
+            # if any(fru in output for fru in ['BPN','BS','BP','BV']):
+            if 'BS' in output:
+                print(output)
+                SN_number = output.split('=')[-1]
+                if len(SN_number) < 10:
+                    text = input('Input BS: ')
+                    bs1 = self.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
+                    bs = self.Execute('ipmi fruw BS ' + text)
+                    print(f'Fru1 BS modify success') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
+                    print(f'Fru BS modify success') if 'Error' not in bs else print(f'Fru BS modify failed')
+                    bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
+                    bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
+                    print(bs1_num+'\n'+bs_num)
+                else: print('BS is match')
+
+            if 'BM' in output:
+                if 'Supermicro' != output.split('=')[-1].lstrip():
+                    print(f"BM doesn't match\nStart override")
+                    bm1 = self.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
+                    bm = self.Execute('ipmi fruw BM Supermicro')
+                    print(f'Fru1 BM modify success') if 'Error' not in bm1 else print(f'Fru1 BM modify failed')
+                    print(f'Fru BM modify success') if 'Error' not in bm else print(f'Fru BM modify failed')
+                else: print(f"{output}\nBM is match")
+
+
 
 class SUMTool():
-    def __init__(self, ip, pwd) -> None:
+    def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
-        self.pwd = pwd
+        self.pwd = Check_PWD(ip, uni_pwd)[1]
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):

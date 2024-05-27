@@ -1,6 +1,7 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import Check_PWD, ASCII_to_raw, Get_Dict, Email_Format, smc_command, hex_to_dec, hex_to_unicode, raw_Factory_Default, Check_BS, Modify_Frus
+from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus
+# from Library.Common_Func import Check_PWD
 from ssh_connect import ssh_os
 from SUT_IP import FW_Type
 
@@ -17,6 +18,9 @@ def enumerate_practice():
     print(TestDict)
 # enumerate_practice()
     
+def SMC_tools():
+    smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
+    return smc, smc_in
 
 # lani = get_lani_id_list(ip, uni_pwd)
 # print(lani)
@@ -45,18 +49,23 @@ def Search_FW_Type(types, mbd):
         
 
 if __name__=='__main__':
-    ip = '10.184.11.104'
-    uni_pwd = 'RXKUWCCGAA'
-    # uni_pwd = 'ADMIN'
+    ip = '10.184.18.55'
+    uni_pwd = 'GXBGWWDHHK'
+    smc, smc_in = SMC_tools()
 
-    # Search_FW_Type('F401MS', 'h13sae')
-    SMCIPMITool(ip, uni_pwd).raw_30_48_1()
-    # raw_Factory_Default(ip, uni_pwd)
-    # smc_command(ip, uni_pwd, 'ipmi power status')
-    # Check_BS(ip, uni_pwd)
+    Search_FW_Type('F401MS', 'h13sae')
+    # smc.raw_30_48_1()
+    # smc.Raw_Factory_Default()
+    # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
+    # smc.smc_commands('ipmi power status')
     # ASCII_to_raw('')
     # Email_Format('UHtapQij@EfPnkRUp.c')
+<<<<<<< HEAD
     # ssh_os('10.184.16.94', 'H13SAE SUT info.txt')
+=======
+    # ssh_os('10.184.16.94', 'SUT info.txt')
+    
+>>>>>>> 6d96cbdeb0c9943c264c31b33888382308351c34
 
 
