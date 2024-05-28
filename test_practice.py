@@ -47,19 +47,19 @@ def Search_FW_Type(types, mbd):
         
 
 if __name__=='__main__':
-    ip = '10.184.18.55'
+    ip = '10.140.177.51'
     uni_pwd = 'GXBGWWDHHK'
     smc, smc_in = SMC_tools()
 
-    Search_FW_Type('F401MS', 'h13sae')
+    # Search_FW_Type('F201MS', 'x12stl')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
     # smc.smc_commands('ipmi power status')
     # ASCII_to_raw('')
-    # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.16.94', 'SUT info.txt')
+    # Email_Format('UHtapQij@EfPnkRUp.c'),
+    # ssh_os('10.140.175.82', 'X12STL-IF.txt')
     
 
 

@@ -250,7 +250,8 @@ def ip_filter(ip):
 def ipmitool_recover(ssh, ip, mask, gateway):
     """Only for `ssh_inband`"""
     print('Execute ipmitool') # Debug only
-    for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
+    for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', 
+                    f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
         for result in stdout.readlines() + stderr.readlines():
             print(result)
@@ -283,8 +284,7 @@ def Check_Frus(SMC_Tool, Types:list, Values:list):
                     
 def Modify_Frus(ip, uni_pwd, input_type):
     print(f'Server IP: {ip}')
-    pwd = Check_PWD(ip, uni_pwd)[1]
-    SMC_Tool = SMCIPMITool_Internal(ip, pwd)
+    SMC_Tool = SMCIPMITool_Internal(ip, uni_pwd)
     Types = String_Split(input_type)
     Values = [input(f"Input {inp} value: ") for inp in Types]
 

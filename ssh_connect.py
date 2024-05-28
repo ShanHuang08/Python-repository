@@ -69,7 +69,7 @@ def ssh_os(OS_IP, SUT_Name):
     print(f"Server: {OS_IP}")
     account = 'root'
     pwd = '111111'
-    commands = ['cat /etc/system-release', 'lsscsi' ,'ipmitool lan print', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 
+    commands = ['cat /etc/system-release', 'lsscsi' ,'ipmitool lan print', './IPMICFG-Linux.x86_64 -tas info', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 
                 'lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,MODEL,SERIAL,STATE,VENDOR', 'hdparm -I /dev/sda']
     try:
         file = open(SUT_Name,'w')
@@ -108,4 +108,4 @@ if __name__=='__main__':
     # ADLogin()
     # ssh_bmc()
     # ssh_updoad()
-    ssh_os()
+    ssh_os(OS_IP, SUT_Name)
