@@ -22,8 +22,8 @@ def SMC_tools():
     return smc, smc_in
 
 def Find_FW_Num(types, mbd):
-    types = types.upper()
-    mbd = mbd.upper()
+    types = types.strip().upper()
+    mbd = mbd.strip().upper()
     possible = []
     try: 
         if isinstance(FW_Type[types], list):
@@ -39,20 +39,26 @@ def Find_FW_Num(types, mbd):
         else: print(f"{types}\nFW num: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
     except KeyError: print(f"Branch {types} is not found!")
 
-def Find_MBDs(types, mbd):
-    for key, value in FW_Type.items():
-        print(key) #key is empty
-        if isinstance(value, dict):
-            print(value['MBDs']) # 2 types: list, dict
-        elif isinstance(value, list):
-            for val in value:
-                print(val['MBDs'])
+def Find_MBDs(mbd):
+    if mbd:
+        mbd = mbd.upper()
+        for key, value in FW_Type.items():
+            if isinstance(value, dict):
+                if mbd in value['MBDs']: print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
+                elif mbd not in value['MBDs'] and mbd[0] == value['MBDs'][0][0]: print(f"{value['MBDs']}\nCan't find {mbd} in {key}")
 
+            elif isinstance(value, list):
+                num = 0
+                for val in value:
+                    if mbd in val['MBDs']: print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
+                    elif mbd not in val['MBDs'] and mbd[0] == val['MBDs'][0][0]: 
+                        print(f"{val['MBDs']}")
+                        num+=1
+                        if num == len(value): print(f"Can't find {mbd} in {key}")
 
 def Search_FW_Type(types, mbd):
-    if types.strip(): 
-        Find_FW_Num(types, mbd)
-    else: pass
+    if types.strip(): Find_FW_Num(types, mbd) 
+    else: Find_MBDs(mbd)
        
 
 if __name__=='__main__':
