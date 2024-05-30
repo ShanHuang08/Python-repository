@@ -21,7 +21,7 @@ def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
 
-def Find_FW_Num(types, mbd):
+def Find_via_FW_Type(types, mbd):
     types = types.strip().upper()
     mbd = mbd.strip().upper()
     possible = []
@@ -39,35 +39,43 @@ def Find_FW_Num(types, mbd):
         else: print(f"{types}\nFW num: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
     except KeyError: print(f"Branch {types} is not found!")
 
-def Find_MBDs(mbd):
+def Find_via_MBDs(mbd):
+    err_msg = [] #Record error output. Error output won't show up if MBD match on the later loop
     if mbd:
         mbd = mbd.upper()
         for key, value in FW_Type.items():
             if isinstance(value, dict):
-                if mbd in value['MBDs']: print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
-                elif mbd not in value['MBDs'] and mbd[0] == value['MBDs'][0][0]: print(f"{value['MBDs']}\nCan't find {mbd} in {key}")
+                if mbd in value['MBDs']: 
+                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
+                    exit()
+                elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
+                    err_msg.append(f"{value['MBDs']}")
+                    err_msg.append(f"Can't find {mbd} in {key}")
 
             elif isinstance(value, list):
                 num = 0
                 for val in value:
-                    if mbd in val['MBDs']: print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
-                    elif mbd not in val['MBDs'] and mbd[0] == val['MBDs'][0][0]: 
-                        print(f"{val['MBDs']}")
+                    if mbd in val['MBDs']: 
+                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}")
+                        exit()
+                    elif mbd not in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
+                        err_msg.append(f"{val['MBDs']}")
                         num+=1
-                        if num == len(value): print(f"Can't find {mbd} in {key}")
-
-def Search_FW_Type(types, mbd):
-    if types.strip(): Find_FW_Num(types, mbd) 
-    else: Find_MBDs(mbd)
-       
+                        if num == len(value): 
+                            err_msg.append(f"Can't find {mbd} in {key}")
+        if err_msg: print('\n'.join(err_msg))
+            
+def Search_FW_Num(types, mbd):
+    Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
+    
 
 if __name__=='__main__':
-    ip = '10.184.21.204'
+    ip = '10.184.19.180'
     uni_pwd = 'NLTAFRJLHJ'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Type('F201MS', 'x12stl')
-    # smc.raw_30_48_1()
+    # Search_FW_Num('', 'x13saw-f')
+    smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
