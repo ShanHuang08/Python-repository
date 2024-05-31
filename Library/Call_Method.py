@@ -2,12 +2,10 @@ from random import choice, randint, sample
 import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
-import subprocess
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
-from Library.Common_Func import Check_PWD
-import re
-from time import sleep
+# from Library.Common_Func import Check_PWD
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
+from SUT_IP import FW_Type
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
@@ -170,11 +168,6 @@ def GetRedfish(path):
             current = current[cp]
     return current
 
-def smc_command(ip, uni_pwd, cmd:str): 
-    output = SMCIPMITool(ip, uni_pwd).Execute(cmd)
-    print(output)
-
-
 def hex_to_dec(digit:str):
     answer = []
     for dec in digit.split(' '):
@@ -297,3 +290,50 @@ def Modify_Frus(ip, uni_pwd, input_type):
         else: print(f'{typ} value is empty!')
     # Check if Fru1 values are match
     Check_Frus(SMC_Tool, Types, Values)
+
+def Find_via_FW_Type(types, mbd):
+    types = types.strip().upper()
+    mbd = mbd.strip().upper()
+    possible = []
+    try: 
+        if isinstance(FW_Type[types], list):
+            for dics in FW_Type[types]:
+                if mbd in dics['MBDs']:
+                    print(f"{types}\nFW num: {dics['info'][0]}\n{dics['info'][-1]}")
+                    break
+                else: 
+                    possible.append(f"FW num: {dics['info'][0]}\n{dics['MBDs']}")
+            # if mbd not in dics['MBDs']: # dics變數在for loop外面仍然可以使用, 返回最後一個值 (Only Python and JS)
+            if len(possible) == len(FW_Type[types]):
+                print(types + '\nPossible FW numbers:\n' +'\n'.join(pos for pos in possible) + '\n' + FW_Type[types][-1]['info'][-1])
+        else: print(f"{types}\nFW num: {FW_Type[types]['info'][0]}\n{FW_Type[types]['info'][-1]}")
+    except KeyError: print(f"Branch {types} is not found!")
+
+def Find_via_MBDs(mbd):
+    err_msg = [] #Record error output. Error output won't show up if MBD match on the later loop
+    if mbd:
+        mbd = mbd.upper()
+        for key, value in FW_Type.items():
+            if isinstance(value, dict):
+                if mbd in value['MBDs']: 
+                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
+                    exit()
+                elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
+                    err_msg.append(f"{value['MBDs']}")
+                    err_msg.append(f"Can't find {mbd} in {key}")
+
+            elif isinstance(value, list):
+                num = 0
+                for val in value:
+                    if mbd in val['MBDs']: 
+                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}")
+                        exit()
+                    elif mbd not in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
+                        err_msg.append(f"{val['MBDs']}")
+                        num+=1
+                        if num == len(value): 
+                            err_msg.append(f"Can't find {mbd} in {key}")
+        if err_msg: print('\n'.join(err_msg))
+            
+def Search_FW_Num(types, mbd):
+    Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)

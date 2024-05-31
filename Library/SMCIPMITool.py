@@ -80,19 +80,23 @@ class SMCIPMITool():
         sleep(timeout)
         print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
 
+    def smc_command(self, cmd:str): 
+        output = self.Execute(cmd)
+        print(output)
+
     def smc_commands(self, cmds:str):
         """- Input: cmd A, cmd B, cmd C"""
         cmds = cmds.strip()
         cmds_list = []
-        if is_only_dot(cmds):
-            cmds_list = cmds.split(',')
-            for i in range(len(cmds_list)):
-                cmds_list[i] = cmds_list[i].strip()
-            for cmd in cmds_list:
-                print(f"Execute {cmd}")
-                output = self.Execute(cmd)
-                print(output)
-        else: print('Commands must be separated by commas (,)')
+
+        cmds_list = cmds.split(',')
+        for i in range(len(cmds_list)):
+            cmds_list[i] = cmds_list[i].strip()
+        for cmd in cmds_list:
+            print(f"Execute {cmd}")
+            output = self.Execute(cmd)
+            print(output)
+
 
 
 class SMCIPMITool_Internal():
@@ -130,7 +134,7 @@ class SMCIPMITool_Internal():
                     print(f'Fru BS modify success') if 'Error' not in bs else print(f'Fru BS modify failed')
                     bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
                     bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
-                    print(bs1_num+'\n'+bs_num)
+                    print(f"{bs1_num}\n{bs_num}")
                 else: print('BS is match')
 
             if 'BM' in output:

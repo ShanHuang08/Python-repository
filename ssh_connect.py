@@ -70,7 +70,7 @@ def ssh_os(OS_IP, SUT_Name):
     account = 'root'
     pwd = '111111'
     commands = ['cat /etc/system-release', 'lsscsi' ,'ipmitool lan print', './IPMICFG-Linux.x86_64 -tas info', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 
-                'lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,MODEL,SERIAL,STATE,VENDOR', 'hdparm -I /dev/sda']
+                'lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,MODEL,SERIAL,STATE,VENDOR', 'hdparm -I /dev/sda', 'ip add']
     try:
         file = open(SUT_Name,'w')
         ssh = SSHClient()
