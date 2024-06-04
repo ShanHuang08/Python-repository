@@ -36,5 +36,3 @@ def is_ipv4(ip):
         Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
         return len(Check) == 4
     else: return False
-        
-print(is_ipv4('255.255.255.0'))

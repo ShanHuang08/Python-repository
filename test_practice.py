@@ -20,19 +20,10 @@ def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
 
-def Fisa_explain_DNS_replaced():
-    List = ['1.2.3.4', '2.3.4.5']
-    print(List)
-    print(f"DNS1: {List[0]}\nDNS2: {List[1]}")
-    print('Remove 1.2.3.4')
-    List.remove('1.2.3.4')
-    print(List)
-    print(f"DNS1: {List[0]}\nDNS2: ")
-
 
 if __name__=='__main__':
-    ip = '10.184.21.204'
-    uni_pwd = 'NLTAFRJLHJ'
+    ip = '10.184.19.180'
+    uni_pwd = 'LDPKIDXXBM'
     smc, smc_in = SMC_tools()
 
     # Search_FW_Num('', 'x13saw-f')
@@ -42,7 +33,7 @@ if __name__=='__main__':
     # Modify_Frus(ip, uni_pwd, 'BM, BDN')
     # smc.smc_commands('ipmi power up')
     # ASCII_to_raw('')
-    # Email_Format('UHtapQij@EfPnkRUp.c'),
+    # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.20.125', 'X13SAW-F.txt')
     
 
