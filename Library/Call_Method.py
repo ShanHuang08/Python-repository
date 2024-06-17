@@ -336,4 +336,5 @@ def Find_via_MBDs(mbd):
         if err_msg: print('\n'.join(err_msg))
             
 def Search_FW_Num(types, mbd):
+    '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)

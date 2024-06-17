@@ -137,7 +137,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.18.55'
+    ip = '10.140.177.51'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()

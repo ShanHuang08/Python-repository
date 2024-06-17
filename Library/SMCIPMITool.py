@@ -130,11 +130,10 @@ class SMCIPMITool_Internal():
                     text = input('Input BS: ')
                     bs1 = self.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
                     bs = self.Execute('ipmi fruw BS ' + text)
-                    print(f'Fru1 BS modify success') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
-                    print(f'Fru BS modify success') if 'Error' not in bs else print(f'Fru BS modify failed')
-                    bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num]
-                    bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
-                    print(f"{bs1_num}\n{bs_num}")
+                    print(f'Fru1 BS modify success\nFru1: {bs1}') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
+                    print(f'Fru BS modify success\nFru: {bs}') if 'Error' not in bs else print(f'Fru BS modify failed')
+                    # bs1_num = [num.split('=') for num in bs1.splitlines() if 'BS' in num] #[['Board Serial Number (BS)       ', ' WM241S005606']]
+                    # bs_num = [num.split('=') for num in bs.splitlines() if 'BS' in num]
                 else: print('BS is match')
 
             if 'BM' in output:

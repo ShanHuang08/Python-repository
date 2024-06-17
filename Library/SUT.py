@@ -1,6 +1,7 @@
 from Redfish_requests import *
 import re
 
+
 def AddSUT():
     key = input("SUT: ")
     BMC_IP = input("BMC IP: ")
@@ -38,19 +39,13 @@ def GetGUID(ip, pwd):
     Mongo_url = 'https://satc.supermicro.com/api/mongohelper/tools/sut/'+ip+'/ADMIN/'+pwd+'/'
     First_Sector = ip.split()[0]
     if First_Sector == '10':
-        Mongo_url = Mongo_url + '10.184.0.12'
+        Mongo_url += '10.184.0.12'
         Guid = GET(url=Mongo_url, timeout=30)
-        if Guid[0] == 200:
-            return print(Guid[-1].json()['guid'])
-        else:
-            print(f"Status code: {Guid[0]}\n{Guid[1]}")
+        return print(Guid[-1].json()['guid']) if Guid[0] == 200 else print(f"Status code: {Guid[0]}\n{Guid[1]}")
     else:
-        Mongo_url = Mongo_url + '172.31.2.47'
+        Mongo_url += '172.31.2.47'
         Guid = GET(url=Mongo_url, timeout=30)
-        if Guid[0] == 200:
-            return Guid[-1].json()['guid']
-        else:
-            print(f"Status code: {Guid[0]}\n{Guid[1]}")
+        return Guid[-1].json()['guid'] if Guid[0] == 200 else print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
 def GetFWInfo(ip:str):
     auth = Check_PWD(ip)
@@ -81,8 +76,8 @@ def GetFWInfo(ip:str):
         print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
 
 if __name__=='__main__':
-    # AddSUT()
-    GetFWInfo('10.184.21.204')
+    AddSUT()
+    # GetFWInfo('10.184.26.116')
     
     # for info in ['10.184.11.104', '10.184.21.204']:
     #     GetFWInfo(info)
