@@ -2,7 +2,7 @@ import subprocess
 import os
 import re
 from Library.Execeptions import SMCError, SUMError
-from Library.Common_Func import Check_ipaddr, Check_PWD, is_only_dot
+from Library.Common_Func import Check_ipaddr, Check_PWD
 from time import sleep
 
 class SMCIPMITool():
@@ -121,6 +121,7 @@ class SMCIPMITool_Internal():
     def Check_BS(self):
         print(f'Server IP: {self.ip}')
         fru1 = self.Execute('ipmi fru1')
+        if 'Error' in fru1: print(fru1)
         for output in fru1.splitlines():
             # if any(fru in output for fru in ['BPN','BS','BP','BV']):
             if 'BS' in output:
@@ -151,22 +152,26 @@ class SUMTool():
     def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
+        self.account = ' ADMIN '
         self.pwd = Check_PWD(ip, uni_pwd)[1]
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('sum.exe -i '+self.ip+' '+'-u ADMIN -p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('sum.exe -i '+self.ip+' '+'-u' +self.account + '-p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             if execute.returncode == 0 and execute.stdout != '':
                 return execute.stdout
             elif execute.returncode == 0 and execute.stdout == '':
                 return execute.stderr
             else:
-                return f'{execute.stdout}\n{execute.stderr}\n{execute.returncode}'
+                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
         else:
             print(SUMError(f'{self.Path} is not found'))
 
     def get_bmc_info(self):
         print(self.Execute('GetBmcInfo'))
+
+        # Error:
+        # Return code: 146 可以用來判斷
     
     def get_bios_info(self):
         print(self.Execute('GetBiosInfo --showall'))
@@ -178,10 +183,11 @@ class SUMTool():
         print(self.Execute('GetPSUInfo'))
 
     def SUT_info(self):
+        '''return 3 varibles, `bmc`, `bios`, `cpld` '''
         bmc = self.get_bmc_info()
         bios = self.get_bios_info()
         cpld = self.get_cpld_info()
-        psu = self.get_psu_info()
-        return f"{bmc}\n{bios}\n{cpld}\n{psu}"
+        # psu = self.get_psu_info()
+        return bmc, bios, cpld
 
 # SMC_tool = SMCIPMITool()

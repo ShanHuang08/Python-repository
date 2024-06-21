@@ -17,32 +17,32 @@ def is_ipv4(ip):
         return len(Check) == 4
     else: return False
 
+def is_openbmc(ip):
+    url = 'https://'+ip+'/redfish/v1/Systems/1'
+    check = GET(url=url, auth=('ADMIN', 'ADMIN'))
+    return True if 'Unauthorized' in check[1] else False
+
 def Check_PWD(ip, unique):
     """
     - Utilize `Redfish` checking current password
     - If `GET fail` return `unique password`
-    
     """
     if not is_ipv4(ip):
         print(f"Invalid IPv4 format: {ip}")
         exit()
+
+    Auth = ('ADMIN', 'ADMIN') if not is_openbmc(ip) else ('root', '0penBmc')
+    # print(Auth)
+
     if Check_ipaddr(ip):
-        Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=('ADMIN', 'ADMIN'))
+        Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
         # if Check_Network == None:
         if isinstance(Check_Network, list):
-            return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
+            return Auth if Check_Network[0] == 200 else (Auth[0], unique)
         else:
             print('SUT is disconnected')
             exit()
-        # return ('ADMIN', 'ADMIN') if Check_Network[0] == 200 else ('ADMIN', unique)
-    else:
-        print('Ping SUT failed')
-        osip = input("Input OS IP (press ENTER if you doesn't know it): ")
-        if osip:
-            print("In-band recover function is under development!")
-            exit()
-        else:
-            exit()
+    else: print('Ping SUT failed')
 
 def is_only_dot(cmd:str):
     special_ch = '!@#$%^&*()_+<>?./:;'

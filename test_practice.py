@@ -20,21 +20,18 @@ def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
 
-
 if __name__=='__main__':
-    ip = '10.184.19.180'
-    uni_pwd = 'NUJUTXSBJF'
+    ip = '10.184.13.65'
+    uni_pwd = '2wsx#EDC'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x13saw-f')
+    # Search_FW_Num('', 'x12sth')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
-    smc_in.Check_BS()
+    # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'BPN')
-    # smc.smc_commands('ipmi fru')
+    # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.20.125', 'X13SAW-F.txt')
     
-
-
