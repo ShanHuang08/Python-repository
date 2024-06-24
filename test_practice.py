@@ -25,7 +25,9 @@ if __name__=='__main__':
     uni_pwd = '2wsx#EDC'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x12sth')
+    # sumT = SUMTool(ip, uni_pwd)
+
+    # Search_FW_Num('F201MS', 'X12STH')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()

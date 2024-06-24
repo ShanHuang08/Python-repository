@@ -1,4 +1,4 @@
-from Library.Call_Method import Check_PWD
+from Library.Common_Func import Check_PWD
 from Library.SMCIPMITool import SMCIPMITool
 from time import sleep
 
@@ -36,6 +36,6 @@ def FactoryDefault(ip, Uni_pwd):
         print('MEL PASS') if Check_Mel(SMC_Tool) else print('MEL FAIL')
 
 if __name__=='__main__':
-    ip = '10.184.19.180'
-    Uni_pwd = 'LDPKIDXXBM'
+    ip = '10.184.13.65'
+    Uni_pwd = '2wsx#EDC'
     FactoryDefault(ip, Uni_pwd)

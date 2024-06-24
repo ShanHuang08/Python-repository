@@ -9,8 +9,9 @@ class SMCIPMITool():
     def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240411_bundleJRE_Windows'
         self.ip = ip
-        self.accout = ' ADMIN '
-        self.pwd = Check_PWD(ip, uni_pwd)[1]
+        Auth = Check_PWD(ip, uni_pwd)
+        self.accout = f' {Auth[0]} '
+        self.pwd = Auth[1]
         self.uni_pwd = uni_pwd
     
     def Execute(self, cmd:str):
@@ -103,8 +104,9 @@ class SMCIPMITool_Internal():
     def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
         self.ip = ip
-        self.accout = ' ADMIN '
-        self.pwd = Check_PWD(ip, uni_pwd)[1]
+        Auth = Check_PWD(ip, uni_pwd)
+        self.accout = f' {Auth[0]} '
+        self.pwd = Auth[1]
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
@@ -152,8 +154,9 @@ class SUMTool():
     def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
-        self.account = ' ADMIN '
-        self.pwd = Check_PWD(ip, uni_pwd)[1]
+        Auth = Check_PWD(ip, uni_pwd)
+        self.account = f' {Auth[0]} '
+        self.pwd = Auth[1]
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
