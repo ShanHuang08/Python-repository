@@ -338,3 +338,14 @@ def Find_via_MBDs(mbd):
 def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
+
+def Mount_isos():
+    # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
+    # {"Oem":{"Supermicro":{"AcceptSelfSigned":false}},"VerifyCertificate":false}
+
+    # POST https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1/Actions/VirtualMedia.InsertMedia
+    # {"Image":"http://10.184.10.1/static/att/iso/RHEL9.4.iso","Inserted":true}
+
+    # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
+    # {Inserted: false}
+    pass

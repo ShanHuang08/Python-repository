@@ -21,8 +21,8 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.13.65'
-    uni_pwd = '2wsx#EDC'
+    ip = '172.31.36.94'
+    uni_pwd = 'PHSKKBFVIV'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
@@ -31,7 +31,7 @@ if __name__=='__main__':
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
-    # Modify_Frus(ip, uni_pwd, 'BPN')
+    # Modify_Frus(ip, uni_pwd, 'PPM')
     # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')

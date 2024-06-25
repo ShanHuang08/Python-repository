@@ -18,32 +18,42 @@ def is_ipv4(ip):
         return len(Check) == 4
     else: return False
 
-def is_openbmc(ip):
+def Check_PWD(ip):
+    """
+    - Utilize `Redfish` checking current password
+    - If `GET fail` return `unique password`
+    """
     if not is_ipv4(ip):
         print(f"Invalid IPv4 format: {ip}")
         exit()
-    url = 'https://'+ip+'/redfish/v1/Systems/1'
-    check = GET(url=url, auth=('ADMIN', 'ADMIN'))
-    if check != None: return True if 'Unauthorized' in check[1] else False
 
-def Check_PWD(ip):
-    Auth = ('root', '0penBmc') if is_openbmc(ip) else ('ADMIN', 'ADMIN')
+    Auth = ('ADMIN', 'ADMIN')
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
-    if Check_Network == None: #會造成GetFWInfo()出現TypeError: 'NoneType' object is not subscriptable
-        print('SUT is disconnected')
-        exit()
-    else:
-        if Check_Network[0] == 200:
-            return Auth
-        else:
+    # if Check_Network == None:
+    if isinstance(Check_Network, list):
+        if Check_Network[0] == 200: return Auth
+        elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
             pwd = input('Input unique password: ')
             if pwd == '':
                 print('Password is empty!')
                 exit()
             return (Auth[0], pwd)
+        else:
+            Open_auth = ('root', '0penBmc')
+            Check_Network2 = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Open_auth)
+            if Check_Network2[0] == 200: return Open_auth
+            else:
+                pwd = input('Input unique password: ')
+                if pwd == '':
+                    print('Password is empty!')
+                    exit()
+                return (Open_auth[0], pwd)
+    else:
+        print('SUT is disconnected')
+        exit()
 
-def GetGUID(ip, pwd):
-    account = 'root' if is_openbmc(ip) else 'ADMIN'
+
+def GetGUID(ip, account, pwd):
     Mongo_url = f'https://satc.supermicro.com/api/mongohelper/tools/sut/{ip}/{account}/{pwd}/'
     First_Sector = ip.split()[0]
     if First_Sector == '10':
@@ -66,7 +76,7 @@ def Get_LegacyFWInfo(ip:str):
 
     if Check_Pwd[0] == 200:
         try:
-            # print(GetGUID(ip, pwd=auth[1]))
+            # print(GetGUID(ip, account=auth[0], pwd=auth[1]))
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
             CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD'
@@ -99,12 +109,12 @@ def Get_OpenFWInfo(ip):
 
 
 def GetFWInfo(ip:str):
-    Get_OpenFWInfo(ip) if is_openbmc(ip) else Get_LegacyFWInfo(ip)
+    Get_OpenFWInfo(ip) if Check_PWD(ip)[0] == 'root' else Get_LegacyFWInfo(ip)
 
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('10.184.13.65')
+    GetFWInfo('172.31.33.86')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()

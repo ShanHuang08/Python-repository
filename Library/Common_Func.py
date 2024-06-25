@@ -17,11 +17,6 @@ def is_ipv4(ip):
         return len(Check) == 4
     else: return False
 
-def is_openbmc(ip):
-    url = 'https://'+ip+'/redfish/v1/Systems/1'
-    check = GET(url=url, auth=('ADMIN', 'ADMIN'))
-    return True if 'Unauthorized' in check[1] else False
-
 def Check_PWD(ip, unique):
     """
     - Utilize `Redfish` checking current password
@@ -31,14 +26,18 @@ def Check_PWD(ip, unique):
         print(f"Invalid IPv4 format: {ip}")
         exit()
 
-    Auth = ('ADMIN', 'ADMIN') if not is_openbmc(ip) else ('root', '0penBmc')
-    # print(Auth)
-
     if Check_ipaddr(ip):
+        Auth = ('ADMIN', unique) #因為常常做30 48 1
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
         # if Check_Network == None:
         if isinstance(Check_Network, list):
-            return Auth if Check_Network[0] == 200 else (Auth[0], unique)
+            if Check_Network[0] == 200: return ('ADMIN', unique)
+            elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
+                return ('ADMIN', 'ADMIN') 
+            else:
+                Open_auth = ('root', '0penBmc')
+                Check_Network2 = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Open_auth)
+                return Open_auth if Check_Network2[0] == 200 else ('root', unique)
         else:
             print('SUT is disconnected')
             exit()
