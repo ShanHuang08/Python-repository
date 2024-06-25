@@ -3,13 +3,13 @@ import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
-# from Library.Common_Func import Check_PWD
+from Library.Common_Func import Check_PWD, Check_ipaddr
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 from SUT_IP import FW_Type
 
 al='abcdefghijklmnopqrstuvwxyz'
 digit='1234567890'
-al_digit = 'abcdefghijklmnopqrstuvwxyz1234567890'
+al_digit = al + digit
 def KeyGenerator():
 
     result=''
@@ -339,13 +339,29 @@ def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
 
-def Mount_isos():
+def Mount_isos(ip, uni_pwd, times:int):
+    print(f"Server IP: {ip}")
+    if times not in [1,2,3]:
+        print(f"times={times}, times arg range should be 1-3")
+        exit()
+    Auth = Check_PWD(ip, uni_pwd)
+
+    VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
+    isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "iso2", "iso3"] #Bade isos and US isos
+
+    # mount isos
+    for time in range(times):
+        url = url=VM_url + str(time+1) #1,2,3
+        
+        setup = PATCH(url, auth=Auth, body='{"Oem":{"Supermicro":{"AcceptSelfSigned":false}},"VerifyCertificate":false}')
+        insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": isos[time],"Inserted":True})
+    
+    
     # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
     # {"Oem":{"Supermicro":{"AcceptSelfSigned":false}},"VerifyCertificate":false}
 
-    # POST https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1/Actions/VirtualMedia.InsertMedia
+    # POST  https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1/Actions/VirtualMedia.InsertMedia
     # {"Image":"http://10.184.10.1/static/att/iso/RHEL9.4.iso","Inserted":true}
 
     # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
     # {Inserted: false}
-    pass
