@@ -21,14 +21,14 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '172.31.36.94'
-    uni_pwd = 'PHSKKBFVIV'
+    ip = '10.184.21.204'
+    uni_pwd = 'NLTAFRJLHJ'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
 
     # Search_FW_Num('F201MS', 'X12STH')
-    # smc.raw_30_48_1()
+    smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'PPM')

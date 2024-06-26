@@ -41,7 +41,9 @@ def Check_PWD(ip, unique):
         else:
             print('SUT is disconnected')
             exit()
-    else: print('Ping SUT failed')
+    else: 
+        print('Ping SUT failed')
+        exit()
 
 def is_only_dot(cmd:str):
     special_ch = '!@#$%^&*()_+<>?./:;'

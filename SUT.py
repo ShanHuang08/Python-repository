@@ -114,7 +114,7 @@ def GetFWInfo(ip:str):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('172.31.33.86')
+    GetFWInfo('172.31.51.33')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
