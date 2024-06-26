@@ -347,21 +347,15 @@ def Mount_isos(ip, uni_pwd, times:int):
     Auth = Check_PWD(ip, uni_pwd)
 
     VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
-    isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "iso2", "iso3"] #Bade isos and US isos
+    bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso", "http://10.184.10.1/static/att/iso/aio9.iso"] 
+    us_isos = ["http://172.29.1.248/static/att/iso/RHEL9.4.iso", "http://172.29.1.248/static/att/iso/RHEL8.8.iso", "http://172.29.1.248/static/att/iso/aio9.iso"]
 
     # mount isos
     for time in range(times):
         url = url=VM_url + str(time+1) #1,2,3
-        
-        setup = PATCH(url, auth=Auth, body='{"Oem":{"Supermicro":{"AcceptSelfSigned":false}},"VerifyCertificate":false}')
-        insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": isos[time],"Inserted":True})
+        print(f'Mounting iso{str(time+1)}')
+        setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
+        insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": bade_isos[time],"Inserted":True})
+        print(f'mount iso{str(time+1)} success') if insert[0] == 200 else print(f'Mount iso{str(time+1)} failed')
     
     
-    # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
-    # {"Oem":{"Supermicro":{"AcceptSelfSigned":false}},"VerifyCertificate":false}
-
-    # POST  https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1/Actions/VirtualMedia.InsertMedia
-    # {"Image":"http://10.184.10.1/static/att/iso/RHEL9.4.iso","Inserted":true}
-
-    # PATCH https://10.184.13.65/redfish/v1/Managers/1/VirtualMedia/VirtualMedia1
-    # {Inserted: false}

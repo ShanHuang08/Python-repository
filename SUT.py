@@ -33,6 +33,7 @@ def Check_PWD(ip):
     if isinstance(Check_Network, list):
         if Check_Network[0] == 200: return Auth
         elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
+            print('Legacy')
             pwd = input('Input unique password: ')
             if pwd == '':
                 print('Password is empty!')
@@ -42,16 +43,31 @@ def Check_PWD(ip):
             Open_auth = ('root', '0penBmc')
             Check_Network2 = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Open_auth)
             if Check_Network2[0] == 200: return Open_auth
-            else:
-                pwd = input('Input unique password: ')
-                if pwd == '':
+            elif Check_Network2[0] == 401 and 'error' not in Check_Network2[1]:
+                # print('OpenBMC')
+                pwd2 = input('Input unique password: ')
+                if pwd2 == '':
                     print('Password is empty!')
                     exit()
-                return (Open_auth[0], pwd)
+                return (Open_auth[0], pwd2)
     else:
         print('SUT is disconnected')
         exit()
 
+def is_OpenBMC(ip:str):
+    if not is_ipv4(ip):
+        print(f"Invalid IPv4 format: {ip}")
+        exit()
+
+    Auth = ('ADMIN', 'ADMIN')
+    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
+    if isinstance(Check_Network, list):
+        if Check_Network[0] == 200: return False
+        elif Check_Network[0] == 401 and 'error' in Check_Network[1]: return False
+        else: return True
+    else:
+        print('SUT is disconnected')
+        exit()
 
 def GetGUID(ip, account, pwd):
     Mongo_url = f'https://satc.supermicro.com/api/mongohelper/tools/sut/{ip}/{account}/{pwd}/'
@@ -107,14 +123,13 @@ def Get_OpenFWInfo(ip):
     # CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
 
 
-
 def GetFWInfo(ip:str):
-    Get_OpenFWInfo(ip) if Check_PWD(ip)[0] == 'root' else Get_LegacyFWInfo(ip)
+    Get_OpenFWInfo(ip) if is_OpenBMC(ip) else Get_LegacyFWInfo(ip)
 
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('172.31.51.33')
+    GetFWInfo('172.31.35.51')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
