@@ -88,14 +88,19 @@ def Get_LegacyFWInfo(ip:str):
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     BMC_Data = None
     BIOS_Data = None
-    Check_Pwd = GET(url='https://'+ip+'/redfish/v1/Systems', auth=auth)
+    Check_Pwd = GET(url=url, auth=auth)
 
     if Check_Pwd[0] == 200:
         try:
             # print(GetGUID(ip, account=auth[0], pwd=auth[1]))
             BMC_Data = GET(url=url+'BMC', auth=auth)
             BIOS_Data = GET(url=url+'BIOS', auth=auth)
-            CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD'
+            # print(Check_Pwd[-1].json()["Members"]) #Check CPLD api
+            # [{'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BMC'}, 
+            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BIOS'}, 
+            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1'}, 
+            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/PowerSupply1'}]
+            CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD' #/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1
             # print(BMC_Data['Version'])
             BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
@@ -129,7 +134,7 @@ def GetFWInfo(ip:str):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('172.31.35.51')
+    GetFWInfo('10.184.19.180')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()

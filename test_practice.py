@@ -1,6 +1,6 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num
+from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos
 from ssh_connect import ssh_os
 
 TagName = ['child8', 'child9']
@@ -21,19 +21,19 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '172.31.35.51'
-    uni_pwd = 'PHYHDTSXUM'
+    ip = '172.31.51.33'
+    uni_pwd = 'LSBKPORJOO'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-
     # Search_FW_Num('F201MS', 'X12STH')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
-    # Modify_Frus(ip, uni_pwd, 'BPN')
+    # Modify_Frus(ip, uni_pwd, 'PM')
     # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.20.125', 'X13SAW-F.txt')
+    # Mount_isos(ip, uni_pwd, 1)
     

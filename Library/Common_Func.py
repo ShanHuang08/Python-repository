@@ -27,13 +27,13 @@ def Check_PWD(ip, unique):
         exit()
 
     if Check_ipaddr(ip):
-        Auth = ('ADMIN', unique) #因為常常做30 48 1
+        Auth = ('ADMIN', 'ADMIN') 
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
         # if Check_Network == None:
         if isinstance(Check_Network, list):
-            if Check_Network[0] == 200: return ('ADMIN', unique)
+            if Check_Network[0] == 200: return Auth
             elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
-                return ('ADMIN', 'ADMIN') 
+                return ('ADMIN', unique) 
             else:
                 Open_auth = ('root', '0penBmc')
                 Check_Network2 = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Open_auth)

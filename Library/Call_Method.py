@@ -5,6 +5,7 @@ from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
 from Library.Common_Func import Check_PWD, Check_ipaddr
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
+from time import sleep
 from SUT_IP import FW_Type
 
 al='abcdefghijklmnopqrstuvwxyz'
@@ -340,11 +341,12 @@ def Search_FW_Num(types, mbd):
     Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
 
 def Mount_isos(ip, uni_pwd, times:int):
-    print(f"Server IP: {ip}")
     if times not in [1,2,3]:
         print(f"times={times}, times arg range should be 1-3")
         exit()
+    print(f"Server IP: {ip}")
     Auth = Check_PWD(ip, uni_pwd)
+    print(Auth)
 
     VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
     bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso", "http://10.184.10.1/static/att/iso/aio9.iso"] 
@@ -357,7 +359,10 @@ def Mount_isos(ip, uni_pwd, times:int):
         url = url=VM_url + num 
         print(f'Mounting iso {num}')
         setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
+        sleep(3)
         insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": tar_isos[time],"Inserted":True})
-        print(f'mount iso {num} success') if insert[0] == 200 else print(f'Mount iso {num} failed')
+        if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success\nPATCH:{setup[0]}\nPOST:{insert[0]}\n{insert[-1]["@odata.id"]}')  
+        elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
+        else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
     
     
