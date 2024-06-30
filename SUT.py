@@ -88,35 +88,37 @@ def Get_LegacyFWInfo(ip:str):
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     BMC_Data = None
     BIOS_Data = None
-    Check_Pwd = GET(url=url, auth=auth)
+    has_CPLD = False
+    Get_Inventory = GET(url=url, auth=auth)
 
-    if Check_Pwd[0] == 200:
+    try:
+        # print(GetGUID(ip, account=auth[0], pwd=auth[1]))
+        BMC_Data = GET(url=url+'BMC', auth=auth)
+        BIOS_Data = GET(url=url+'BIOS', auth=auth)
+
+        Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
+        # [{'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BMC'}, 
+        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BIOS'}, 
+        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1'}, 
+        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/PowerSupply1'}]
+        for link in Links:
+            if 'CPLD' in link['@odata.id']: 
+                CPLD_link = link['@odata.id']
+                has_CPLD = True
+        CPLD_Data = GET(url=CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
+        # print(BMC_Data['Version'])
+        BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+        BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+
+        CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
+                
+        print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+    except KeyError as e:
         try:
-            # print(GetGUID(ip, account=auth[0], pwd=auth[1]))
-            BMC_Data = GET(url=url+'BMC', auth=auth)
-            BIOS_Data = GET(url=url+'BIOS', auth=auth)
-            # print(Check_Pwd[-1].json()["Members"]) #Check CPLD api
-            # [{'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BMC'}, 
-            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BIOS'}, 
-            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1'}, 
-            #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/PowerSupply1'}]
-            CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD' #/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1
-            # print(BMC_Data['Version'])
-            BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-            BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-
-            CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
-                   
-            print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
         except KeyError as e:
-            try:
-                print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
-            except KeyError as e:
-                print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
         
-    else:
-        print(f"Status code: {Check_Pwd[0]}\n{Check_Pwd[1]}")
-
 def Get_OpenFWInfo(ip):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
