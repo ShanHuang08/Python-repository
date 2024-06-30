@@ -11,12 +11,12 @@ class SMCIPMITool():
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
         self.accout = f' {Auth[0]} '
-        self.pwd = Auth[1]
+        self.pwd = f'{Auth[1]} '
         self.uni_pwd = uni_pwd
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             if execute.returncode == 0:
                 return execute.stdout
             else:
@@ -106,11 +106,11 @@ class SMCIPMITool_Internal():
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
         self.accout = f' {Auth[0]} '
-        self.pwd = Auth[1]
+        self.pwd = f'{Auth[1]} '
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd +' '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             # print(self.ip, self.pwd, cmd)
             if execute.returncode == 0:
                 return execute.stdout
@@ -155,12 +155,12 @@ class SUMTool():
         self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
-        self.account = f' {Auth[0]} '
+        self.account = Auth[0]
         self.pwd = Auth[1]
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('sum.exe -i '+self.ip+' '+'-u' +self.account + '-p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+'-p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             if execute.returncode == 0 and execute.stdout != '':
                 return execute.stdout
             elif execute.returncode == 0 and execute.stdout == '':
