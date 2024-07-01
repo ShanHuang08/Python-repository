@@ -97,15 +97,11 @@ def Get_LegacyFWInfo(ip:str):
         BIOS_Data = GET(url=url+'BIOS', auth=auth)
 
         Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
-        # [{'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BMC'}, 
-        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/BIOS'}, 
-        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/Motherboard_CPLD_1'}, 
-        #  {'@odata.id': '/redfish/v1/UpdateService/FirmwareInventory/PowerSupply1'}]
         for link in Links:
             if 'CPLD' in link['@odata.id']: 
                 CPLD_link = link['@odata.id']
                 has_CPLD = True
-        CPLD_Data = GET(url=CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
+        CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
         # print(BMC_Data['Version'])
         BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
         BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
