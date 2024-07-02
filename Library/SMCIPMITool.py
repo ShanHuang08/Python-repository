@@ -13,6 +13,7 @@ class SMCIPMITool():
         self.accout = f' {Auth[0]} '
         self.pwd = f'{Auth[1]} '
         self.uni_pwd = uni_pwd
+        # print(Auth)
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):

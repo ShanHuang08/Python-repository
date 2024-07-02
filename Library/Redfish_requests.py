@@ -5,7 +5,7 @@ import urllib3
 # 禁用所有警告 Idea from ChatGPT
 urllib3.disable_warnings()
 
-def GET(url, auth=None, timeout=10):
+def GET(url, auth=None, timeout=20):
     """
     `GET()[0]` : `Status code`
 
@@ -22,6 +22,8 @@ def GET(url, auth=None, timeout=10):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
+    except requests.exceptions.Timeout as e:
+        print(e)
 
 def GET_Data(url, auth):
     try:
@@ -33,6 +35,8 @@ def GET_Data(url, auth):
     except requests.exceptions.ConnectTimeout as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
+        print(e)
+    except requests.exceptions.Timeout as e:
         print(e)
 
 def PATCH(url, auth, body, timeout=10):
@@ -52,7 +56,8 @@ def PATCH(url, auth, body, timeout=10):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
-
+    except requests.exceptions.Timeout as e:
+        print(e)
 
 def POST(url, auth, body=None):
     """
@@ -71,6 +76,8 @@ def POST(url, auth, body=None):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)
+    except requests.exceptions.Timeout as e:
+        print(e)
 
 def DELETE(url, auth):
     """
@@ -87,3 +94,5 @@ def DELETE(url, auth):
         print(e)
     except requests.exceptions.ConnectionError as e:
         print(e)    
+    except requests.exceptions.Timeout as e:
+        print(e)

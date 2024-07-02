@@ -286,8 +286,8 @@ def Modify_Frus(ip, uni_pwd, input_type):
         if value != '':
             output1 = SMC_Tool.Execute(f'ipmi fru1w {typ} {value} Supermicro82265990')
             output = SMC_Tool.Execute(f'ipmi fruw {typ} {value}')
-            print(f'Fru1 {typ} modify success') if 'Error' not in output1 else print(f'Fru1 {typ} modify failed')
-            print(f'Fru {typ} modify success') if 'Error' not in output else print(f'Fru {typ} modify failed')         
+            print(f'Fru1 {typ} modify success') if 'Error' not in output1 else print(f'Fru1 {typ} modify failed\n{output1}')
+            print(f'Fru {typ} modify success') if 'Error' not in output else print(f'Fru {typ} modify failed\n{output}')         
         else: print(f'{typ} value is empty!')
     # Check if Fru1 values are match
     Check_Frus(SMC_Tool, Types, Values)

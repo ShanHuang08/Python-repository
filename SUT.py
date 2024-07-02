@@ -87,8 +87,11 @@ def Get_LegacyFWInfo(ip:str):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     BMC_Data = None
+    BMC_FW = None
     BIOS_Data = None
+    BIOS_FW = None
     has_CPLD = False
+    CPLD_Ver = None
     Get_Inventory = GET(url=url, auth=auth)
 
     try:
@@ -98,17 +101,21 @@ def Get_LegacyFWInfo(ip:str):
 
         Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
         for link in Links:
-            if 'CPLD' in link['@odata.id']: 
+            if 'CPLD' in link['@odata.id'] and 'Motherboard' in link['@odata.id']: 
                 CPLD_link = link['@odata.id']
                 has_CPLD = True
+        # if not has_CPLD: print(f"Link list: {Links}") #For Debug only
+
         CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
         # print(BMC_Data['Version'])
-        BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-        BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-
-        CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
-                
-        print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+        if BMC_Data != None and BIOS_Data != None and CPLD_Data != None:
+            BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+            BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+            CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
+            print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+        else:
+            print(f"BMC types:{type(BMC_Data)}, BIOS types:{type(BIOS_Data)}, CPLD types:{type(CPLD_Data)}")
+                  
     except KeyError as e:
         try:
             print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
@@ -132,7 +139,7 @@ def GetFWInfo(ip:str):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('10.184.19.180')
+    GetFWInfo('172.31.51.33')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
