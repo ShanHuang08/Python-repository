@@ -2,6 +2,7 @@ from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos
 from ssh_connect import ssh_os
+from robot.libraries.BuiltIn import BuiltIn
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
@@ -21,12 +22,12 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.19.180'
-    uni_pwd = 'LDPKIDXXBM'
+    ip = '10.184.21.204'
+    uni_pwd = 'NLTAFRJLHJ'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    Search_FW_Num('1501MS', '')
+    # Search_FW_Num('1501MS', '')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
