@@ -16,18 +16,27 @@ def enumerate_practice():
             # <class 'int'> <class 'str'>
     print(TestDict)
 # enumerate_practice()
-    
+
+def run(name, *args):
+    return BuiltIn().run_keyword(name, *args)
+
+def run_many(*keywords):
+    return BuiltIn().run_keywords(*keywords)    
+
+def fail_test(msg):
+    return BuiltIn().fail(msg)
+
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.21.204'
+    ip = '10.184.17.190'
     uni_pwd = 'NLTAFRJLHJ'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('1501MS', '')
+    # Search_FW_Num('', 'x13deg')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
