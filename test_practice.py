@@ -17,15 +17,6 @@ def enumerate_practice():
     print(TestDict)
 # enumerate_practice()
 
-def run(name, *args):
-    return BuiltIn().run_keyword(name, *args)
-
-def run_many(*keywords):
-    return BuiltIn().run_keywords(*keywords)    
-
-def fail_test(msg):
-    return BuiltIn().fail(msg)
-
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
