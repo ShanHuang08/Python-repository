@@ -125,12 +125,36 @@ def Get_LegacyFWInfo(ip:str):
 def Get_OpenFWInfo(ip):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
+    has_CPLD = False
     auth = Check_PWD(ip)
-    print(auth)
+    Get_Inventory = GET(url=url, auth=auth)
 
+    guid = GetGUID(ip, account=auth[0], pwd=auth[1])
+    print(guid)
+    
+    BMC_ver_num = GET(url+'BMC', auth=auth)[-1].json()['Version']
+    BMC_release_date = GET(url+'BMC', auth=auth)[-1].json()['ReleaseDate']
+    year = BMC_release_date[0:4]
+    month = BMC_release_date[5:7]
+    date = BMC_release_date[8:10]
 
-    # CPLD_Data = GET(url=url + 'CPLD_Motherboard', auth=auth) if GET(url=url + 'CPLD_Motherboard', auth=auth)[0] == 200 else 'Not support CPLD'
-    # CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
+    sumT = SUMTool(ip, auth[1])
+    output = sumT.get_bios_info()
+    Bios_name = output.splitlines()[-1]
+    Bios_name = Bios_name.split(':')[-1].strip()
+
+    Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
+    for link in Links:
+        if 'CPLD' in link['@odata.id'] and 'Motherboard' in link['@odata.id']: 
+            CPLD_link = link['@odata.id']
+            has_CPLD = True
+    # if not has_CPLD: print(f"Link list: {Links}") #For Debug only
+    CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
+
+    #因為目前只有個一個branch
+    if 'R12' in guid: print(f"BMC_R12AST2600-6401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
+    elif 'R13' in guid: print(f"BMC_R13AST2600-7401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
+    else: pass
 
 
 def GetFWInfo(ip:str):
@@ -139,7 +163,7 @@ def GetFWInfo(ip:str):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('172.31.51.33')
+    GetFWInfo('10.140.170.130')
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
