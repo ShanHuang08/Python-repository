@@ -7,7 +7,7 @@ from time import sleep
 
 class SMCIPMITool():
     def __init__(self, ip, uni_pwd) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240411_bundleJRE_Windows'
+        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
         self.accout = f' {Auth[0]} '
@@ -158,10 +158,11 @@ class SUMTool():
         Auth = Check_PWD(ip, uni_pwd)
         self.account = Auth[0]
         self.pwd = Auth[1]
+        # print(Auth)
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+'-p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+' -p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             if execute.returncode == 0 and execute.stdout != '':
                 return execute.stdout
             elif execute.returncode == 0 and execute.stdout == '':
@@ -172,13 +173,16 @@ class SUMTool():
             print(SUMError(f'{self.Path} is not found'))
 
     def get_bmc_info(self):
-        print(self.Execute('GetBmcInfo'))
+        print(self.Execute('GetBmcInfo --showall'))
 
         # Error:
         # Return code: 146 可以用來判斷
     
-    def get_bios_info(self):
+    def print_bios_info(self):
         print(self.Execute('GetBiosInfo --showall'))
+    
+    def get_bios_info(self):
+        return self.Execute('GetBiosInfo --showall')
     
     def get_cpld_info(self):
         print(self.Execute('GetCpldInfo'))
@@ -187,7 +191,7 @@ class SUMTool():
         print(self.Execute('GetPSUInfo'))
 
     def SUT_info(self):
-        '''return 3 varibles, `bmc`, `bios`, `cpld` '''
+        '''return 3 variables, `bmc`, `bios`, `cpld` '''
         bmc = self.get_bmc_info()
         bios = self.get_bios_info()
         cpld = self.get_cpld_info()
