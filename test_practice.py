@@ -43,11 +43,11 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.13.8'
+    ip = '10.184.17.190'
     uni_pwd = 'KODBIWYRYE'
     smc, smc_in = SMC_tools()
 
-    sumT = SUMTool(ip, uni_pwd)
+    # sumT = SUMTool(ip, uni_pwd)
     # Search_FW_Num('5501ms', '')
     # smc.raw_30_48_1()
     # smc.Raw_Factory_Default()
