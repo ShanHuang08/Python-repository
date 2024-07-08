@@ -17,14 +17,6 @@ def enumerate_practice():
     print(TestDict)
 # enumerate_practice()
 
-def get_lib_instance(lib, all_=False):
-    """Wrapper function for BuiltIn.get_library_instance.
-    Put it in def __init__(self): to variable
-    all (可選): 默認為 False。如果設置為 True，將返回一個包含所有匹配庫實例的列表。
-    """
-    # from library.webfunctional.IPMISelenium import IPMISelenium
-    # self.ipmi = get_lib_instance('IPMISelenium') 
-    return BuiltIn().get_library_instance(lib, all=all_)
 
 from robot.api.deco import keyword
 @keyword('Test 2')
