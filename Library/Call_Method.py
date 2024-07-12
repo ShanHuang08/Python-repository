@@ -3,7 +3,7 @@ import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
-from Library.Common_Func import Check_PWD, Check_ipaddr
+from Library.Common_Func import Check_PWD
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 from time import sleep
 from SUT_IP import FW_Type
@@ -346,7 +346,7 @@ def Mount_isos(ip, uni_pwd, times:int):
         exit()
     print(f"Server IP: {ip}")
     Auth = Check_PWD(ip, uni_pwd)
-    print(Auth)
+    # print(Auth) #Debug
 
     VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
     bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso", "http://10.184.10.1/static/att/iso/aio9.iso"] 

@@ -52,6 +52,24 @@ class SMCIPMITool():
     def raw_30_48_1(self):
         print(f"Execute ipmi raw 30 48 1\n{self.raw('30 48 1')}")
 
+    def raw_30_0C(self):
+        """Get UID status: `off`: 00, `on`: 01 or 02"""
+        output = self.raw('30 0C')
+        print(f"Execute ipmi raw 30 0C\n{output}")
+        return output
+
+    def raw_30_0D(self):
+        """Enable UID"""
+        output = self.raw('30 0D')
+        print(f"Execute ipmi raw 30 0C\n{output}")
+        return output
+
+    def raw_30_0E(self):
+        """Disable UID"""
+        output = self.raw('30 0E')
+        print(f"Execute ipmi raw 30 0C\n{output}")
+        return output
+
     def get_sensors(self):
         print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
 

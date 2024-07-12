@@ -81,7 +81,7 @@ def GetGUID(ip, account, pwd):
         Guid = GET(url=Mongo_url, timeout=30)
         return Guid[-1].json()['guid'] if Guid[0] == 200 else print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
-def Get_LegacyFWInfo(ip:str):
+def Get_LegacyFWInfo(ip:str, guid:bool):
     auth = Check_PWD(ip)
     # auth = ('admin', '2wsx#EDC')
     print(f"Server IP: {ip}")
@@ -95,7 +95,8 @@ def Get_LegacyFWInfo(ip:str):
     Get_Inventory = GET(url=url, auth=auth)
 
     try:
-        # print(GetGUID(ip, account=auth[0], pwd=auth[1]))
+        if guid:
+            print(GetGUID(ip, account=auth[0], pwd=auth[1]))
         BMC_Data = GET(url=url+'BMC', auth=auth)
         BIOS_Data = GET(url=url+'BIOS', auth=auth)
 
@@ -157,13 +158,13 @@ def Get_OpenFWInfo(ip):
     else: pass
 
 
-def GetFWInfo(ip:str):
-    Get_OpenFWInfo(ip) if is_OpenBMC(ip) else Get_LegacyFWInfo(ip)
+def GetFWInfo(ip:str, guid:bool):
+    Get_OpenFWInfo(ip) if is_OpenBMC(ip) else Get_LegacyFWInfo(ip, guid)
 
 if __name__=='__main__':
     # AddSUT()
-    # print(GetGUID('10.140.179.173', '0penBmc'))
-    GetFWInfo('10.140.170.130')
+    # print(GetGUID('10.140.175.132', 'ADMIN', ''))
+    GetFWInfo('10.184.26.175', guid=False)
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
