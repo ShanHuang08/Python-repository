@@ -18,18 +18,6 @@ def enumerate_practice():
 # enumerate_practice()
 
 
-from robot.api.deco import keyword
-@keyword('Test 2')
-def test2():
-    """Put it in def __init__(self):
-    用于设置 Robot Framework 在执行关键字时搜索库的顺序。
-    """
-    BuiltIn().set_library_search_order(
-            'MultiActions', 'Users', 'IPMISelenium',
-            'SeleniumLibrary'
-        )
-
-
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
