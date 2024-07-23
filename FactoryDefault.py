@@ -17,10 +17,11 @@ def Check_Mel(SMC_Tool):
 
 def FactoryDefault(ip, Uni_pwd):
     # commands = ['30 40', '30 41', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1', 'ipmi fd 2', 'ipmi fd 3']
-    commands = ['30 48 0', 'ipmi fd 1', '30 48 1']
+    commands = ['ipmi fd 3']
     for cmd in commands:
         error = []
         pwd = Check_PWD(ip, Uni_pwd)[1] 
+        print(pwd) #Debug
         SMC_Tool = SMCIPMITool(ip, pwd)
         print('Start executing '+cmd)
         if 'ipmi' in cmd:
@@ -36,6 +37,6 @@ def FactoryDefault(ip, Uni_pwd):
         print('MEL PASS') if Check_Mel(SMC_Tool) else print('MEL FAIL')
 
 if __name__=='__main__':
-    ip = '10.184.13.65'
-    Uni_pwd = '2wsx#EDC'
+    ip = '10.184.30.24'
+    Uni_pwd = 'BOFSXVCBCT'
     FactoryDefault(ip, Uni_pwd)
