@@ -29,6 +29,7 @@ def Check_PWD(ip, unique):
     if Check_ipaddr(ip):
         Auth = ('ADMIN', 'ADMIN') 
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
+        # Can't login to   (Login error message from SMCIPMITool)
         # if Check_Network == None:
         if isinstance(Check_Network, list):
             if Check_Network[0] == 200: return Auth
