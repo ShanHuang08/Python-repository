@@ -2,7 +2,7 @@ from pysnmp.hlapi import *
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
 from sys import exit
-from Library.Call_Method import Check_PWD
+from Library.Common_Func import Check_PWD
 
 # Source:ChatGPT 2023/8/8, add class snmp: 2023/12/10
 uid_on = OID['uid on']
@@ -137,7 +137,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.140.177.51'
+    ip = '10.184.13.65'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()

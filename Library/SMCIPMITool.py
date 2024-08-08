@@ -12,7 +12,7 @@ class SMCIPMITool():
         Auth = Check_PWD(ip, uni_pwd)
         self.accout = f' {Auth[0]} '
         self.pwd = f'{Auth[1]} '
-        self.uni_pwd = uni_pwd
+        self.uni_pwd = f'{uni_pwd} '
         # print(Auth)
     
     def Execute(self, cmd:str):
@@ -92,10 +92,12 @@ class SMCIPMITool():
 
     def Raw_Factory_Default(self):
         print(f'Server IP: {self.ip}')
-        timeout = 130 if self.ip.split('.')[0] == '10' else 150
+        timeout = 140 if self.ip.split('.')[0] == '10' else 150
+        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 30 41') #Debug
         self.raw_30_41()
         sleep(timeout)
         self.pwd = self.uni_pwd
+        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 30 48 1') #Debug
         self.raw_30_48_1()
         sleep(timeout)
         print('Completed') if Check_ipaddr(self.ip) else print(f"{self.ip} is still offline!")
