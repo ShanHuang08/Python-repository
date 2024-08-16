@@ -13,6 +13,7 @@ class SMCIPMITool():
         self.accout = f' {Auth[0]} '
         self.pwd = f'{Auth[1]} '
         self.uni_pwd = f'{uni_pwd} '
+        self.Auth = Auth
         # print(Auth)
     
     def Execute(self, cmd:str):
@@ -46,28 +47,34 @@ class SMCIPMITool():
         return self.raw('30 68 0A '+cmd)
 
     def raw_30_41(self):
-        print(f"Execute ipmi raw 30 41\n{self.raw('30 41')}")
-
+        print(f"Execute ipmi raw 30 41")
+        output = self.raw('30 41')
+        print(f"{output}\n{self.Auth}") if "Can't login to" in output else print(output)
 
     def raw_30_48_1(self):
-        print(f"Execute ipmi raw 30 48 1\n{self.raw('30 48 1')}")
+        print(f"Execute ipmi raw 30 48 1")
+        output = self.raw('30 48 1')
+        print(f"{output}\n{self.Auth}") if "Can't login to" in output else print(output)
 
     def raw_30_0C(self):
         """Get UID status: `off`: 00, `on`: 01 or 02"""
+        print(f"Execute ipmi raw 30 0C")
         output = self.raw('30 0C')
-        print(f"Execute ipmi raw 30 0C\n{output}")
+        print(output)
         return output
 
     def raw_30_0D(self):
         """Enable UID"""
+        print(f"Execute ipmi raw 30 0D")
         output = self.raw('30 0D')
-        print(f"Execute ipmi raw 30 0C\n{output}")
+        print(output)
         return output
 
     def raw_30_0E(self):
         """Disable UID"""
+        print(f"Execute ipmi raw 30 0E")
         output = self.raw('30 0E')
-        print(f"Execute ipmi raw 30 0C\n{output}")
+        print(output)
         return output
 
     def get_sensors(self):
