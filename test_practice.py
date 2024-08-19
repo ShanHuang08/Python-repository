@@ -35,8 +35,8 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.29.133'
-    uni_pwd = 'UCSBMNESZY'
+    ip = '10.184.17.92'
+    uni_pwd = '2wsx#EDC'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
@@ -48,6 +48,7 @@ if __name__=='__main__':
     # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.20.73', 'H13SRD.txt')
+    # ssh_os('10.184.26.72', 'H13SAEMF.txt')
     # Mount_isos(ip, uni_pwd, 1)
+    # hex_to_dec('F')
 

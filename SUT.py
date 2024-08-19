@@ -158,14 +158,13 @@ def Get_OpenFWInfo(ip):
     else: pass
 
 
-def GetFWInfo(ip:str, guid:bool):
-    # Get_OpenFWInfo(ip) if is_OpenBMC(ip) else Get_LegacyFWInfo(ip, guid)
-    Get_LegacyFWInfo(ip, guid)
+def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
+    Get_OpenFWInfo(ip) if OpenBMC else Get_LegacyFWInfo(ip, guid)
 
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('10.184.26.161', guid=False)
+    GetFWInfo('10.184.30.29', guid=False, OpenBMC=False)
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
