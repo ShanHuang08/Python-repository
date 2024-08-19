@@ -274,7 +274,7 @@ def Check_Frus(SMC_Tool, Types:list, Values:list):
             if Type in output:
                 Actual_value = output.split('=')[-1].lstrip() # Remove left side space
                 print(f"{Type} output: {Actual_value}")
-                print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!')
+                print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!\nActual value: {Actual_value}\nInput value: {value}')
                     
 def Modify_Frus(ip, uni_pwd, input_type):
     print(f'Server IP: {ip}')
@@ -356,7 +356,7 @@ def Mount_isos(ip, uni_pwd, times:int):
     # mount isos
     for time in range(times):
         num = str(time+1) #1,2,3
-        url = url=VM_url + num 
+        url = VM_url + num 
         print(f'Mounting iso {num}')
         setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
         sleep(3)

@@ -23,19 +23,20 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '172.31.51.33'
-    uni_pwd = 'PHYHDTSXUM'
+    ip = '10.184.17.92'
+    uni_pwd = '2wsx#EDC'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('f201ms', '')
+    # Search_FW_Num('', 'X12SPA')
     # smc.raw_30_48_1()
-    smc.Raw_Factory_Default()
+    # smc.Raw_Factory_Default()
     # smc_in.Check_BS()
     # Modify_Frus(ip, uni_pwd, 'BP')
     # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.20.125', 'X13SAW-F.txt')
+    # ssh_os('10.184.26.72', 'H13SAEMF.txt')
     # Mount_isos(ip, uni_pwd, 1)
+    # hex_to_dec('F')
 

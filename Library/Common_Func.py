@@ -30,7 +30,10 @@ def Check_PWD(ip, unique):
         Auth = ('ADMIN', 'ADMIN') 
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
         # Can't login to   (Login error message from SMCIPMITool), 用tool會造成互call
-        # if Check_Network == None:
+        if Check_Network[0] == 500:
+            print(f"GET /redfish/v1/Managers/1 return 500\n GET Systems/1")
+            Check_Network = GET(url='https://'+ip+'/redfish/v1/Systems/1', auth=Auth)
+
         if isinstance(Check_Network, list):
             if Check_Network[0] == 200: return Auth
             # elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized

@@ -6,7 +6,8 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from Library.Redfish_requests import *
 from Library.SMASH import SMASH
-from Library.Call_Method import Check_PWD, GetPath
+from Library.Call_Method import GetPath
+from Library.Common_Func import Check_PWD
 
 Account=Password='ADMIN'
 
@@ -42,15 +43,16 @@ def Scrape(Account, Password):
 
 def Redfish_setup():
     print(f"Server: {BMC_ip}")
-    
+    url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
     setup = PATCH(url=url, auth=auth, body=redfish['LDAP Setup'])
     if setup[0] == 200:
         print('LDAP setup success')
     else:
-        print(f'Setup failed, Status code: {setup[0]}\n{setup[-1]}')
+        print(f'LDAP Setup failed, Status code: {setup[0]}\n{setup[-1]}')
 
 def Clear_setup():
     print('Clear LDAP setup')
+    url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
     clear = PATCH(url=url, auth=auth, body=redfish['LDAP clear'])
     if clear[0] == 200:
         print('Setup has cleared')
@@ -58,9 +60,8 @@ def Clear_setup():
         print(f'Clear failed, Status code: {clear[0]}\n{clear[-1]}')
 
 if __name__=='__main__':
-    BMC_ip = '10.148.173.54'
+    BMC_ip = '10.184.29.133'
     auth = Check_PWD(BMC_ip, unique='DWDKCNBMVW')
-    url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
     Redfish_setup()
-    SMASH(ip=BMC_ip)
+    # SMASH(ip=BMC_ip)
     # Clear_setup()
