@@ -35,8 +35,8 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.17.92'
-    uni_pwd = '2wsx#EDC'
+    ip = '172.31.51.33'
+    uni_pwd = 'PHYHDTSXUM'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
