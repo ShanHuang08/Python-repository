@@ -1,7 +1,33 @@
 from Library.Redfish_requests import *
 import re
 from Library.SMCIPMITool import SUMTool
+import subprocess, os
+from Library.Execeptions import SMCError
 
+class SMCIPMITool():
+    def __init__(self, ip, Auth) -> None:
+        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'
+        self.ip = ip
+        self.accout = f' {Auth[0]} '
+        self.pwd = f'{Auth[1]} '
+        self.Auth = Auth
+        # print(Auth)
+    
+    def Execute(self, cmd:str):
+        if os.path.exists(self.Path):
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
+            if execute.returncode == 0:
+                return execute.stdout
+            else:
+                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+        else:
+            print(SMCError(f'{self.Path} is not found'))
+            exit()
+
+    def raw(self, cmd:str):
+        output = self.Execute('ipmi raw '+cmd)
+        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 6 1') #Debug
+        return output
 
 def AddSUT():
     key = input("SUT: ")
@@ -18,38 +44,36 @@ def is_ipv4(ip):
         return len(Check) == 4
     else: return False
 
-def Check_PWD(ip):
+def Check_ipaddr(ip):
+    command = 'ping -n 1 ' + ip
+    Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
+    List = Ping.stdout.splitlines()
+    Text =''.join(line for line in List if "TTL=" in line)
+    return len(Text) > 0
+
+def Check_PWD(ip, Open):
     """
-    - Utilize `Redfish` checking current password
-    - If `GET fail` return `unique password`
+    - Utilize `SMCIPMITool` checking current password
+    - If `Login fail` require to input `unique password`
     """
+    if Open: Auth = ('root', '0penBmc')
+    else: Auth = ('ADMIN', 'ADMIN')
+
+    smci = SMCIPMITool(ip, Auth)
     if not is_ipv4(ip):
         print(f"Invalid IPv4 format: {ip}")
         exit()
 
-    Auth = ('ADMIN', 'ADMIN')
-    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
-    # if Check_Network == None:
-    if isinstance(Check_Network, list):
-        if Check_Network[0] == 200: return Auth
-        elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
-            print('Legacy')
-            pwd = input('Input unique password: ')
-            if pwd == '':
-                print('Password is empty!')
-                exit()
-            return (Auth[0], pwd)
-        else:
-            Open_auth = ('root', '0penBmc')
-            Check_Network2 = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Open_auth)
-            if Check_Network2[0] == 200: return Open_auth
-            elif Check_Network2[0] == 401 and 'error' not in Check_Network2[1]:
-                # print('OpenBMC')
-                pwd2 = input('Input unique password: ')
-                if pwd2 == '':
-                    print('Password is empty!')
-                    exit()
-                return (Open_auth[0], pwd2)
+    Check_Network = smci.raw('6 1')
+    if Check_ipaddr(ip):
+        # print(Check_Network)
+        if "00" in Check_Network: return Auth
+        elif "Can't connect to" in Check_Network: 
+            print(f'SUT is disconnected\n{Check_Network}')
+            exit()
+        elif "Can't login to" in Check_Network:
+            uni_pwd = input('Unique Password: ')
+            return (Auth[0], uni_pwd)
     else:
         print('SUT is disconnected')
         exit()
@@ -81,10 +105,10 @@ def GetGUID(ip, account, pwd):
         Guid = GET(url=Mongo_url, timeout=30)
         return Guid[-1].json()['guid'] if Guid[0] == 200 else print(f"Status code: {Guid[0]}\n{Guid[1]}")
 
-def Get_LegacyFWInfo(ip:str, guid:bool):
-    auth = Check_PWD(ip)
-    # auth = ('admin', '2wsx#EDC')
+def Get_LegacyFWInfo(ip:str, guid:bool, Open):
     print(f"Server IP: {ip}")
+    auth = Check_PWD(ip, Open)
+    # auth = ('admin', '2wsx#EDC')
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     BMC_Data = None
     BMC_FW = None
@@ -99,7 +123,7 @@ def Get_LegacyFWInfo(ip:str, guid:bool):
             print(GetGUID(ip, account=auth[0], pwd=auth[1]))
         BMC_Data = GET(url=url+'BMC', auth=auth)
         BIOS_Data = GET(url=url+'BIOS', auth=auth)
-
+        
         Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
         for link in Links:
             if 'CPLD' in link['@odata.id'] and 'Motherboard' in link['@odata.id']: 
@@ -121,13 +145,13 @@ def Get_LegacyFWInfo(ip:str, guid:bool):
         try:
             print(f"{e}\nBMC Data: {BMC_Data[-1].json()['Oem']}\nBIOS Data: {BIOS_Data[-1].json()['Oem']}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
         except KeyError as e:
-            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {CPLD_Data[-1].json()['Version']}")
+            print(f"{e}\nBMC Data: {BMC_Data[-1].json()}\nBIOS Data: {BIOS_Data[-1].json()}\nCPLD Data: {Get_Inventory[-1].json()}")
         
-def Get_OpenFWInfo(ip):
+def Get_OpenFWInfo(ip, Open):
     print(f"Server IP: {ip}")
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
     has_CPLD = False
-    auth = Check_PWD(ip)
+    auth = Check_PWD(ip, Open)
     Get_Inventory = GET(url=url, auth=auth)
 
     guid = GetGUID(ip, account=auth[0], pwd=auth[1])
@@ -159,12 +183,12 @@ def Get_OpenFWInfo(ip):
 
 
 def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
-    Get_OpenFWInfo(ip) if OpenBMC else Get_LegacyFWInfo(ip, guid)
+    Get_OpenFWInfo(ip) if OpenBMC else Get_LegacyFWInfo(ip, guid, OpenBMC)
 
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('10.184.30.29', guid=False, OpenBMC=False)
+    GetFWInfo('10.184.13.118', guid=False, OpenBMC=False)
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
