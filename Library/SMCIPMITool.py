@@ -28,7 +28,9 @@ class SMCIPMITool():
             exit()
 
     def raw(self, cmd:str):
-        return self.Execute('ipmi raw '+cmd)
+        output = self.Execute('ipmi raw '+cmd)
+        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 6 1') #Debug
+        return output
     
     def raw_06_01(self):
         print(self.raw('06 01'))

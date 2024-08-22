@@ -2,32 +2,7 @@ from Library.Redfish_requests import *
 import re
 from Library.SMCIPMITool import SUMTool
 import subprocess, os
-from Library.Execeptions import SMCError
-
-class SMCIPMITool():
-    def __init__(self, ip, Auth) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'
-        self.ip = ip
-        self.accout = f' {Auth[0]} '
-        self.pwd = f'{Auth[1]} '
-        self.Auth = Auth
-        # print(Auth)
-    
-    def Execute(self, cmd:str):
-        if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
-            if execute.returncode == 0:
-                return execute.stdout
-            else:
-                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
-        else:
-            print(SMCError(f'{self.Path} is not found'))
-            exit()
-
-    def raw(self, cmd:str):
-        output = self.Execute('ipmi raw '+cmd)
-        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 6 1') #Debug
-        return output
+from Library.Common_Func import SMCIPMITool
 
 def AddSUT():
     key = input("SUT: ")
@@ -51,6 +26,9 @@ def Check_ipaddr(ip):
     Text =''.join(line for line in List if "TTL=" in line)
     return len(Text) > 0
 
+
+
+
 def Check_PWD(ip, Open):
     """
     - Utilize `SMCIPMITool` checking current password
@@ -66,7 +44,7 @@ def Check_PWD(ip, Open):
 
     Check_Network = smci.raw('6 1')
     if Check_ipaddr(ip):
-        # print(Check_Network)
+        # print(Check_Network) #Debug
         if "00" in Check_Network: return Auth
         elif "Can't connect to" in Check_Network: 
             print(f'SUT is disconnected\n{Check_Network}')
@@ -107,6 +85,7 @@ def GetGUID(ip, account, pwd):
 
 def Get_LegacyFWInfo(ip:str, guid:bool, Open):
     print(f"Server IP: {ip}")
+    ip = ip.strip()
     auth = Check_PWD(ip, Open)
     # auth = ('admin', '2wsx#EDC')
     url = 'https://'+ip+'/redfish/v1/UpdateService/FirmwareInventory/'
@@ -188,7 +167,8 @@ def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('10.184.13.118', guid=False, OpenBMC=False)
+    GetFWInfo('172.31.49.224 ', guid=False, OpenBMC=False)
+    # GetFWInfo('10.184.26.175', guid=False, OpenBMC=False)
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
@@ -197,6 +177,8 @@ if __name__=='__main__':
     # for info in ['10.184.11.104', '10.184.21.204']:
     #     GetFWInfo(info)
     #     print('\n')
+
+   
 
 # Traceback (most recent call last):
 #   File "c:\Users\Stephenhuang\Python\Library\SUT.py", line 1, in <module>
