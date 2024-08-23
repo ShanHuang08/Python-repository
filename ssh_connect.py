@@ -2,6 +2,7 @@ import paramiko
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 import subprocess
 from time import sleep
+from Library.Call_Method import Search_FW_Num
 
 
 def LDAPLogin():
@@ -73,6 +74,8 @@ def ssh_os(OS_IP, SUT_Name):
                 'rpm -q java', 'lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,MODEL,SERIAL,STATE,VENDOR', 'hdparm -I /dev/sda', 'hdparm -I /dev/nvme0n1', 'ip add']
     try:
         file = open(SUT_Name,'w')
+        FW_Num = Search_FW_Num('', SUT_Name[:-4])
+        file.write(FW_Num + '\n')
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())
         ssh.connect(hostname=OS_IP, username=account, password=pwd, port=22)
