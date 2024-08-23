@@ -318,7 +318,7 @@ def Find_via_MBDs(mbd):
             if isinstance(value, dict):
                 if mbd in value['MBDs']: 
                     print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
-                    exit()
+                    return f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}"
                 elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
                     err_msg.append(f"{value['MBDs']}")
                     err_msg.append(f"Can't find {mbd} in {key}")
@@ -328,17 +328,19 @@ def Find_via_MBDs(mbd):
                 for val in value:
                     if mbd in val['MBDs']: 
                         print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}")
-                        exit()
+                        return f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}"
                     elif mbd not in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
                         err_msg.append(f"{val['MBDs']}")
                         num+=1
                         if num == len(value): 
                             err_msg.append(f"Can't find {mbd} in {key}")
-        if err_msg: print('\n'.join(err_msg))
+        if err_msg: 
+            print('\n'.join(err_msg))
+            return '\n'.join(err_msg)
             
 def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
-    Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
+    return Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
 
 def Mount_isos(ip, uni_pwd, times:int):
     if times not in [1,2,3]:
