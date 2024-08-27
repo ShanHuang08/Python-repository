@@ -317,8 +317,8 @@ def Find_via_MBDs(mbd):
         for key, value in FW_Type.items():
             if isinstance(value, dict):
                 if mbd in value['MBDs']: 
-                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}")
-                    return f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}"
+                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
+                    return f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}"
                 elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
                     err_msg.append(f"{value['MBDs']}")
                     err_msg.append(f"Can't find {mbd} in {key}")
@@ -326,10 +326,11 @@ def Find_via_MBDs(mbd):
             elif isinstance(value, list):
                 num = 0
                 for val in value:
-                    if mbd in val['MBDs']: 
-                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}")
-                        return f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}"
-                    elif mbd not in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
+                    # print(f"num={num}\nval['MBDs']={val['MBDs']}") #Debug
+                    if mbd in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
+                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
+                        return f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}"
+                    elif mbd not in val['MBDs']: 
                         err_msg.append(f"{val['MBDs']}")
                         num+=1
                         if num == len(value): 
@@ -351,8 +352,8 @@ def Mount_isos(ip, uni_pwd, times:int):
     # print(Auth) #Debug
 
     VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
-    bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso", "http://10.184.10.1/static/att/iso/aio9.iso"] 
-    us_isos = ["http://172.29.1.248/static/att/iso/RHEL9.4.iso", "http://172.29.1.248/static/att/iso/RHEL8.8.iso", "http://172.29.1.248/static/att/iso/aio9.iso"]
+    bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/aio9.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso"] 
+    us_isos = ["http://172.29.1.248/static/att/iso/RHEL9.4.iso", "http://172.29.1.248/static/att/iso/aio9.iso", "http://172.29.1.248/static/att/iso/RHEL8.8.iso"]
     tar_isos = bade_isos if ip.split('.')[0] == '10' else us_isos
 
     # mount isos
