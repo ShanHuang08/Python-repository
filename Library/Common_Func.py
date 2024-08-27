@@ -49,9 +49,15 @@ def Check_PWD(ip, unique):
     if Check_ipaddr(ip):
         return Check_Pwd_via_Redfish(ip, unique)
     else: 
-        print('Ping SUT failed\nWaiting for 20s')
-        sleep(20)
-        return Check_Pwd_via_Redfish(ip, unique)
+        print('Ping SUT failed\nWaiting for 10s')
+        sleep(10)
+        if Check_ipaddr(ip):
+            return Check_Pwd_via_Redfish(ip, unique)
+        else:
+            print('Ping SUT failed\nWaiting for 20s')
+            sleep(20)
+        return Check_Pwd_via_Redfish(ip, unique) if Check_ipaddr(ip) else print('Ping SUT failed!')
+        
 
 def is_only_dot(cmd:str):
     special_ch = '!@#$%^&*()_+<>?./:;'
