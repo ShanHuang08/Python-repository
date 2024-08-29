@@ -29,6 +29,7 @@ def test2():
             'SeleniumLibrary'
         )
 
+from os import environ
 
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
@@ -50,5 +51,5 @@ if __name__=='__main__':
     # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.26.105', 'X13SRA.txt')
     # Mount_isos(ip, uni_pwd, 1)
-    # hex_to_dec('F')
+    # hex_to_dec('A1')
 
