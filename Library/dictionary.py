@@ -49,6 +49,7 @@ goPage = {
 }
 
 
+
 redfish = {
     "Accounts" : "/redfish/v1/AccountService/Accounts/",
     "Systems" : "/redfish/v1/Systems/1/",
