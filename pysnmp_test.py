@@ -17,7 +17,8 @@ class snmp():
         self.port = 161
         self.oid = "1.3.6.1.4.1.21317.1.10.0"
         self.account = 'SnmpUser'
-        self.community_key='Public'
+        self.community_key='wpskingsoft'
+        redfish["Add SNMPv2 Community"]["SNMP"]["CommunityStrings"][0]["CommunityString"] = self.community_key
         self.v3_key = 'Aa123456' #MD5/DES
         self.Account_Enable = True
 
@@ -137,8 +138,10 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.13.65'
+    # ip = '172.31.35.133'
+    ip = '10.184.30.139'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
+    # pwd = ('root', 'kingsoft')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 
