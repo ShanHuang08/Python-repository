@@ -138,8 +138,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    # ip = '172.31.35.133'
-    ip = '10.184.30.139'
+    ip = '10.184.30.145'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     # pwd = ('root', 'kingsoft')
     Snmp = snmp(ip, pwd)
