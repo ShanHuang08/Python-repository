@@ -17,6 +17,8 @@ class SMCIPMITool():
         # print(Auth)
     
     def Execute(self, cmd:str):
+        if self.accout is None:
+            exit()
         if os.path.exists(self.Path):
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             if execute.returncode == 0:
@@ -76,6 +78,16 @@ class SMCIPMITool():
         """Disable UID"""
         print(f"Execute ipmi raw 30 0E")
         output = self.raw('30 0E')
+        print(output)
+        return output
+    
+    def raw_30_68_28_00(self):
+        """Check RA Provisioning
+        - 00: Not Provisioned
+        - 01: Provisioned
+        """
+        print(f"Execute ipmi raw 30 68 28 00")
+        output = self.raw('30 68 28 00')
         print(output)
         return output
 

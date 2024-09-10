@@ -1,8 +1,9 @@
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos
+from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator
 from ssh_connect import ssh_os
 from robot.libraries.BuiltIn import BuiltIn
+from Library.dictionary import redfish
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
@@ -29,26 +30,35 @@ def test2():
             'SeleniumLibrary'
         )
 
-from os import environ
+def upload_certificate():
+    import requests, json
+    boot_certs = redfish["CertificateString"]
+    # print(boot_certs[1])
+    url = 'https://'+ip+'/redfish/v1/Systems/1/Boot/Certificates/'
+    payload = {"CertificateString": boot_certs[0], "CertificateType": "PEM"}
+    res = requests.post(url, data=json.dumps(payload), auth=('ADMIN', 'ADMIN'), verify=False)
+    print(f"Status Code: {res.status_code}\nResponse JSON: {json.dumps(res.json(), indent=4)}\nHeaders: {res.headers}")
+
 
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.11.8'
-    uni_pwd = 'FXLUYKZIHZ'
+    ip = '10.184.12.25'
+    uni_pwd = 'JSMQXJVZBS'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('', 'X13SRA')
-    # smc.raw_30_48_1()
+    # Search_FW_Num('1501MS', '')
+    smc.raw_30_48_1()
     # smc_in.Check_BS()
+    # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')
     # smc.smc_commands('ipmi fru1, ipmi fru')
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.21.58', 'X12DDW.txt')
-    # Mount_isos(ip, uni_pwd, 1)
-    # hex_to_dec('A1')
+    # Mount_isos(ip, uni_pwd, 2)
+    # StringGenerator(64)
 
