@@ -59,7 +59,7 @@ def PATCH(url, auth, body, timeout=10):
     except requests.exceptions.Timeout as e:
         print(e)
 
-def POST(url, auth, body=None):
+def POST(url, auth, body=None, timeout=10):
     """
     `POST()[0]` : `Status code`
 
@@ -68,7 +68,7 @@ def POST(url, auth, body=None):
     `POST()[-1]` : `json()`
     """
     try:
-        Post_data = requests.post(url=url, auth=auth, json=body, verify=False, timeout=10)
+        Post_data = requests.post(url=url, auth=auth, json=body, verify=False, timeout=timeout)
         return [Post_data.status_code, Post_data.text, Post_data.json()]
     except requests.exceptions.HTTPError as e:
         print(e)

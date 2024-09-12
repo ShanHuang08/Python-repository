@@ -53,12 +53,27 @@ goPage = {
 redfish = {
     "Accounts" : "/redfish/v1/AccountService/Accounts/",
     "Systems" : "/redfish/v1/Systems/1/",
-    "MD5_DES" : {"UserName" : "SnmpUser", 
+    "SNMP account" : {"UserName" : "SnmpUser", 
                  "Password" : "Suser123", 
                  "RoleId" : "Administrator", 
-                 "Enabled" : True, 
-                 "AccountTypes" : ["SNMP"], 
+                 "Enabled" : True},
+    "MD5_DES" : {"AccountTypes" : ["SNMP"], 
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5", "EncryptionProtocol": "CBC_DES"}
+                 },
+    "MD5_AES" : {"AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5", "EncryptionProtocol": "CFB128_AES128"}
+                 },
+    "MD5_None" : {"AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5"}
+                 },
+    "SHA1_DES" : {"AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96", "EncryptionProtocol": "CBC_DES"}
+                 },
+    "SHA1_AES" : {"AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96", "EncryptionProtocol": "CFB128_AES128"}
+                 },
+    "SHA1_None" : {"AccountTypes" : ["SNMP"], 
+                 "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96"}
                  },
     "SNMP" : "/redfish/v1/Managers/1/NetworkProtocol",
     "Enable SNMP" : {"SNMP" : {"ProtocolEnabled": True}},
