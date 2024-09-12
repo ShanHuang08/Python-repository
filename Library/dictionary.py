@@ -57,22 +57,22 @@ redfish = {
                  "Password" : "Suser123", 
                  "RoleId" : "Administrator", 
                  "Enabled" : True},
-    "MD5_DES" : {"AccountTypes" : ["SNMP"], 
+    "MD5_DES" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5", "EncryptionProtocol": "CBC_DES"}
                  },
-    "MD5_AES" : {"AccountTypes" : ["SNMP"], 
+    "MD5_AES" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5", "EncryptionProtocol": "CFB128_AES128"}
                  },
-    "MD5_None" : {"AccountTypes" : ["SNMP"], 
+    "MD5_None" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_MD5"}
                  },
-    "SHA1_DES" : {"AccountTypes" : ["SNMP"], 
+    "SHA1_DES" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96", "EncryptionProtocol": "CBC_DES"}
                  },
-    "SHA1_AES" : {"AccountTypes" : ["SNMP"], 
+    "SHA1_AES" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96", "EncryptionProtocol": "CFB128_AES128"}
                  },
-    "SHA1_None" : {"AccountTypes" : ["SNMP"], 
+    "SHA1_None" : {"AccountTypes" : ["SNMP"], "Enabled" : True,
                  "SNMP" : {"AuthenticationKey": "Aa123456", "EncryptionKey": "Aa123456", "AuthenticationProtocol": "HMAC_SHA96"}
                  },
     "SNMP" : "/redfish/v1/Managers/1/NetworkProtocol",
