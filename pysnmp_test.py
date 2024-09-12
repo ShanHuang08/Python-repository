@@ -100,8 +100,10 @@ class snmp():
         jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
         count = str(jdata['Members@odata.count']+1)
         Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish[Credentials], timeout=30)
-        if Create[0] == 201 and Modify[0] == 200:
+        if not self.Smc_Tool.is_Snmpuser_exist() and Create[0] == 201 and Modify[0] == 200:
             print('Account has created')
+        elif self.Smc_Tool.is_Snmpuser_exist() and Modify[0] == 200:
+            print(f'Account has been modified to {Credentials}')
         else:
             print(f'Failed, Status code: {Create[0]}\n{Create[-1]}\n{Modify[0]}\n{Modify[-1]}')
             if "reached the limit" in Create[1]:
@@ -111,27 +113,29 @@ class snmp():
                     exit()
 
         # Make extra function to handle it???
-        snmp_key = redfish["Enable SNMPv3"]
+        snmpv3_key = redfish["Enable SNMPv3"]
+        Aut_P = "AuthenticationProtocol"
+        Enc_P = "EncryptionProtocol"
         if 'MD5_DES' in Credentials:
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'CBC_DES'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_MD5'
+            snmpv3_key["SNMP"][Enc_P] = 'CBC_DES'
         elif 'MD5_AES' in Credentials:
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'CFB128_AES128'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_MD5'
+            snmpv3_key["SNMP"][Enc_P] = 'CFB128_AES128'
         elif 'MD5_None' in Credentials:
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'None'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_MD5'
+            snmpv3_key["SNMP"][Enc_P] = 'None'
         elif 'SHA1_DES' in Credentials:
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'CBC_DES'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_SHA96'
+            snmpv3_key["SNMP"][Enc_P] = 'CBC_DES'
         elif 'SHA1_AES' in Credentials:
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'   
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'CFB128_AES128'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_SHA96'   
+            snmpv3_key["SNMP"][Enc_P] = 'CFB128_AES128'
         elif 'SHA1_None' in Credentials: 
-            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'
-            snmp_key["SNMP"]["EncryptionProtocol"] = 'None'
+            snmpv3_key["SNMP"][Aut_P] = 'HMAC_SHA96'
+            snmpv3_key["SNMP"][Enc_P] = 'None'
 
-        bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], snmp_key]
+        bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], snmpv3_key]
         for body in bodies:
             Snmp = PATCH(url='https://'+self.ip + redfish['SNMP'], auth=self.pwd, body=body, timeout=30)
             if Snmp[0] not in [200,202]:
@@ -186,6 +190,8 @@ if __name__ == '__main__':
     ip = '10.184.29.133'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     # pwd = ('root', 'kingsoft')
+    # Cre_List = ['MD5_DES', 'MD5_AES', 'MD5_None', 'SHA1_DES', 'SHA1_AES', 'SHA1_None']
+    Cre_List = ['MD5_DES', 'SHA1_AES']
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 
@@ -198,16 +204,16 @@ if __name__ == '__main__':
         # Snmp.UID_Change(Change)
         Snmp.snmpv2_test(uid_off)
         Snmp.snmpv2_test()
+        for cre in Cre_List:
+            Snmp.Redfish_setup(cre)
+            Snmp.snmpv3_test(uid_on, Credentials=cre)
+            Snmp.snmpv3_test(Credentials=cre)
 
-        Snmp.snmpv3_test(uid_on)
-        Snmp.snmpv3_test()
-
-        Snmp.snmpv3_test(uid_off)
-        Snmp.snmpv3_test()
-        Change = "Off"
-        print('Test Disable account')      
-        Snmp.Disable_Account(Account_Enable=False)
-        Snmp.snmpv3_test()
+            Snmp.snmpv3_test(uid_off, Credentials=cre)
+            Snmp.snmpv3_test(Credentials=cre)
+            print(f'Test Disable account on {cre}')      
+            Snmp.Disable_Account(Account_Enable=False)
+            Snmp.snmpv3_test(Credentials=cre)
     Snmp.Clear_setup()
 
 
