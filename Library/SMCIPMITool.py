@@ -90,6 +90,17 @@ class SMCIPMITool():
         output = self.raw('30 68 28 00')
         print(output)
         return output
+    
+    def raw_30_68_e0_00(self):
+        """Check POST complete status
+        - 0x00 and 0xFF are preserved
+        - 0x01 for POST begin
+        - 0xFE for POST end
+        """
+        print(f"Execute ipmi raw 30 68 e0 00")
+        output = self.raw('30 68 e0 00')
+        print(output)
+        return output     
 
     def get_sensors(self):
         print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
@@ -140,6 +151,10 @@ class SMCIPMITool():
             output = self.Execute(cmd)
             print(output)
 
+    def is_Snmpuser_exist(self):
+        output = self.Execute('user list')
+        # print('SnmpUser' in output)
+        return 'SnmpUser' in output
 
 
 class SMCIPMITool_Internal():

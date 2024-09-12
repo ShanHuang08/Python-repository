@@ -1,8 +1,8 @@
 from pysnmp.hlapi import *
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
-from sys import exit
 from Library.Common_Func import Check_PWD
+from Library.SMCIPMITool import SMCIPMITool
 
 # Source:ChatGPT 2023/8/8, add class snmp: 2023/12/10
 uid_on = OID['uid on']
@@ -17,10 +17,11 @@ class snmp():
         self.port = 161
         self.oid = "1.3.6.1.4.1.21317.1.10.0"
         self.account = 'SnmpUser'
-        self.community_key='wpskingsoft'
+        self.community_key='Public'
         redfish["Add SNMPv2 Community"]["SNMP"]["CommunityStrings"][0]["CommunityString"] = self.community_key
-        self.v3_key = 'Aa123456' #MD5/DES
+        self.v3_key = 'Aa123456' #MD5_DES
         self.Account_Enable = True
+        self.Smc_Tool = SMCIPMITool(self.ip, self.pwd)
 
     def snmpv2_test(self, value=None):
         # 定義 SNMP Community 和 SNMP 版本
@@ -38,7 +39,8 @@ class snmp():
             request = setCmd(SnmpEngine(), community, target, ContextData(), oid_obj)
 
         error_indication, error_status, error_index, var_binds = next(request)
-        print(f'SNMPv2 Get:\nLog: {var_binds}') if value == None else print(f'SNMPv2 Set:\nLog: {var_binds}')
+        # print(f'SNMPv2 Get:\nLog: {var_binds}') if value == None else print(f'SNMPv2 Set:\nLog: {var_binds}') #Debug
+        print(f'SNMPv2 Get:') if value == None else print(f'SNMPv2 Set:')
 
         if error_indication:
             print(f"Error: {error_indication}, Please enable SNMP and set-up community!")
@@ -46,20 +48,39 @@ class snmp():
             print(f"Error: {error_status} at {error_index and var_binds[int(error_index)-1][0] or '?'}")
         else:
             for var_bind in var_binds:
-                print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')        
+                print(f'OID: {var_bind[0]}, Value: {var_bind[-1]}')  
 
-    def snmpv3_test(self, value=None):
-        MD5_DES_credential = UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
+    def v3_credentials(self, Credentials:str):
+        # UsmUserData 是 pysnmp 中用於配置 SNMPv3 使用者（User）的類別。SNMPv3 是 SNMP 的一個安全版本，它使用使用者名稱（User Name）和相應的認證及加密金鑰來確保 SNMP 的安全性。
+        if 'MD5_DES' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
+        elif 'MD5_AES' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmAesCfb128Protocol)
+        elif 'MD5_None' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol)
+        elif 'SHA1_DES' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACSHAAuthProtocol, privProtocol=usmDESPrivProtocol)
+        elif 'SHA1_AES' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACSHAAuthProtocol, privProtocol=usmAesCfb128Protocol)
+        elif 'SHA1_None' in Credentials:
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACSHAAuthProtocol) 
+        else:
+            # Set MD5_DES as default if string is others
+            return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
+
+    def snmpv3_test(self, value=None, Credentials='MD5_DES'):
+        Credential = self.v3_credentials(Credentials)
         target = UdpTransportTarget((self.ip, self.port))
         if value == None:
             oid_obj = ObjectType(ObjectIdentity(self.oid))
-            request = getCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+            request = getCmd(SnmpEngine(), Credential, target, ContextData(), oid_obj)
         else:
             oid_obj = ObjectType(ObjectIdentity(self.oid), value)
-            request = setCmd(SnmpEngine(), MD5_DES_credential, target, ContextData(), oid_obj)
+            request = setCmd(SnmpEngine(), Credential, target, ContextData(), oid_obj)
         
         error_indication, error_status, error_index, var_binds = next(request)
-        print(f'SNMPv3 Get:\nLog: {var_binds}') if value == None else print(f'SNMPv3 Set:\nLog: {var_binds}')
+        # print(f'SNMPv3 Get with {Credentials}:\nLog: {var_binds}') if value == None else print(f'SNMPv3 Set with {Credentials}:\nLog: {var_binds}') #Debug
+        print(f'SNMPv3 Get with {Credentials}:') if value == None else print(f'SNMPv3 Set with {Credentials}:')
 
         if error_indication:
             print(f"Error: {error_indication}")
@@ -70,23 +91,47 @@ class snmp():
                 value = var_bind[-1]
                 print(f'OID: {var_bind[0]}, Value: {value}')
 
-    def Redfish_setup(self):
+    def Redfish_setup(self, Credentials='MD5_DES'):
         print(f'Server: {self.ip}')
         print('Start setting up SNMP environment')
-        Create = POST(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd, body=redfish['MD5_DES'])
-        if Create[0] == 201:
+        if not self.Smc_Tool.is_Snmpuser_exist():
+            Create = POST(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd, body=redfish['SNMP account'], timeout=30)
+        
+        jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
+        count = str(jdata['Members@odata.count']+1)
+        Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish[Credentials], timeout=30)
+        if Create[0] == 201 and Modify[0] == 200:
             print('Account has created')
         else:
-            print(f'Failed, Status code: {Create[0]}\n{Create[-1]}')
+            print(f'Failed, Status code: {Create[0]}\n{Create[-1]}\n{Modify[0]}\n{Modify[-1]}')
             if "reached the limit" in Create[1]:
                 Get_Account = GET(url='https://'+self.ip+'/redfish/v1/AccountService/Accounts/16', auth=self.pwd)
                 if Get_Account[0] == 200:
                     print("Accounts reach the limit, Please delete an account and try again")
-            if "The action SnmpUser was submitted with more than one value" in Create[1]:
-                print("Acount SnmpUser is existed, please delete previous SnmpUser account")
-            exit()
-        
-        bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], redfish['Enable SNMPv3']]
+                    exit()
+
+        # Make extra function to handle it???
+        snmp_key = redfish["Enable SNMPv3"]
+        if 'MD5_DES' in Credentials:
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'CBC_DES'
+        elif 'MD5_AES' in Credentials:
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'CFB128_AES128'
+        elif 'MD5_None' in Credentials:
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_MD5'
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'None'
+        elif 'SHA1_DES' in Credentials:
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'CBC_DES'
+        elif 'SHA1_AES' in Credentials:
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'   
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'CFB128_AES128'
+        elif 'SHA1_None' in Credentials: 
+            snmp_key["SNMP"]["AuthenticationProtocol"] = 'HMAC_SHA96'
+            snmp_key["SNMP"]["EncryptionProtocol"] = 'None'
+
+        bodies =[redfish['Enable SNMP'], redfish['Add SNMPv2 Community'], snmp_key]
         for body in bodies:
             Snmp = PATCH(url='https://'+self.ip + redfish['SNMP'], auth=self.pwd, body=body, timeout=30)
             if Snmp[0] not in [200,202]:
@@ -103,14 +148,14 @@ class snmp():
         else:
             print(f'Failed, Status: {uid_patch[0]}\n Body:{uid_patch[1]}')
 
-    def Disable_Account(self, Account_Enable=None):
+    def Disable_Account(self, Account_Enable=None, Credentials='MD5_DES'):
         if Account_Enable == False:
             print('Disable account')
             jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
             #count要重寫, 如果從中間刪掉的話無法判斷, 因為只抓得到最後一個account
             count = str(jdata['Members@odata.count']+1)
-            redfish['MD5_DES']['Enabled'] = Account_Enable
-            Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish['MD5_DES'], timeout=30)
+            redfish[Credentials]['Enabled'] = Account_Enable
+            Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish[Credentials], timeout=30)
             if Modify[0] == 200:
                 print('Account has disabled')
             else:
@@ -138,7 +183,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.30.145'
+    ip = '10.184.29.133'
     pwd = Check_PWD(ip, unique='GXBGWWDHHK')
     # pwd = ('root', 'kingsoft')
     Snmp = snmp(ip, pwd)
@@ -172,19 +217,15 @@ if __name__ == '__main__':
     # Type SNMPv3 command to get UID status 'snmpget -v3 -u <user_name> -a MD5 -A "*****" -x DES -X "*****" -l authPriv <BMC_IP> 1.3.6.1.4.1.21317.1.10.0'
     # https://github.com/pyasn1/pyasn1/issues/28  issue using pyasn1-0.5.0 and pysnmp-4.4.12 when I use getcmd().
 
-def v3_test_code():
-    oid = ".1.3.6.1.4.1.2021.11.9.0"
-    oid_obj = ObjectType(ObjectIdentity(oid))
-    combo = 'MD5/DES'
-    combo2 = 'SHA1/AES'
-    name = combo.replace('/','')
-    credentials = UsmUserData(name, authKey='Aa123456')
+    def v3_test_code(self, credentials):
+        oid = ".1.3.6.1.4.1.2021.11.9.0"
+        oid_obj = ObjectType(ObjectIdentity(oid))
+        combo = 'MD5_DES'
+        combo2 = 'SHA1_AES'
+        name = combo.replace('_','')
+        credentials = UsmUserData(name, authKey='Aa123456')
+        for cre in ['MD5_DES', 'MD5_AES', 'MD5_None', 'SHA1_DES', 'SHA1_AES', 'SHA1_None']:
+            pass
     
-    # UsmUserData 是 pysnmp 中用於配置 SNMPv3 使用者（User）的類別。SNMPv3 是 SNMP 的一個安全版本，它使用使用者名稱（User Name）和相應的認證及加密金鑰來確保 SNMP 的安全性。
-    SHA_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', authProtocol=usmHMACSHAAuthProtocol )
-    MD5_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', authProtocol=usmHMACMD5AuthProtocol )
-    AES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmAesCfb128Protocol )
-    DES_credentials = UsmUserData(name, authKey='Aa123456', privKey='Aa123456', privProtocol=usmDESPrivProtocol )
-
     # getCmd() 函數用於發送單個的 SNMP GET 請求
     # 而 nextCmd() 函數用於發送連續的 SNMP GETNEXT 請求（也稱為 SNMP WALK）
