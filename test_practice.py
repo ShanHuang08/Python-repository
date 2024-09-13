@@ -50,12 +50,13 @@ if __name__=='__main__':
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('F201MS', '')
+    # Search_FW_Num('F201MS', 'X13SWA')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')
     # smc.smc_commands('ipmi fru1, ipmi fru')
+    # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
     # ssh_os('10.184.21.58', 'X12DDW.txt')

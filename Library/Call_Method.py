@@ -53,7 +53,7 @@ def AI_StringGenerator():
 
 def StringGenerator(Num):
     """
-    Input str number
+    Input int or str number
     """
     Start = 1
     result = ''

@@ -82,7 +82,7 @@ class SMCIPMITool():
         return output
     
     def raw_30_68_28_00(self):
-        """Check RA Provisioning
+        """Check RA Provisioning `ROT only`
         - 00: Not Provisioned
         - 01: Provisioned
         """

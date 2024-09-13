@@ -46,6 +46,6 @@ def FactoryDefault(ip, Uni_pwd):
         print('MEL PASS') if Check_Mel(SMC_Tool) else print('MEL FAIL')
 
 if __name__=='__main__':
-    ip = '10.184.12.25'
-    Uni_pwd = 'KWMRHHNZEJ'
+    ip = '172.31.51.6'
+    Uni_pwd = 'WESUPKTNDW'
     FactoryDefault(ip, Uni_pwd)
