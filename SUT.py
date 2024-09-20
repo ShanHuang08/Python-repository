@@ -94,8 +94,9 @@ def Get_LegacyFWInfo(ip:str, guid:bool, Open):
     BIOS_Data = None
     BIOS_FW = None
     has_CPLD = False
-    CPLD_Ver = None
     Get_Inventory = GET(url=url, auth=auth)
+    CPLD_link = str
+    CPLD_Data = str
 
     try:
         if guid:
@@ -106,17 +107,25 @@ def Get_LegacyFWInfo(ip:str, guid:bool, Open):
         Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
         for link in Links:
             if 'CPLD' in link['@odata.id'] and 'Motherboard' in link['@odata.id']: 
-                CPLD_link = link['@odata.id']
+                CPLD_link ='https://'+ip+link['@odata.id']
+                # print(CPLD_link) #Debug
                 has_CPLD = True
         # if not has_CPLD: print(f"Link list: {Links}") #For Debug only
+        if not has_CPLD:
+            sumT = SUMTool(ip, auth[1])
+            output = sumT.get_cpld_info()
+            if 'not supported' in output: CPLD_Data = 'Not support CPLD'
+            else:
+                for res in output.splitline():
+                    if 'CPLD' in res:
+                        CPLD_Data = res
+        else: CPLD_Data = GET(url=CPLD_link, auth=auth)[-1].json()['Version']
 
-        CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
-        # print(BMC_Data['Version'])
+        # print(BMC_Data['Version')
         if BMC_Data != None and BIOS_Data != None and CPLD_Data != None:
             BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
-            CPLD_Ver = CPLD_Data if CPLD_Data == 'Not support CPLD' else CPLD_Data[-1].json()['Version']
-            print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Ver}")
+            print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Data}")
         else:
             print(f"BMC types:{type(BMC_Data)}, BIOS types:{type(BIOS_Data)}, CPLD types:{type(CPLD_Data)}")
                   
@@ -147,27 +156,40 @@ def Get_OpenFWInfo(ip, Open):
     Bios_name = output.splitlines()[-1]
     Bios_name = Bios_name.split(':')[-1].strip()
 
+    CPLD_Data = str
     Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
     for link in Links:
         if 'CPLD' in link['@odata.id'] and 'Motherboard' in link['@odata.id']: 
             CPLD_link = link['@odata.id']
             has_CPLD = True
     # if not has_CPLD: print(f"Link list: {Links}") #For Debug only
-    CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD' 
+    if not has_CPLD: 
+        output = sumT.get_cpld_info()
+        if 'not supported' in output: CPLD_Data = 'Not support CPLD'
+        else:
+            for res in output.splitline():
+                if 'CPLD' in res:
+                    CPLD_Data = res
+    else:
+        CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD'
+
+
+
 
     #因為目前只有個一個branch
     if 'R12' in guid: print(f"BMC_R12AST2600-6401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
     elif 'R13' in guid: print(f"BMC_R13AST2600-7401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
-    else: pass
+    # elif 'Xinan_AST2600_OpenBMC' in guid: print(f"BMC_H13AST2600-C501MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
+    else: print(f"BMC_H13AST2600-C501MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
 
 
 def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
-    Get_OpenFWInfo(ip) if OpenBMC else Get_LegacyFWInfo(ip, guid, OpenBMC)
+    Get_OpenFWInfo(ip, OpenBMC) if OpenBMC else Get_LegacyFWInfo(ip, guid, OpenBMC)
 
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('172.31.51.6', guid=False, OpenBMC=False)
+    GetFWInfo('172.31.35.128', guid=False, OpenBMC=False)
     
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
