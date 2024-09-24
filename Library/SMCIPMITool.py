@@ -205,6 +205,29 @@ class SMCIPMITool_Internal():
                     print(f'Fru BM modify success') if 'Error' not in bm else print(f'Fru BM modify failed')
                 else: print(f"{output}\nBM is match")
 
+    def smc_command(self, cmd:str): 
+        if 'fru1w' in cmd:
+            output = self.Execute(cmd + ' Supermicro82265990')
+        else:
+            output = self.Execute(cmd)
+        print(output)
+
+    def smc_commands(self, cmds:str):
+        """- Input: cmd A, cmd B, cmd C"""
+        cmds = cmds.strip()
+        cmds_list = []
+
+        cmds_list = cmds.split(',')
+        for i in range(len(cmds_list)):
+            cmds_list[i] = cmds_list[i].strip()
+        for cmd in cmds_list:
+            print(f"Execute {cmd}")
+            if 'fru1w' in cmd:
+                output = self.Execute(cmd + ' Supermicro82265990')
+            else:
+                output = self.Execute(cmd)
+            print(output)
+
 
 
 class SUMTool():
@@ -241,7 +264,8 @@ class SUMTool():
         return self.Execute('GetBiosInfo --showall')
     
     def get_cpld_info(self):
-        print(self.Execute('GetCpldInfo'))
+        # print(self.Execute('GetCpldInfo'))
+        return self.Execute('GetCpldInfo')
     
     def get_psu_info(self):
         print(self.Execute('GetPSUInfo'))

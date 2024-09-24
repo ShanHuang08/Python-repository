@@ -123,11 +123,13 @@ def Get_LegacyFWInfo(ip:str, guid:bool, Open):
 
         # print(BMC_Data['Version')
         if BMC_Data != None and BIOS_Data != None and CPLD_Data != None:
+            # BMC_Ver = BMC_Data[-1].json()['Version']
             BMC_FW = BMC_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
             BIOS_FW = BIOS_Data[-1].json()['Oem']['Supermicro']['UniqueFilename']
+            # print(f"{BMC_Ver}\n{BMC_FW}\n{BIOS_FW}\n{CPLD_Data}")
             print(f"{BMC_FW}\n{BIOS_FW}\n{CPLD_Data}")
         else:
-            print(f"BMC types:{type(BMC_Data)}, BIOS types:{type(BIOS_Data)}, CPLD types:{type(CPLD_Data)}")
+            print(f"BMC types: {type(BMC_Data)}, BIOS types:{type(BIOS_Data)}, CPLD types:{type(CPLD_Data)}")
                   
     except KeyError as e:
         try:
@@ -173,9 +175,6 @@ def Get_OpenFWInfo(ip, Open):
     else:
         CPLD_Data = GET(url='https://'+ip+CPLD_link, auth=auth) if has_CPLD else 'Not support CPLD'
 
-
-
-
     #因為目前只有個一個branch
     if 'R12' in guid: print(f"BMC_R12AST2600-6401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
     elif 'R13' in guid: print(f"BMC_R13AST2600-7401MS_{year}{month}{date}_{BMC_ver_num}_STDsp.zip\n{Bios_name}\n{CPLD_Data[-1].json()['Version']}")
@@ -189,7 +188,7 @@ def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('172.31.35.128', guid=False, OpenBMC=False)
+    GetFWInfo('10.184.17.92', guid=False, OpenBMC=False)
     
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')

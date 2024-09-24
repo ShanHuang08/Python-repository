@@ -62,6 +62,9 @@ def Check_PWD(ip, unique):
             print('Ping SUT failed!')
             exit()
         
+def log(content, Debug=bool):
+    """Only print() if Debug == `True`"""
+    if Debug: print(content)
 
 def is_only_dot(cmd:str):
     special_ch = '!@#$%^&*()_+<>?./:;'
