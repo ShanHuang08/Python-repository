@@ -75,7 +75,7 @@ def ssh_os(OS_IP, SUT_Name):
     try:
         SUT_Name = SUT_Name[:-4] + '_OS_info.txt'
         file = open(SUT_Name,'w')
-        FW_Num = Search_FW_Num('', SUT_Name[:-4])
+        FW_Num = Search_FW_Num('', SUT_Name[:-12])
         file.write(FW_Num + '\n')
         ssh = SSHClient()
         ssh.set_missing_host_key_policy(AutoAddPolicy())

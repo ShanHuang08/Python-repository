@@ -58,7 +58,11 @@ class SMCIPMITool():
     def raw_30_48_1(self):
         print(f"Execute ipmi raw 30 48 1")
         output = self.raw('30 48 1')
-        print(f"{output}\n{self.Auth}") if "Can't login to" in output else print(output)
+        if "Can't login to" in output:
+            print(f"{output}\n{self.Auth}\nWait for 30s")
+            sleep(30)
+            print(self.raw('30 48 1'))
+        else: print(output)
 
     def raw_30_0C(self):
         """Get UID status: `off`: 00, `on`: 01 or 02"""

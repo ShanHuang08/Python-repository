@@ -45,13 +45,13 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.17.92'
-    uni_pwd = '2wsx#EDC'
+    ip = '10.184.24.201'
+    uni_pwd = 'FSOQHIILQP'
     smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('', 'H13SSL')
-    smc.raw_30_48_1()
+    # Search_FW_Num('c301ms', '')
+    # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')
@@ -59,6 +59,6 @@ if __name__=='__main__':
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.22.210', 'X13SWA.txt')
+    # ssh_os('10.184.15.251', 'X13DEI.txt')
     # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)

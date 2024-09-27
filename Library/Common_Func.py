@@ -16,14 +16,14 @@ def is_ipv4(ip):
     ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
     match = re.match(ipv4_pattern, ip)
     if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
+        Check = [ip.split('.')[seg] for seg in range(0,4) if 0 <= int(ip.split('.')[seg]) <= 255]
         return len(Check) == 4
     else: return False
 
 def Check_Pwd_via_Redfish(ip, unique):
     Auth = ('ADMIN', 'ADMIN')
     Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
-    # Can't login to   (Login error message from SMCIPMITool), 用tool會造成互cal
+    # Can't login to   (Login error message from SMCIPMITool), 用tool會造成互call
     if Check_Network[0] == 500:
         print(f"GET /redfish/v1/Managers/1 return 500\n GET Systems/1")
         Check_Network = GET(url='https://'+ip+'/redfish/v1/Systems/1', auth=Auth) 
