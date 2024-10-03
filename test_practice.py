@@ -45,12 +45,12 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.24.201'
-    uni_pwd = 'FSOQHIILQP'
-    smc, smc_in = SMC_tools()
+    ip = '10.184.16.42'
+    uni_pwd = 'IPXCATFFPD'
+    # smc, smc_in = SMC_tools()
 
     # sumT = SUMTool(ip, uni_pwd)
-    # Search_FW_Num('c301ms', '')
+    Search_FW_Num('', 'X12DPT')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
@@ -62,3 +62,4 @@ if __name__=='__main__':
     # ssh_os('10.184.15.251', 'X13DEI.txt')
     # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)
+    # print(hex(51)[2:])

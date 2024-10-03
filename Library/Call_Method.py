@@ -293,15 +293,17 @@ def Modify_Frus(ip, uni_pwd, input_type):
     Check_Frus(SMC_Tool, Types, Values)
 
 def Find_via_FW_Type(types, mbd):
+    import re
     types = types.strip().upper()
     mbd = mbd.strip().upper()
+    pattern = r'%s.*' % mbd
     possible = []
     try: 
         if isinstance(FW_Type[types], list):
             for dics in FW_Type[types]:
-                if mbd in dics['MBDs']:
+                if re.match(pattern, dics['MBDs']):
+                # if mbd in dics['MBDs']:
                     print(f"{types}\nFW num: {dics['info'][0]}\n{dics['info'][-1]}")
-                    break
                 else: 
                     possible.append(f"FW num: {dics['info'][0]}\n{dics['MBDs']}")
             # if mbd not in dics['MBDs']: # dics變數在for loop外面仍然可以使用, 返回最後一個值 (Only Python and JS)
@@ -311,12 +313,22 @@ def Find_via_FW_Type(types, mbd):
     except KeyError: print(f"Branch {types} is not found!")
 
 def Find_via_MBDs(mbd):
+    import re
+    matches = []
     err_msg = [] #Record error output. Error output won't show up if MBD match on the later loop
+    mbd = mbd.strip().upper()
+    pattern = r'%s.*' % mbd
     if mbd:
         mbd = mbd.upper()
         for key, value in FW_Type.items():
             if isinstance(value, dict):
-                if mbd in value['MBDs']: 
+                # print(f"value['MBDs']={value['MBDs']}") #Debug
+                for mb in value['MBDs']:
+                    match = re.match(pattern, mb)
+                    if match: matches.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
+                if matches:
+                    print(matches)
+                # if mbd in value['MBDs']: 
                     print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
                     return f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}"
                 elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
@@ -327,7 +339,13 @@ def Find_via_MBDs(mbd):
                 num = 0
                 for val in value:
                     # print(f"num={num}\nval['MBDs']={val['MBDs']}") #Debug
-                    if mbd in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
+                    for mb in val['MBDs']:
+                        match = re.match(pattern, mb)
+                        # print(match)
+                        if match: matches.append(match)
+                    if matches:
+                        print(matches)
+                    # if mbd in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
                         print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
                         return f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}"
                     elif mbd not in val['MBDs']: 
@@ -338,7 +356,7 @@ def Find_via_MBDs(mbd):
         if err_msg: 
             print('\n'.join(err_msg))
             return '\n'.join(err_msg)
-            
+    else: print('Please input MBD value')        
 def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     return Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
