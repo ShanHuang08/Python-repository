@@ -46,11 +46,10 @@ def SMC_tools():
 
 if __name__=='__main__':
     ip = '10.184.16.42'
-    uni_pwd = 'IPXCATFFPD'
-    # smc, smc_in = SMC_tools()
+    uni_pwd = 'NLTAFRJLHJ'
+    smc, smc_in = SMC_tools()
 
-    # sumT = SUMTool(ip, uni_pwd)
-    Search_FW_Num('', 'X12DPT')
+    # Search_FW_Num('', 'x13sei')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
@@ -59,7 +58,6 @@ if __name__=='__main__':
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.15.251', 'X13DEI.txt')
+    # ssh_os('10.184.12.210', 'X13SEI.txt')
     # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)
-    # print(hex(51)[2:])
