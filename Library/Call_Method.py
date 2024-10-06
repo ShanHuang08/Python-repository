@@ -322,41 +322,38 @@ def Find_via_MBDs(mbd):
         mbd = mbd.upper()
         for key, value in FW_Type.items():
             if isinstance(value, dict):
-                # print(f"value['MBDs']={value['MBDs']}") #Debug
+                # print(f"{key}\nvalue['MBDs']={value['MBDs']}") #Debug
                 for mb in value['MBDs']:
                     match = re.match(pattern, mb)
-                    if match: matches.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
+                    # print(match) #Debug
+                    if match: 
+                        matches.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
                 if matches:
-                    print(matches)
-                # if mbd in value['MBDs']: 
-                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
-                    return f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}"
-                elif mbd not in value['MBDs'] and mbd[0:3] == value['MBDs'][0][0:3]: 
+                    print(f"{matches}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
+                    break
+                elif not matches and mbd[0:3] == value['MBDs'][0][0:3]:
                     err_msg.append(f"{value['MBDs']}")
                     err_msg.append(f"Can't find {mbd} in {key}")
 
             elif isinstance(value, list):
                 num = 0
                 for val in value:
-                    # print(f"num={num}\nval['MBDs']={val['MBDs']}") #Debug
+                    # print(f"{key}\nnum={num}\nval['MBDs']={val['MBDs']}") #Debug
                     for mb in val['MBDs']:
                         match = re.match(pattern, mb)
-                        # print(match)
+                        # print(match) #Debug
                         if match: matches.append(match)
                     if matches:
-                        print(matches)
-                    # if mbd in val['MBDs'] and mbd[0:3] == val['MBDs'][0][0:3]: 
-                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
-                        return f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}"
-                    elif mbd not in val['MBDs']: 
+                        print(f"{matches}\n{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
+                        break
+                    elif not matches and mbd[0:3] == val['MBDs'][0][0:3]:
                         err_msg.append(f"{val['MBDs']}")
                         num+=1
                         if num == len(value): 
                             err_msg.append(f"Can't find {mbd} in {key}")
-        if err_msg: 
-            print('\n'.join(err_msg))
-            return '\n'.join(err_msg)
-    else: print('Please input MBD value')        
+        if not matches: print('\n'.join(err_msg))
+    else: print('Please input MBD value')    
+        
 def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     return Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)

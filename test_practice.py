@@ -49,7 +49,7 @@ if __name__=='__main__':
     uni_pwd = 'NLTAFRJLHJ'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x13sei')
+    # Search_FW_Num('', 'x12sei')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()

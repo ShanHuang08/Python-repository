@@ -1,5 +1,5 @@
 import re, sys
-from Library.Call_Method import ASCII_to_raw, StringGenerator, CN_Generator
+# from Library.Call_Method import ASCII_to_raw, StringGenerator, CN_Generator
 sys.path.append('C:\\Users\\Stephenhuang\\Python')
 
 reformat = r"^b'\<([0-9]{1,3})\>([A-Za-z]{3} [0-9 ]{2} \d{2}:\d{2}:\d{2}) ((([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])|^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])) ([\S\s]+)"
@@ -29,10 +29,28 @@ def Check_lan_mode():
     else: 
         print(f"Input: {string}, Not match")
 
-def is_ipv4(ip):
-    ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
-    match = re.match(ipv4_pattern, ip)
-    if match: 
-        Check = [ip.split('.')[i] for i in range(0,4) if 0 <= int(ip.split('.')[i]) <= 255]
-        return len(Check) == 4
-    else: return False
+FW_Type = {
+    'H122' : {'MBD':['H12CCD-TF', 'H12CCD-F']},
+    'H12' : {'MBD':['H12SRD-TF', 'H12SSD-F']},
+    
+    'H13' : {'MBD':['H13SRD-F']},
+    'X13' : {'MBD':['X13SRD-TF']}
+}
+
+def Find_Device(devi):
+    devi = devi.upper()
+    matches = bool
+    pattern = r'%s.*' % devi  
+    print(pattern)
+    for key, value in FW_Type.items():
+        for mb in value['MBD']:
+            match = re.match(pattern, mb)
+            print(match)
+            matches = True if match else False
+            
+        if matches: 
+            print(FW_Type[key])
+            break
+        else: print(f"{key} aren't match")
+
+Find_Device('H12ssd')
