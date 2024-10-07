@@ -47,9 +47,9 @@ def SMC_tools():
 if __name__=='__main__':
     ip = '10.184.16.42'
     uni_pwd = 'NLTAFRJLHJ'
-    smc, smc_in = SMC_tools()
+    # smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x12sei')
+    Search_FW_Num('', 'x13dei')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()

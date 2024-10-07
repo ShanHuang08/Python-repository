@@ -314,7 +314,8 @@ def Find_via_FW_Type(types, mbd):
 
 def Find_via_MBDs(mbd):
     import re
-    matches = []
+    matches = False
+    PairList = []
     err_msg = [] #Record error output. Error output won't show up if MBD match on the later loop
     mbd = mbd.strip().upper()
     pattern = r'%s.*' % mbd
@@ -327,10 +328,11 @@ def Find_via_MBDs(mbd):
                     match = re.match(pattern, mb)
                     # print(match) #Debug
                     if match: 
-                        matches.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
+                        matches = True
+                        PairList.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
                 if matches:
-                    print(f"{matches}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
-                    break
+                    print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
+                    matches = False
                 elif not matches and mbd[0:3] == value['MBDs'][0][0:3]:
                     err_msg.append(f"{value['MBDs']}")
                     err_msg.append(f"Can't find {mbd} in {key}")
@@ -342,16 +344,18 @@ def Find_via_MBDs(mbd):
                     for mb in val['MBDs']:
                         match = re.match(pattern, mb)
                         # print(match) #Debug
-                        if match: matches.append(match)
+                        if match: 
+                            matches = True
+                            PairList.append(match)
                     if matches:
-                        print(f"{matches}\n{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
-                        break
+                        print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
+                        matches = False
                     elif not matches and mbd[0:3] == val['MBDs'][0][0:3]:
                         err_msg.append(f"{val['MBDs']}")
                         num+=1
                         if num == len(value): 
                             err_msg.append(f"Can't find {mbd} in {key}")
-        if not matches: print('\n'.join(err_msg))
+        if not PairList: print('\n'.join(err_msg))
     else: print('Please input MBD value')    
         
 def Search_FW_Num(types, mbd):

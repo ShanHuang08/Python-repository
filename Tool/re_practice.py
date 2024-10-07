@@ -30,27 +30,37 @@ def Check_lan_mode():
         print(f"Input: {string}, Not match")
 
 FW_Type = {
-    'H122' : {'MBD':['H12CCD-TF', 'H12CCD-F']},
-    'H12' : {'MBD':['H12SRD-TF', 'H12SSD-F']},
-    
+    'A122' : {'MBD':['A12CCD-TF', 'A12CCD-F']},
+    'H12' : {'MBD':['H12SRD-TF', 'H12SSD-F', 'H123ABC']},
+    'H122' : {'MBD':['H12SRD-T', 'H123ABC']},
     'H13' : {'MBD':['H13SRD-F']},
     'X13' : {'MBD':['X13SRD-TF']}
 }
 
 def Find_Device(devi):
     devi = devi.upper()
-    matches = bool
+    matches = False
+    PairList = []
+    err = []
     pattern = r'%s.*' % devi  
-    print(pattern)
-    for key, value in FW_Type.items():
-        for mb in value['MBD']:
-            match = re.match(pattern, mb)
-            print(match)
-            matches = True if match else False
-            
-        if matches: 
-            print(FW_Type[key])
-            break
-        else: print(f"{key} aren't match")
+    # print(pattern)
+    if devi: 
+        for key, value in FW_Type.items():
+            for mb in value['MBD']:
+                match = re.match(pattern, mb)
+                # print(match)            
+                if match: 
+                    matches = True
+                    PairList.append(match)
+                    break
+                else: False
 
-Find_Device('H12ssd')
+            if matches: 
+                print(f"{PairList}\n{key}\n{FW_Type[key]['MBD']}")
+                matches = False
+            else: err.append(f"{key} aren't match")
+
+        if not PairList: print('\n'.join(err))
+    else: print('Please input device info')
+
+Find_Device('h12sr')
