@@ -45,11 +45,11 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.24.201'
-    uni_pwd = 'CESDIGFNXN'
-    smc, smc_in = SMC_tools()
+    ip = '10.184.16.42'
+    uni_pwd = 'NLTAFRJLHJ'
+    # smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x12sei')
+    Search_FW_Num('', 'x13dei')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
