@@ -45,8 +45,8 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.16.42'
-    uni_pwd = 'NLTAFRJLHJ'
+    ip = '10.184.24.201'
+    uni_pwd = 'CESDIGFNXN'
     smc, smc_in = SMC_tools()
 
     # Search_FW_Num('', 'x12sei')
@@ -54,7 +54,7 @@ if __name__=='__main__':
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')
-    # smc_in.smc_command('ipmi fruw BP test123')
+    # smc.smc_command('ipmi fruw PV 1.01')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # Email_Format('UHtapQij@EfPnkRUp.c')
