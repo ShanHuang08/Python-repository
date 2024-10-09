@@ -102,6 +102,9 @@ def Get_LegacyFWInfo(ip:str, guid:bool, Open):
         if guid:
             print(GetGUID(ip, account=auth[0], pwd=auth[1]))
         BMC_Data = GET(url=url+'BMC', auth=auth)
+        if BMC_Data[0] != 200: 
+            print(f"Status code:{BMC_Data[0]}\nSUT api has not responsding\n{BMC_Data[1]}")
+            exit()
         BIOS_Data = GET(url=url+'BIOS', auth=auth)
         
         Links = Get_Inventory[-1].json()["Members"] #Check CPLD api
@@ -188,7 +191,7 @@ def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('10.184.25.239', guid=False, OpenBMC=False)
+    GetFWInfo('172.31.51.237', guid=False, OpenBMC=False)
     
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')

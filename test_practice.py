@@ -1,9 +1,7 @@
-from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator
 from ssh_connect import ssh_os
 from robot.libraries.BuiltIn import BuiltIn
-from Library.dictionary import redfish
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
@@ -32,6 +30,7 @@ def test2():
 
 def upload_certificate():
     import requests, json
+    from Library.dictionary import redfish
     boot_certs = redfish["CertificateString"]
     # print(boot_certs[1])
     url = 'https://'+ip+'/redfish/v1/Systems/1/Boot/Certificates/'
@@ -45,11 +44,11 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.16.42'
-    uni_pwd = 'NLTAFRJLHJ'
-    # smc, smc_in = SMC_tools()
+    ip = '172.31.51.33'
+    uni_pwd = 'PHYHDTSXUM'
+    smc, smc_in = SMC_tools()
 
-    Search_FW_Num('', 'x13dei')
+    # Search_FW_Num('', 'x12spa')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()

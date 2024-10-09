@@ -35,7 +35,13 @@ class SMCIPMITool():
         return output
     
     def raw_06_01(self):
+        """Get Device ID"""
         print(self.raw('06 01'))
+
+    def raw_06_04(self):
+        """Get Self Test Results
+        - PASS: 55"""
+        print(self.raw('06 04'))
     
     def raw_30_74_01(self):
         """

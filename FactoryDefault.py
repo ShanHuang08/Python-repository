@@ -23,6 +23,7 @@ def Check_Mel(SMC_Tool):
     return len(Pass_Check) > 0
 
 def FactoryDefault(ip, Uni_pwd):
+    """- ipmi fd 2 = raw 30 42"""
     # commands = ['30 40', '30 41', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1', 'ipmi fd 2', 'ipmi fd 3']
     commands = ['30 48 0', 'ipmi fd 1']
     for cmd in commands:
