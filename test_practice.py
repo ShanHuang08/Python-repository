@@ -49,7 +49,7 @@ if __name__=='__main__':
     smc, smc_in = SMC_tools()
 
     # Search_FW_Num('', 'x12spa')
-    # smc.raw_30_48_1()
+    smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')

@@ -242,7 +242,7 @@ class SMCIPMITool_Internal():
 
 class SUMTool():
     def __init__(self, ip, uni_pwd) -> None:
-        self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p1_Win_x86_64'
+        self.Path = 'C:\\Users\\Stephenhuang\\sum_2.14.0-p8_Win_x86_64'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
         self.account = Auth[0]
