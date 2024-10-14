@@ -59,4 +59,4 @@ if __name__=='__main__':
     # ssh_os('10.184.22.41', 'X13SAZ.txt')
     # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)
-    # Set_Pre_Test_Pwd_to_ADMIN()
+    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3)

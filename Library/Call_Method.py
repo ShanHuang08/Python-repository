@@ -392,19 +392,18 @@ def Mount_isos(ip, uni_pwd, times:int):
         elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
         else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
 
-def Set_Pre_Test_Pwd_to_ADMIN(selections=None):
-    """- `None means FD ALL SUTs`
-    - 0 : 10.184.21.204
-    - 1 : 10.184.17.92
-    - 2 : 172.31.51.33"""
+def Set_Pre_Test_Pwd_to_ADMIN(*selections):
+    """- Input integers, ex: `1,2,3`
+    - 1 : 10.184.21.204
+    - 2 : 10.184.17.92
+    - 3 : 172.31.51.33"""
     devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM')]
-    if selections != None:
-        selections = int(selections)
-        if selections < 3: devices = [devices[selections]] 
-        else: 
-            print(f'Invalid selection number: {selections}\n0 : 10.184.21.204\n1 : 10.184.17.92\n2 : 172.31.51.33')
-            exit()
-    else: devices = devices
+    # print(selections) #(1,2)
+    devices = [devices[num-1] for num in selections if num in [1,2,3]]
+    if len(selections) != len(devices): 
+        err = [str(num) for num in selections if num not in [1,2,3]]
+        print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33")
+        exit()
     for info in devices: 
         # print(info[0] + '\n' + info[1]) #Debug
         print(f'Server IP: {info[0]}')
