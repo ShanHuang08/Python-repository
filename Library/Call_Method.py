@@ -1,5 +1,4 @@
 from random import choice, randint, sample
-import string
 from Library.Redfish_requests import *
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
@@ -36,6 +35,7 @@ def AI_Optimize():
     return result
 
 def AI_StringGenerator():
+    import string
     Num = 32
     multiple = 1
     while Num > 5*multiple:
@@ -301,8 +301,8 @@ def Find_via_FW_Type(types, mbd):
     try: 
         if isinstance(FW_Type[types], list):
             for dics in FW_Type[types]:
-                if re.match(pattern, dics['MBDs']):
-                # if mbd in dics['MBDs']:
+                # if re.match(pattern, dics['MBDs']):
+                if mbd in dics['MBDs']:
                     print(f"{types}\nFW num: {dics['info'][0]}\n{dics['info'][-1]}")
                 else: 
                     possible.append(f"FW num: {dics['info'][0]}\n{dics['MBDs']}")
@@ -330,6 +330,7 @@ def Find_via_MBDs(mbd):
                     if match: 
                         matches = True
                         PairList.append(match) #<re.Match object; span=(0, 9), match='H13SAE-MF'>
+                        PairList.append(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
                 if matches:
                     print(f"{key}\nFW num: {FW_Type[key]['info'][0]}\n{FW_Type[key]['info'][-1]}\n{FW_Type[key]['MBDs']}")
                     matches = False
@@ -344,18 +345,22 @@ def Find_via_MBDs(mbd):
                     for mb in val['MBDs']:
                         match = re.match(pattern, mb)
                         # print(match) #Debug
+                        print(f'Num= {num}')
                         if match: 
                             matches = True
                             PairList.append(match)
+                            PairList.append(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
+                        
                     if matches:
                         print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
                         matches = False
                     elif not matches and mbd[0:3] == val['MBDs'][0][0:3]:
                         err_msg.append(f"{val['MBDs']}")
-                        num+=1
                         if num == len(value): 
                             err_msg.append(f"Can't find {mbd} in {key}")
+                    num+=1
         if not PairList: print('\n'.join(err_msg))
+        return '\n'.join(str(pair) for pair in PairList)
     else: print('Please input MBD value')    
         
 def Search_FW_Num(types, mbd):
@@ -386,5 +391,21 @@ def Mount_isos(ip, uni_pwd, times:int):
         if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success\nPATCH:{setup[0]}\nPOST:{insert[0]}\nTask: https://{ip}{insert[-1]["@odata.id"]}')  
         elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
         else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
-    
-    
+
+def Set_Pre_Test_Pwd_to_ADMIN(selections=None):
+    """- `None means FD ALL SUTs`
+    - 0 : 10.184.21.204
+    - 1 : 10.184.17.92
+    - 2 : 172.31.51.33"""
+    devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM')]
+    if selections != None:
+        selections = int(selections)
+        if selections < 3: devices = [devices[selections]] 
+        else: 
+            print(f'Invalid selection number: {selections}\n0 : 10.184.21.204\n1 : 10.184.17.92\n2 : 172.31.51.33')
+            exit()
+    else: devices = devices
+    for info in devices: 
+        # print(info[0] + '\n' + info[1]) #Debug
+        print(f'Server IP: {info[0]}')
+        SMCIPMITool(info[0], info[1]).raw_30_48_1()

@@ -1,5 +1,5 @@
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator
+from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator, Set_Pre_Test_Pwd_to_ADMIN
 from ssh_connect import ssh_os
 from robot.libraries.BuiltIn import BuiltIn
 
@@ -44,19 +44,19 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '172.31.51.33'
-    uni_pwd = 'PHYHDTSXUM'
+    ip = '10.184.30.66'
+    uni_pwd = 'HFECFUXZKR'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x12spa')
-    smc.raw_30_48_1()
+    # Search_FW_Num('', 'x13saz')
+    # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # Modify_Frus(ip, uni_pwd, 'BP')
     # smc.smc_command('ipmi fruw PV 1.01')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
-    # Email_Format('UHtapQij@EfPnkRUp.c')
-    # ssh_os('10.184.12.210', 'X13SEI.txt')
+    # ssh_os('10.184.22.41', 'X13SAZ.txt')
     # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)
+    # Set_Pre_Test_Pwd_to_ADMIN()

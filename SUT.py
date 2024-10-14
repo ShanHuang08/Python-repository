@@ -197,10 +197,6 @@ if __name__=='__main__':
     # SumT = SUMTool('10.140.179.173', '0penBmc')
     # ouput = SumT.get_bmc_info()
     
-    
-    # for info in ['10.184.21.204', '10.184.17.92', '172.31.51.33']:
-    #     GetFWInfo(info, guid=False, OpenBMC=False)
-    #     print('\n')
 
    
 
