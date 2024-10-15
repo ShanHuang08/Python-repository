@@ -28,6 +28,14 @@ def test2():
             'SeleniumLibrary'
         )
 
+@keyword('Click ${element}')    
+def click_element(self, element):
+    try:
+        self._click_element(element) #要自己定義click(element)
+    except Exception as e:
+        BuiltIn().run_keyword("Capture Page Screenshot")
+        raise e
+
 def upload_certificate():
     import requests, json
     from Library.dictionary import redfish
@@ -48,7 +56,7 @@ if __name__=='__main__':
     uni_pwd = 'HFECFUXZKR'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x13saz')
+    Search_FW_Num('', 'x13saz')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()

@@ -345,7 +345,6 @@ def Find_via_MBDs(mbd):
                     for mb in val['MBDs']:
                         match = re.match(pattern, mb)
                         # print(match) #Debug
-                        print(f'Num= {num}')
                         if match: 
                             matches = True
                             PairList.append(match)
@@ -358,6 +357,7 @@ def Find_via_MBDs(mbd):
                         err_msg.append(f"{val['MBDs']}")
                         if num == len(value): 
                             err_msg.append(f"Can't find {mbd} in {key}")
+                    # print(f'Num= {num}') #Debug
                     num+=1
         if not PairList: print('\n'.join(err_msg))
         return '\n'.join(str(pair) for pair in PairList)
