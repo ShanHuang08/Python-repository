@@ -69,6 +69,7 @@ class SMCIPMITool():
             sleep(30)
             print(self.raw('30 48 1'))
         else: print(output)
+        return output
 
     def raw_30_0C(self):
         """Get UID status: `off`: 00, `on`: 01 or 02"""
@@ -95,6 +96,7 @@ class SMCIPMITool():
         """Check RA Provisioning `ROT only`
         - 00: Not Provisioned
         - 01: Provisioned
+        - Execute raw 30 68 28 01 start Provisioning
         """
         print(f"Execute ipmi raw 30 68 28 00")
         output = self.raw('30 68 28 00')
@@ -162,8 +164,9 @@ class SMCIPMITool():
             print(output)
 
     def is_Snmpuser_exist(self):
+        # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'user list') #Debug
         output = self.Execute('user list')
-        # print('SnmpUser' in output)
+        # print('SnmpUser' in output) #Debug
         return 'SnmpUser' in output
 
 

@@ -1,4 +1,4 @@
-from pysnmp.hlapi import *
+from pysnmp.hlapi import CommunityData, UdpTransportTarget, ObjectType, ObjectIdentity, getCmd, setCmd, SnmpEngine, ContextData, UsmUserData, usmHMACMD5AuthProtocol, usmDESPrivProtocol, usmAesCfb128Protocol, usmHMACSHAAuthProtocol
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
 from Library.Common_Func import Check_PWD
@@ -13,7 +13,7 @@ Change = "Blinking"  #For Redfish
 class snmp():
     def __init__(self, ip, pwd) -> None:
         self.ip = ip
-        self.pwd = pwd
+        self.pwd = pwd #(Tuple)
         self.port = 161
         self.oid = "1.3.6.1.4.1.21317.1.10.0"
         self.account = 'SnmpUser'
@@ -21,7 +21,7 @@ class snmp():
         redfish["Add SNMPv2 Community"]["SNMP"]["CommunityStrings"][0]["CommunityString"] = self.community_key
         self.v3_key = 'Aa123456' #MD5_DES
         self.Account_Enable = True
-        self.Smc_Tool = SMCIPMITool(self.ip, self.pwd)
+        self.Smc_Tool = SMCIPMITool(self.ip, self.pwd[1])
 
     def snmpv2_test(self, value=None):
         # 定義 SNMP Community 和 SNMP 版本
@@ -187,8 +187,8 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.29.133'
-    pwd = Check_PWD(ip, unique='GXBGWWDHHK')
+    ip = '10.184.30.66'
+    pwd = Check_PWD(ip, unique='HFECFUXZKR')
     # pwd = ('root', 'kingsoft')
     # Cre_List = ['MD5_DES', 'MD5_AES', 'MD5_None', 'SHA1_DES', 'SHA1_AES', 'SHA1_None']
     Cre_List = ['MD5_DES', 'SHA1_AES']

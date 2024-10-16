@@ -6,7 +6,7 @@ from time import sleep
 from Library.Execeptions import SMCError
 
 def Check_ipaddr(ip):
-    command = 'ping -n 1 ' + ip
+    command = 'ping -n 2 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     List = Ping.stdout.splitlines()
     Text =''.join(line for line in List if "TTL=" in line)

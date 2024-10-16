@@ -2,7 +2,7 @@ from random import choice, randint, sample
 from Library.Redfish_requests import *
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
-from Library.Common_Func import Check_PWD
+from Library.Common_Func import Check_PWD, Check_ipaddr
 from paramiko import SSHClient, ssh_exception, AutoAddPolicy
 from time import sleep
 from SUT_IP import FW_Type
@@ -406,5 +406,9 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
         exit()
     for info in devices: 
         # print(info[0] + '\n' + info[1]) #Debug
-        print(f'Server IP: {info[0]}')
-        SMCIPMITool(info[0], info[1]).raw_30_48_1()
+        if Check_ipaddr(info[0]):
+            print(f'Server IP: {info[0]}')
+            output = SMCIPMITool(info[0], info[1]).raw_30_48_1()
+            if "Can't connect to" in output: print('SUT RMCP is not responding')
+            elif "Can't login to" in output: print('Password is ADMIN')
+        else: print('SUT is offline')

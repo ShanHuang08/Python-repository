@@ -56,7 +56,7 @@ if __name__=='__main__':
     uni_pwd = 'HFECFUXZKR'
     smc, smc_in = SMC_tools()
 
-    Search_FW_Num('', 'x13saz')
+    # Search_FW_Num('', 'x13saz')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
@@ -65,6 +65,6 @@ if __name__=='__main__':
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # ssh_os('10.184.22.41', 'X13SAZ.txt')
-    # Mount_isos(ip, uni_pwd, 1)
+    # Mount_isos(ip, uni_pwd, 3)
     # StringGenerator(64)
     # Set_Pre_Test_Pwd_to_ADMIN(1,2,3)
