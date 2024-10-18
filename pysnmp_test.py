@@ -1,4 +1,5 @@
-from pysnmp.hlapi import CommunityData, UdpTransportTarget, ObjectType, ObjectIdentity, getCmd, setCmd, SnmpEngine, ContextData, UsmUserData, usmHMACMD5AuthProtocol, usmDESPrivProtocol, usmAesCfb128Protocol, usmHMACSHAAuthProtocol
+from pysnmp.hlapi import CommunityData, UdpTransportTarget, ObjectType, ObjectIdentity, getCmd, setCmd, SnmpEngine,\
+ContextData, UsmUserData, usmHMACMD5AuthProtocol, usmDESPrivProtocol, usmAesCfb128Protocol, usmHMACSHAAuthProtocol
 from Library.Redfish_requests import *
 from Library.dictionary import redfish, OID
 from Library.Common_Func import Check_PWD

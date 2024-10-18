@@ -28,14 +28,6 @@ def test2():
             'SeleniumLibrary'
         )
 
-@keyword('Click ${element}')    
-def click_element(self, element):
-    try:
-        self._click_element(element) #要自己定義click(element)
-    except Exception as e:
-        BuiltIn().run_keyword("Capture Page Screenshot")
-        raise e
-
 def upload_certificate():
     import requests, json
     from Library.dictionary import redfish
@@ -52,7 +44,7 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.30.66'
+    ip = '10.184.25.138'
     uni_pwd = 'HFECFUXZKR'
     smc, smc_in = SMC_tools()
 
@@ -60,11 +52,11 @@ if __name__=='__main__':
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
-    # Modify_Frus(ip, uni_pwd, 'BP')
+    # Modify_Frus(ip, uni_pwd, 'BPN')
     # smc.smc_command('ipmi fruw PV 1.01')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # ssh_os('10.184.22.41', 'X13SAZ.txt')
-    # Mount_isos(ip, uni_pwd, 3)
+    # Mount_isos(ip, uni_pwd, 1)
     # StringGenerator(64)
     # Set_Pre_Test_Pwd_to_ADMIN(1,2,3)
