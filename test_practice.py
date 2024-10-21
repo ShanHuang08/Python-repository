@@ -44,7 +44,7 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.25.138'
+    ip = '10.184.13.89'
     uni_pwd = 'HFECFUXZKR'
     smc, smc_in = SMC_tools()
 
@@ -52,11 +52,11 @@ if __name__=='__main__':
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
-    # Modify_Frus(ip, uni_pwd, 'BPN')
+    # Modify_Frus(ip, uni_pwd, 'PN')
     # smc.smc_command('ipmi fruw PV 1.01')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
     # ssh_os('10.184.22.41', 'X13SAZ.txt')
-    # Mount_isos(ip, uni_pwd, 1)
+    # Mount_isos(ip, uni_pwd, 3, mount=True)
     # StringGenerator(64)
     # Set_Pre_Test_Pwd_to_ADMIN(1,2,3)

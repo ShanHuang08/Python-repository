@@ -244,7 +244,7 @@ def ip_filter(ip):
 def ipmitool_recover(ssh, ip, mask, gateway):
     """Only for `ssh_inband`"""
     print('Execute ipmitool') # Debug only
-    for ssh_cmd in [f'ipmitool lan set 1 iparc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', 
+    for ssh_cmd in [f'ipmitool lan set 1 ipsrc static', f'ipmitool lan set 1 ipaddr {ip}', f'ipmitool lan set 1 netmask {mask}', 
                     f'ipmitool lan set 1 defgw ipaddr {gateway}', 'ipmitool lan print']:
         stdin, stdout, stderr = ssh.exec_command(ssh_cmd)
         for result in stdout.readlines() + stderr.readlines():
@@ -367,7 +367,7 @@ def Search_FW_Num(types, mbd):
     '''- EX: `('d301ms', '')`, `('', 'x13dsf-a')`'''
     return Find_via_FW_Type(types, mbd) if types.strip() else Find_via_MBDs(mbd)
 
-def Mount_isos(ip, uni_pwd, times:int):
+def Mount_isos(ip, uni_pwd, times:int, mount=True):
     if times not in [1,2,3]:
         print(f"times={times}, times arg range should be 1-3")
         exit()
@@ -376,21 +376,28 @@ def Mount_isos(ip, uni_pwd, times:int):
     # print(Auth) #Debug
 
     VM_url = 'https://' + ip + '/redfish/v1/Managers/1/VirtualMedia/VirtualMedia'
-    bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/aio9.iso", "http://10.184.10.1/static/att/iso/RHEL8.8.iso"] 
-    us_isos = ["http://172.29.1.248/static/att/iso/RHEL9.4.iso", "http://172.29.1.248/static/att/iso/aio9.iso", "http://172.29.1.248/static/att/iso/RHEL8.8.iso"]
+    bade_isos = ["http://10.184.10.1/static/att/iso/RHEL9.4.iso", "http://10.184.10.1/static/att/iso/aio9.iso", "https://10.135.0.253/os/redhat/el9a1/aarch64/rhel-baseos-9.1-aarch64-dvd.iso"] 
+    us_isos = ["http://172.29.1.248/static/att/iso/RHEL9.4.iso", "http://172.29.1.248/static/att/iso/aio9.iso", "https://172.29.1.237/iso/efishell.iso"]
     tar_isos = bade_isos if ip.split('.')[0] == '10' else us_isos
 
-    # mount isos
+    # mount/unmount isos
     for time in range(times):
         num = str(time+1) #1,2,3
         url = VM_url + num 
-        print(f'Mounting iso {num}')
-        setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
-        sleep(3)
-        insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": tar_isos[time],"Inserted":True})
-        if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success\nPATCH:{setup[0]}\nPOST:{insert[0]}\nTask: https://{ip}{insert[-1]["@odata.id"]}')  
-        elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
-        else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
+        if mount:
+            print(f'Mounting iso {num}')
+            setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
+            sleep(3)
+            insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": tar_isos[time],"Inserted":mount})
+            if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success\nPATCH:{setup[0]}\nPOST:{insert[0]}\nTask: https://{ip}{insert[-1]["@odata.id"]}')  
+            elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
+            else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
+        else:
+            print(f'Unmounting iso {num}')
+            if GET(url, auth=Auth)[-1].json()["Inserted"]:
+                uninsert = PATCH(url, auth=Auth, body={"Inserted":mount})
+                if uninsert[0] in [200, 202]:print(f'Unmount iso {num} success\nPATCH:{uninsert[0]}')
+            else: print(f'VM{num} has been unmounted')
 
 def Set_Pre_Test_Pwd_to_ADMIN(*selections):
     """- Input integers, ex: `1,2,3`
@@ -412,6 +419,6 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
             if passwd != 'ADMIN':
                 output = SMCIPMITool(info[0], info[1]).raw_30_48_1()
                 if "Can't connect to" in output: print('SUT RMCP is not responding')
-                elif "Can't login to" in output: print('Password is ADMIN')
+                elif "Can't login to" in output and '00' not in output: print('Password is ADMIN')
             else: print(f"Password is {passwd}")
         else: print('SUT is offline')
