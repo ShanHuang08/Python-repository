@@ -371,6 +371,7 @@ def Mount_isos(ip, uni_pwd, times:int, mount=True):
     if times not in [1,2,3]:
         print(f"times={times}, times arg range should be 1-3")
         exit()
+    if not mount: times = 3
     print(f"Server IP: {ip}")
     Auth = Check_PWD(ip, uni_pwd)
     # print(Auth) #Debug

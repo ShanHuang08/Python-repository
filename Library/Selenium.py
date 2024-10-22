@@ -28,3 +28,7 @@ class SeleniumBase():
 
     def find_xpaths(self, value) -> WebElement:
         return self.driver.find_elements(By.XPATH, value=value)
+
+    def get_window_handles(self):
+        """return list with handles. Cooperate with `switch_window()`"""
+        return self.driver.window_handles
