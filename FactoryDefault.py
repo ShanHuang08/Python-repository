@@ -23,7 +23,7 @@ def Check_Mel(SMC_Tool):
     return len(Pass_Check) > 0
 
 def FactoryDefault(ip, Uni_pwd):
-    """- ipmi fd 2 = raw 30 42"""
+    """- ipmi fd 2 = raw 30 40"""
     # commands = ['30 40', '30 41', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1', 'ipmi fd 2', 'ipmi fd 3']
     commands = ['30 48 0', 'ipmi fd 1', 'ipmi fd 3']
     for cmd in commands:
@@ -35,13 +35,13 @@ def FactoryDefault(ip, Uni_pwd):
         if 'ipmi' in cmd:
             exe = SMC_Tool.Execute(cmd)
             print(exe)
-            if 'Error' in exe: error.append('Fail')
-            elif "Can't login" in exe: error.append("Can't login")
+            if 'Error' in exe: error.append(exe)
+            elif "Can't login" in exe: error.append(exe)
         else:
             raw = SMC_Tool.raw(cmd)
             print(raw)
-            if 'Error' in raw: error.append('Fail')
-            elif "Can't login" in raw: error.append("Can't login")
+            if 'Error' in raw: error.append(raw)
+            elif "Can't login" in raw: error.append(raw)
         print('Execute PASS') if not error else print('Execute FAIL')
         sleep(timeout(ip))
         print('MEL PASS') if Check_Mel(SMC_Tool) else print('MEL FAIL')

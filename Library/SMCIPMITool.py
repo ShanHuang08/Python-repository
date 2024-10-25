@@ -10,17 +10,17 @@ class SMCIPMITool():
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
-        self.accout = f' {Auth[0]} '
+        self.account = f' {Auth[0]} '
         self.pwd = f'{Auth[1]} '
         self.uni_pwd = f'{uni_pwd} '
         self.Auth = Auth
         # print(Auth)
     
     def Execute(self, cmd:str):
-        if self.accout is None:
+        if self.account is None:
             exit()
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
+            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             if execute.returncode == 0:
                 return execute.stdout
             else:
@@ -67,7 +67,9 @@ class SMCIPMITool():
         if "Can't login to" in output:
             print(f"{output}\n{self.Auth}\nWait for 30s")
             sleep(30)
-            print(self.raw('30 48 1'))
+            output2 = self.raw('30 48 1')
+            print(output2)
+            return output + output2
         else: print(output)
         return output
 

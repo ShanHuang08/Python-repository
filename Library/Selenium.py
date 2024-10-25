@@ -5,9 +5,16 @@ from Library.dictionary import *
 from selenium.webdriver.remote.webelement import WebElement
 
 class SeleniumBase():
+    def __init__(self) -> None:
+        # self.url = url
+        pass
     
     def Chrome(self, path):
         self.driver = webdriver.Chrome(service=Service(path+'chromedriver.exe'))
+        return self.driver
+
+    def Firefox(self, path):
+        self.driver = webdriver.Firefox(service=Service(path+'geckodriver.exe'))
         return self.driver
 
     def find_ID(self, value) -> WebElement:
