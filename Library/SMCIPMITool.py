@@ -137,6 +137,7 @@ class SMCIPMITool():
         return result
 
     def Raw_Factory_Default(self):
+        """Execute `30 41` and `30 48 01` respectively"""
         print(f'Server IP: {self.ip}')
         timeout = 140 if self.ip.split('.')[0] == '10' else 150
         # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 30 41') #Debug

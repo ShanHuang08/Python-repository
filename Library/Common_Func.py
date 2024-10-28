@@ -4,6 +4,9 @@ import os
 from Library.Redfish_requests import GET
 from time import sleep
 from Library.Execeptions import SMCError
+import requests
+from urllib3.exceptions import NewConnectionError
+from requests.exceptions import ConnectionError
 
 def Check_ipaddr(ip):
     command = 'ping -n 2 ' + ip
@@ -22,19 +25,27 @@ def is_ipv4(ip):
 
 def Check_Pwd_via_Redfish(ip, unique):
     Auth = ('ADMIN', 'ADMIN')
-    Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
-    # Can't login to   (Login error message from SMCIPMITool), 用tool會造成互call
-    if Check_Network[0] == 500:
-        print(f"GET /redfish/v1/Managers/1 return 500\n GET Systems/1")
-        Check_Network = GET(url='https://'+ip+'/redfish/v1/Systems/1', auth=Auth) 
+    try:
+        Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
+        # Can't login to   (Login error message from SMCIPMITool), 用tool會造成互call
+        if Check_Network is not None: 
+            if Check_Network[0] == 500:
+                print(f"GET /redfish/v1/Managers/1 return 500\n GET Systems/1")
+                Check_Network = GET(url='https://'+ip+'/redfish/v1/Systems/1', auth=Auth) 
 
-    if isinstance(Check_Network, list):
-            if Check_Network[0] == 200: return Auth
-            # elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
-            else: return ('ADMIN', unique)        
-    else:
-        print('SUT is disconnected')
-        exit()
+            if isinstance(Check_Network, list):
+                    if Check_Network[0] == 200: return Auth
+                    # elif Check_Network[0] == 401 and 'error' in Check_Network[1]: #Legacy response包含error, Openbmc只會有Unauthorized
+                    else: return ('ADMIN', unique)        
+        else:
+            print('GET /redfish/v1/Managers/1 return None\nSUT is disconnected')
+            # exit()
+    except NewConnectionError as err:
+        print(f'NewConnectionError: {err}')
+    except ConnectionError as err:
+        print(f'ConnectionError: {err}')
+    except requests.exceptions.RequestException as err:
+        print(f"An error occurred: {err}")
 
 
 def Check_PWD(ip, unique):

@@ -44,8 +44,8 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.12.118'
-    uni_pwd = 'MTOPSTTYKV'
+    ip = '172.31.41.147'
+    uni_pwd = 'labadmin'
     smc, smc_in = SMC_tools()
 
     # Search_FW_Num('', 'x12qch')
@@ -59,4 +59,4 @@ if __name__=='__main__':
     # ssh_os('10.184.18.125', 'X12STD.txt')
     # Mount_isos(ip, uni_pwd, 1, mount=True)
     # StringGenerator(64)
-    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3)
+    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)

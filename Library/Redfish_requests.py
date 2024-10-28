@@ -5,7 +5,7 @@ import urllib3
 # 禁用所有警告 Idea from ChatGPT
 urllib3.disable_warnings()
 
-def GET(url, auth=None, timeout=20):
+def GET(url, auth=None, timeout=20, retries=5):
     """
     `GET()[0]` : `Status code`
 
@@ -18,12 +18,16 @@ def GET(url, auth=None, timeout=20):
         return [Get_data.status_code, Get_data.text, Get_data]
     except requests.exceptions.HTTPError as e:
         print(e)
+        Retries_api(url, auth, retries)
     except requests.exceptions.ConnectTimeout as e:
         print(e)
+        Retries_api(url, auth, retries)
     except requests.exceptions.ConnectionError as e:
         print(e)
+        Retries_api(url, auth, retries)
     except requests.exceptions.Timeout as e:
         print(e)
+        Retries_api(url, auth, retries)
 
 def GET_Data(url, auth):
     try:
@@ -96,3 +100,21 @@ def DELETE(url, auth):
         print(e)    
     except requests.exceptions.Timeout as e:
         print(e)
+
+def Retries_api(url, auth, retries:int):
+    """Only support `GET` method"""
+    success = []
+    Fail_List = []
+    print(f'Start to retry {url}')
+    for retry in range(retries):
+        print(f'Retry {retry} times')
+        res = GET(url, auth, timeout=20)
+        if res == 200: 
+            print('GET api success')
+            success.append(res)
+            break
+        else: 
+            Fail_List.append(str(retry)+'. '+str(res[0]))
+            continue
+    if not success: 
+        print(f'Retry api failed after {retries} times\n{'\n'.join(Fail_List)}')
