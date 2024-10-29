@@ -5,7 +5,7 @@ import urllib3
 # 禁用所有警告 Idea from ChatGPT
 urllib3.disable_warnings()
 
-def GET(url, auth=None, timeout=20, retries=5):
+def GET(url, auth=None, timeout=20, retries=3):
     """
     `GET()[0]` : `Status code`
 
@@ -17,17 +17,17 @@ def GET(url, auth=None, timeout=20, retries=5):
         Get_data = requests.get(url=url, auth=auth, verify=False, timeout=timeout)
         return [Get_data.status_code, Get_data.text, Get_data]
     except requests.exceptions.HTTPError as e:
-        print(e)
-        Retries_api(url, auth, retries)
+        print(f'HTTPError: {e}')
+        Retry_api(url, auth, retries)
     except requests.exceptions.ConnectTimeout as e:
-        print(e)
-        Retries_api(url, auth, retries)
+        print(f'ConnectTimeout: {e}')
+        Retry_api(url, auth, retries)
     except requests.exceptions.ConnectionError as e:
-        print(e)
-        Retries_api(url, auth, retries)
+        print(f'ConnectionError: {e}')
+        Retry_api(url, auth, retries)
     except requests.exceptions.Timeout as e:
-        print(e)
-        Retries_api(url, auth, retries)
+        print(f'Timeout: {e}')
+        Retry_api(url, auth, retries)
 
 def GET_Data(url, auth):
     try:
@@ -101,15 +101,29 @@ def DELETE(url, auth):
     except requests.exceptions.Timeout as e:
         print(e)
 
-def Retries_api(url, auth, retries:int):
+def Retry_api(url, auth, retries:int):
     """Only support `GET` method"""
+    import requests
     success = []
     Fail_List = []
     print(f'Start to retry {url}')
-    for retry in range(retries):
-        print(f'Retry {retry} times')
-        res = GET(url, auth, timeout=20)
-        if res == 200: 
+    for retry in range(1, retries+1):
+        print(f'Retry {retry} times, timeout 20 secs')
+        try:
+            res = requests.get(url, auth, verify=False, timeout=20) # Use GET() will trigger infinity loop
+        except requests.exceptions.HTTPError as e:
+            print(f'HTTPError: {e}')
+            continue
+        except requests.exceptions.ConnectTimeout as e:
+            print(f'ConnectTimeout: {e}')
+            continue
+        except requests.exceptions.ConnectionError as e:
+            print(f'ConnectionError: {e}')
+            continue
+        except requests.exceptions.Timeout as e:
+            print(f'Timeout: {e}')
+            continue
+        if res.status_code == 200: 
             print('GET api success')
             success.append(res)
             break
@@ -117,4 +131,5 @@ def Retries_api(url, auth, retries:int):
             Fail_List.append(str(retry)+'. '+str(res[0]))
             continue
     if not success: 
-        print(f'Retry api failed after {retries} times\n{'\n'.join(Fail_List)}')
+        fail_list_str = '\n'.join(Fail_List)
+        print(f"Retry api failed after {retries} times\n{fail_list_str}")

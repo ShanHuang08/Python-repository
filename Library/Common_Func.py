@@ -15,6 +15,22 @@ def Check_ipaddr(ip):
     Text =''.join(line for line in List if "TTL=" in line)
     return len(Text) > 0
 
+def Check_ip_is_stable(ip, counts=10):
+    print(f'Server IP: {ip}')
+    success = []
+    command = f'ping -n {counts} {ip}' 
+    Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
+    # print(Ping.stdout) #Debug
+    for line in Ping.stdout.splitlines():
+        if 'TTL=' in line:
+            success.append(line)
+    err = counts - len(success) #10 - 8
+    if err == 0: print('SUT ping is stable')
+    elif err == counts:
+        print(f'{err} packets loss of {counts}\nAll packets are loss')
+    else: print(f'SUT is unstable\n{err} packets loss of {counts}')
+    return err == 0
+
 def is_ipv4(ip):
     ipv4_pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'  
     match = re.match(ipv4_pattern, ip)
