@@ -82,9 +82,9 @@ def answer1(seconds):
         # year, day, hour, minute and seconds
         else: return f'{year} {year_str}, {day_rem} {day_str}, {hour_rem} {hour_str}, {min_rem} {min_str} and {sec_rem} {sec_str}'
 
-test = answer1(31536000*0 + 86400*0 + 3600*0 + 60*2 + 4) # 1day, 1hr + 1 min + 2 secs
+# test = answer1(31536000*0 + 86400*0 + 3600*0 + 60*2 + 4) # 1day, 1hr + 1 min + 2 secs
 # 31536000*0 + 86400*2 + 3600*2 + 60*2 + 2
-print(test)
+# print(test)
 
 
 
@@ -200,3 +200,35 @@ def add_s(c, s):
     if c > 1:
         return s + 's'
     return s
+
+
+import requests
+def get_request(url):
+    print(f'Execute requests.get({url})')
+    # current_func = inspect.stack()[0].function
+    try:
+        requests.get(url, auth=('admin','123456'), verify=False)
+        print("requests.get(url, auth=('admin','123456'), verify=False)")
+    except requests.exceptions.ConnectTimeout as e:
+        print(f'ConnectTimeout: {e}')
+        retry(get_request, url)
+
+def patch_request(url, body):
+    print(f'Execute requests.get({url})')
+    # current_func = inspect.stack()[0].function
+    try:
+        requests.patch(url, auth=('admin','123456'), json=body, verify=False)
+        print("requests.patch(url, auth=('admin','123456'), json=body, verify=False)")
+    except requests.exceptions.ConnectTimeout as e:
+        print(f'ConnectTimeout: {e}')
+        retry(patch_request, url)
+
+def retry(method, url):
+    print(f'retrying {method.__name__}...')
+    if method == 'get_request':
+        print(f'retry requests.get({url})')
+    else:
+        get_url = 'https://127.0.0.2/api'
+        print(f'requests.get({get_url})')
+
+patch_request('https://127.0.0.1/patch/api', {'test' : 123})
