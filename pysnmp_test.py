@@ -70,6 +70,7 @@ class snmp():
             return UsmUserData(userName=self.account, authKey=self.v3_key, privKey=self.v3_key, authProtocol=usmHMACMD5AuthProtocol, privProtocol=usmDESPrivProtocol)
 
     def snmpv3_test(self, value=None, Credentials='MD5_DES'):
+        print(f'--- Start testing {Credentials} ---\n')
         Credential = self.v3_credentials(Credentials)
         target = UdpTransportTarget((self.ip, self.port))
         if value == None:
@@ -93,7 +94,6 @@ class snmp():
                 print(f'OID: {var_bind[0]}, Value: {value}')
 
     def Redfish_setup(self, Credentials='MD5_DES'):
-        print(f'Server: {self.ip}')
         print('Start setting up SNMP environment')
         if not self.Smc_Tool.is_Snmpuser_exist():
             Create = POST(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd, body=redfish['SNMP account'], timeout=30)
@@ -101,7 +101,7 @@ class snmp():
         jdata = GET(url='https://'+self.ip+ redfish['Accounts'], auth=self.pwd)[-1].json()
         count = str(jdata['Members@odata.count']+1)
         Modify = PATCH(url='https://'+self.ip+ redfish['Accounts'] + count, auth=self.pwd, body=redfish[Credentials], timeout=30)
-        if not self.Smc_Tool.is_Snmpuser_exist() and Create[0] == 201 and Modify[0] == 200:
+        if self.Smc_Tool.is_Snmpuser_exist() and Create[0] == 201 and Modify[0] == 200:
             print('Account has created')
         elif self.Smc_Tool.is_Snmpuser_exist() and Modify[0] == 200:
             print(f'Account has been modified to {Credentials}')
@@ -188,11 +188,12 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.30.66'
+    ip = '10.184.12.118'
     pwd = Check_PWD(ip, unique='HFECFUXZKR')
     # pwd = ('root', 'kingsoft')
     # Cre_List = ['MD5_DES', 'MD5_AES', 'MD5_None', 'SHA1_DES', 'SHA1_AES', 'SHA1_None']
     Cre_List = ['MD5_DES', 'SHA1_AES']
+    print(f'Server: {ip}')
     Snmp = snmp(ip, pwd)
     Snmp.Redfish_setup()
 
