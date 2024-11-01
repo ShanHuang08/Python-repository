@@ -30,6 +30,7 @@ def FactoryDefault(ip, Uni_pwd):
     """- ipmi fd 2 = raw 30 40"""
     # commands = ['30 40', '30 41', '30 42', '30 48 0', 'ipmi fd 1', '30 48 1', 'ipmi fd 2', 'ipmi fd 3']
     commands = ['30 48 0', 'ipmi fd 1']
+    print(f'Server IP: {ip}')
     for cmd in commands:
         try:
             error = []
@@ -55,6 +56,6 @@ def FactoryDefault(ip, Uni_pwd):
             continue
 
 if __name__=='__main__':
-    ip = '10.184.12.118'
-    Uni_pwd = 'MTOPSTTYKV'
+    ip = '10.184.26.116'
+    Uni_pwd = 'NUJUTXSBJF'
     FactoryDefault(ip, Uni_pwd)
