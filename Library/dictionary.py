@@ -45,7 +45,8 @@ goPage = {
     'Account Services' : 'goPage("config_account_overview")',
     'Remote Control' : 'goPage("remote")',
     'Storage Monitoring' : 'goPage("sys_storage")',
-    'Multi Node' : 'goPage("sys_multinode")'
+    'Multi Node' : 'goPage("sys_multinode")',
+    'BMC Reset' : 'goPage("mntc_factorydefault")'
 }
 
 
