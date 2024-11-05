@@ -117,7 +117,10 @@ class SMCIPMITool():
         return output     
 
     def get_sensors(self):
-        print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
+        # print(f"Execute ipmi sensor on {self.ip}\n{self.Execute('ipmi sensor --full')}")
+        output = self.Execute('ipmi sensor --full')
+        return output
+
 
     def Check_sensors_status(self):
         """`0E` or `1E`: No sensor, `0F` or `1F`: has sensor"""
