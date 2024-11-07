@@ -4,6 +4,7 @@ import re
 from Library.Execeptions import SMCError, SUMError
 from Library.Common_Func import Check_ipaddr, Check_PWD
 from time import sleep
+import requests
 
 class SMCIPMITool():
     def __init__(self, ip, uni_pwd) -> None:
@@ -14,11 +15,13 @@ class SMCIPMITool():
         self.pwd = f'{Auth[1]} '
         self.uni_pwd = f'{uni_pwd} '
         self.Auth = Auth
+        self.smc_rakp = f'https://{self.ip}/redfish/v1/Managers/1/Oem/Supermicro/SMCRAKP/'
         # print(Auth)
     
     def Execute(self, cmd:str):
         if self.account is None:
             exit()
+        self.check_rakp()
         if os.path.exists(self.Path):
             execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
             if execute.returncode == 0:
@@ -34,6 +37,15 @@ class SMCIPMITool():
         # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 6 1') #Debug
         return output
     
+    def check_rakp(self):
+        """Check SMC RAKP status, if it's enabled, disbale it"""
+        check_smc_rakp = requests.get(url=self.smc_rakp, auth=self.Auth, verify=False, timeout=30).json()["Mode"]
+        if 'Enabled' in check_smc_rakp:
+            print(f'SMC RAKP is enabled\nDisable it')
+            off_rakp = requests.patch(url=self.smc_rakp, auth=self.Auth, json={"Mode": "Disabled"}, verify=False, timeout=30)
+            if off_rakp.status_code == 200: print('SMC RAKP id disabled')
+            else: print(f'Disable failed\nStatus code: {off_rakp.status_code}\nContent: {off_rakp.text}')
+
     def raw_06_01(self):
         """Get Device ID"""
         print(self.raw('06 01'))
