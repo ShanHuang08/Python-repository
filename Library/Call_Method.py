@@ -423,4 +423,4 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
                 if "Can't connect to" in output: print('SUT RMCP is not responding')
                 elif "Can't login to" in output and '00' not in output: print('Password is ADMIN')
             else: print(f"Password is {passwd}")
-        else: print('SUT is offline')
+        else: print(f'{info[0]} is offline')

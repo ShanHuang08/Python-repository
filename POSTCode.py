@@ -13,7 +13,7 @@ def Get_PostCode(ip, auth):
             kdata = GET(url='https://'+ip+'/redfish/v1/Managers/1/Oem/Supermicro/Snooping/', auth=auth)[-1].json()
             count+=1
             if reboot_count < 10:
-                print(f"{count}. PostCode = {kdata['PostCode']}")
+                print(f"{count:>3}. PostCode = {kdata['PostCode']}") #:>3 align 3 space with right 
 
                 if kdata['PostCode'] in ['00', '0000']:
                   return f"{count}. PostCode = {kdata['PostCode']}"

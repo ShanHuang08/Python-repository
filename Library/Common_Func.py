@@ -9,6 +9,7 @@ from urllib3.exceptions import NewConnectionError
 from requests.exceptions import ConnectionError
 
 def Check_ipaddr(ip):
+    """ping -n 2 ip address"""
     command = 'ping -n 2 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     List = Ping.stdout.splitlines()

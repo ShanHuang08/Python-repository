@@ -46,7 +46,7 @@ def SMC_tools():
 if __name__=='__main__':
     ip = '10.184.30.29'
     uni_pwd = 'YGEWQIXCVZ'
-    smc, smc_in = SMC_tools()
+    # smc, smc_in = SMC_tools()
 
     # Search_FW_Num('', 'h13sae')
     # smc.raw_30_48_1()
@@ -59,4 +59,4 @@ if __name__=='__main__':
     # ssh_os('10.184.26.72', 'H13SAE.txt')
     # Mount_isos(ip, uni_pwd, 1, mount=True)
     # StringGenerator(64)
-    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)

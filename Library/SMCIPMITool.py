@@ -272,7 +272,7 @@ class SUMTool():
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+' -p '+self.pwd+' -c '+cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path)
+            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+' -p '+self.pwd+' -c '+cmd, check=True, capture_output=True, universal_newlines=True, cwd=self.Path)
             if execute.returncode == 0 and execute.stdout != '':
                 return execute.stdout
             elif execute.returncode == 0 and execute.stdout == '':
@@ -283,8 +283,9 @@ class SUMTool():
             print(SUMError(f'{self.Path} is not found'))
 
     def get_bmc_info(self):
-        print(self.Execute('GetBmcInfo --showall'))
-
+        output = self.Execute('GetBmcInfo --showall')
+        print(output)
+        return output
         # Error:
         # Return code: 146 可以用來判斷
     
@@ -292,14 +293,19 @@ class SUMTool():
         print(self.Execute('GetBiosInfo --showall'))
     
     def get_bios_info(self):
-        return self.Execute('GetBiosInfo --showall')
+        output = self.Execute('GetBiosInfo --showall')
+        print(output)
+        return output
     
     def get_cpld_info(self):
-        # print(self.Execute('GetCpldInfo'))
-        return self.Execute('GetCpldInfo')
+        output = self.Execute('GetCpldInfo')
+        print(output)
+        return output
     
     def get_psu_info(self):
-        print(self.Execute('GetPSUInfo'))
+        output = self.Execute('GetPSUInfo')
+        print(output)
+        return output
 
     def SUT_info(self):
         '''return 3 variables, `bmc`, `bios`, `cpld` '''
