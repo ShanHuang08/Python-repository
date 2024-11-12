@@ -421,6 +421,6 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
             if passwd != 'ADMIN':
                 output = SMCIPMITool(info[0], info[1]).raw_30_48_1()
                 if "Can't connect to" in output: print('SUT RMCP is not responding')
-                elif "Can't login to" in output and '00' not in output: print('Password is ADMIN')
+                elif "Can't login to" in output and '00' not in output: print(f'Password is not equal {passwd}')
             else: print(f"Password is {passwd}")
         else: print(f'{info[0]} is offline')
