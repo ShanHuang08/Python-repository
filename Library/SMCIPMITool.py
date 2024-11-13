@@ -5,6 +5,7 @@ from Library.Execeptions import SMCError, SUMError
 from Library.Common_Func import Check_ipaddr, Check_PWD
 from time import sleep
 import requests
+from subprocess import CalledProcessError
 
 class SMCIPMITool():
     def __init__(self, ip, uni_pwd) -> None:
@@ -23,11 +24,17 @@ class SMCIPMITool():
             exit()
         self.check_rakp()
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
-            if execute.returncode == 0:
-                return execute.stdout
-            else:
-                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            try:
+                execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, 
+                                         universal_newlines=True, cwd=self.Path, timeout=120)
+                if execute.returncode == 0:
+                    return execute.stdout
+                else:
+                    return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            except CalledProcessError as e:
+                print(f'CalledProcessError: {e}')
+            except FileNotFoundError as e:
+                print(f'FileNotFoundError: {e}\nSuggest to add arg Shell=True in subprocess.run()')
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()
@@ -39,12 +46,17 @@ class SMCIPMITool():
     
     def check_rakp(self):
         """Check SMC RAKP status, if it's enabled, disbale it"""
-        check_smc_rakp = requests.get(url=self.smc_rakp, auth=self.Auth, verify=False, timeout=30).json()["Mode"]
-        if 'Enabled' in check_smc_rakp:
-            print(f'SMC RAKP is enabled\nDisable it')
-            off_rakp = requests.patch(url=self.smc_rakp, auth=self.Auth, json={"Mode": "Disabled"}, verify=False, timeout=30)
-            if off_rakp.status_code == 200: print('SMC RAKP id disabled')
-            else: print(f'Disable failed\nStatus code: {off_rakp.status_code}\nContent: {off_rakp.text}')
+        try:
+            check_smc_rakp = requests.get(url=self.smc_rakp, auth=self.Auth, verify=False, timeout=40).json()["Mode"]
+            if 'Enabled' in check_smc_rakp:
+                print(f'SMC RAKP is enabled\nDisable it')
+                off_rakp = requests.patch(url=self.smc_rakp, auth=self.Auth, json={"Mode": "Disabled"}, verify=False, timeout=30)
+                if off_rakp.status_code == 200: print('SMC RAKP id disabled')
+                else: print(f'Disable failed\nStatus code: {off_rakp.status_code}\nContent: {off_rakp.text}')
+            else: print('SMC RAKP is disabled')
+        except KeyError as e:
+            print(f'KeyError {e}\nDo nothing')
+            return
 
     def raw_06_01(self):
         """Get Device ID"""
@@ -77,7 +89,7 @@ class SMCIPMITool():
         print(f"Execute ipmi raw 30 48 1")
         output = self.raw('30 48 1')
         if "Can't login to" in output:
-            print(f"{output}\n{self.Auth}\nWait for 30s")
+            print(f"{output}\nWait for 30s")
             sleep(30)
             output2 = self.raw('30 48 1')
             print(output2)
@@ -153,7 +165,6 @@ class SMCIPMITool():
 
     def Raw_Factory_Default(self):
         """Execute `30 41` and `30 48 01` respectively"""
-        print(f'Server IP: {self.ip}')
         timeout = 140 if self.ip.split('.')[0] == '10' else 150
         # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'ipmi raw 30 41') #Debug
         self.raw_30_41()
@@ -198,18 +209,21 @@ class SMCIPMITool_Internal():
 
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, universal_newlines=True, cwd=self.Path, timeout=120)
-            # print(self.ip, self.pwd, cmd)
-            if execute.returncode == 0:
-                return execute.stdout
-            else:
-                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            try:
+                execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, check=True, capture_output=True, 
+                                         universal_newlines=True, cwd=self.Path, timeout=120)
+                # print(self.ip, self.pwd, cmd)
+                if execute.returncode == 0:
+                    return execute.stdout
+                else:
+                    return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            except CalledProcessError as e:
+                print(f'CalledProcessError: {e}')
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()    
 
     def Check_BS(self):
-        print(f'Server IP: {self.ip}')
         fru1 = self.Execute('ipmi fru1')
         if 'Error' in fru1: print(fru1)
         for output in fru1.splitlines():
@@ -272,13 +286,17 @@ class SUMTool():
     
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
-            execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+' -p '+self.pwd+' -c '+cmd, check=True, capture_output=True, universal_newlines=True, cwd=self.Path)
-            if execute.returncode == 0 and execute.stdout != '':
-                return execute.stdout
-            elif execute.returncode == 0 and execute.stdout == '':
-                return execute.stderr
-            else:
-                return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            try:
+                execute = subprocess.run('sum.exe -i '+self.ip+' -u '+self.account+' -p '+self.pwd+' -c '+cmd, shell=True, 
+                                         capture_output=True, universal_newlines=True, cwd=self.Path)
+                if execute.returncode == 0 and execute.stdout != '':
+                    return execute.stdout
+                elif execute.returncode == 0 and execute.stdout == '':
+                    return execute.stderr
+                else:
+                    return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
+            except CalledProcessError as e:
+                print(f'CalledProcessError: {e}')
         else:
             print(SUMError(f'{self.Path} is not found'))
 
@@ -297,9 +315,9 @@ class SUMTool():
         print(output)
         return output
     
-    def get_cpld_info(self):
+    def get_cpld_info(self, log=False):
         output = self.Execute('GetCpldInfo')
-        print(output)
+        if log: print(output)
         return output
     
     def get_psu_info(self):

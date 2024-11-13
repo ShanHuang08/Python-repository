@@ -16,18 +16,6 @@ def enumerate_practice():
     print(TestDict)
 # enumerate_practice()
 
-
-from robot.api.deco import keyword
-@keyword('Test 2')
-def test2():
-    """Put it in def __init__(self):
-    用于设置 Robot Framework 在执行关键字时搜索库的顺序。
-    """
-    BuiltIn().set_library_search_order(
-            'MultiActions', 'Users', 'IPMISelenium',
-            'SeleniumLibrary'
-        )
-
 def upload_certificate():
     import requests, json
     from Library.dictionary import redfish
@@ -38,17 +26,30 @@ def upload_certificate():
     res = requests.post(url, data=json.dumps(payload), auth=('ADMIN', 'ADMIN'), verify=False)
     print(f"Status Code: {res.status_code}\nResponse JSON: {json.dumps(res.json(), indent=4)}\nHeaders: {res.headers}")
 
+def check_time_diff():
+    import time
+    def convert_web_time_to_seconds(text):
+        time_strt = time.strptime(text, "%Y-%m-%dT%H:%M:%S%z")
+        res = time.mktime(time_strt)
+        print(time_strt, res)
+        print(f'Converted {text} to {res} seconds')
+        return res
+    des_time = convert_web_time_to_seconds(text='2024-11-11T11:33:45Z')
+    cur_time = time.time()
+    #  print(cur_time, des_time)
+    print(f'Current time subtract destinated time = {int(cur_time) - int(des_time)} secs')
 
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
+    print(f'Server IP: {ip}')
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.30.29'
-    uni_pwd = 'YGEWQIXCVZ'
-    # smc, smc_in = SMC_tools()
+    ip = '10.184.16.42'
+    uni_pwd = 'IPXCATFFPD'
+    smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'h13sae')
+    # Search_FW_Num('', 'x12qch')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
@@ -56,7 +57,9 @@ if __name__=='__main__':
     # smc.smc_command('ipmi fruw PS PS241022')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
-    # ssh_os('10.184.26.72', 'H13SAE.txt')
+    # ssh_os('10.184.12.210', 'X13SEI.txt')
     # Mount_isos(ip, uni_pwd, 1, mount=True)
     # StringGenerator(64)
-    Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4) 
+    # from Library.Common_Func import Count_RunTime
+    # Count_RunTime(print('test'))

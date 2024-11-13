@@ -101,6 +101,23 @@ def is_only_dot(cmd:str):
         if s in cmd: no_err = False
     return no_err
 
+def Count_RunTime(method, timeout=5):
+    """Count method running time"""
+    import time
+    Start_Time = time.time()
+    try:
+        print(Start_Time)
+        method
+        End_Time = time.time()
+        print(End_Time)
+        elapsed_time = End_Time - Start_Time
+        if elapsed_time == 0.000: elapsed_time = 0.001 
+        print(f'Spend {elapsed_time:.3f} secs')
+    except Exception as e:
+        End_Time = time.time()
+        elapsed_time = End_Time - Start_Time
+        print(f'Method execution fail: {e}\nSpend {elapsed_time:.3f} secs')
+
 class SMCIPMITool():
     def __init__(self, ip, Auth) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'

@@ -117,7 +117,8 @@ def Get_LegacyFWInfo(ip:str, guid:bool, Open):
         if not has_CPLD:
             sumT = SUMTool(ip, auth[1])
             output = sumT.get_cpld_info()
-            if 'not supported' in output: CPLD_Data = 'Not support CPLD'
+            if output == None: CPLD_Data = 'Not support CPLD'
+            elif 'not supported' in output: CPLD_Data = 'Not support CPLD'
             else:
                 for res in output.splitline():
                     if 'CPLD' in res:
@@ -170,7 +171,8 @@ def Get_OpenFWInfo(ip, Open):
     # if not has_CPLD: print(f"Link list: {Links}") #For Debug only
     if not has_CPLD: 
         output = sumT.get_cpld_info()
-        if 'not supported' in output: CPLD_Data = 'Not support CPLD'
+        if output == None: CPLD_Data = 'Not support CPLD'
+        elif 'not supported' in output: CPLD_Data = 'Not support CPLD'
         else:
             for res in output.splitline():
                 if 'CPLD' in res:
@@ -191,7 +193,7 @@ def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
 if __name__=='__main__':
     # AddSUT()
     # print(GetGUID('10.140.175.132', 'ADMIN', ''))
-    GetFWInfo('10.184.17.92', guid=False, OpenBMC=False)
+    GetFWInfo('10.184.30.66', guid=False, OpenBMC=False)
     
 
     # SumT = SUMTool('10.140.179.173', '0penBmc')
