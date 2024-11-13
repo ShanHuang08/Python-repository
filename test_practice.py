@@ -49,7 +49,7 @@ if __name__=='__main__':
     uni_pwd = 'IPXCATFFPD'
     smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x13sei')
+    # Search_FW_Num('', 'x12qch')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
@@ -57,7 +57,9 @@ if __name__=='__main__':
     # smc.smc_command('ipmi fruw PS PS241022')
     # smc.raw_30_68_28_00() #Check provision status
     # ASCII_to_raw('1234')
-    # ssh_os('10.184.26.72', 'H13SAE.txt')
+    # ssh_os('10.184.12.210', 'X13SEI.txt')
     # Mount_isos(ip, uni_pwd, 1, mount=True)
     # StringGenerator(64)
     # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4) 
+    # from Library.Common_Func import Count_RunTime
+    # Count_RunTime(print('test'))

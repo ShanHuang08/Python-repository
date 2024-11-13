@@ -28,6 +28,8 @@ def GET(url, auth=None, timeout=20, retries=3):
     except requests.exceptions.Timeout as e:
         print(f'Timeout: {e}')
         Retry_api(url, auth, retries)
+    except urllib3.exceptions.ReadTimeoutError as e:
+        print(f'ReadTimeoutError: {e}')
 
 def GET_Data(url, auth):
     try:
@@ -122,6 +124,9 @@ def Retry_api(url, auth, retries:int):
             continue
         except requests.exceptions.Timeout as e:
             print(f'Timeout: {e}')
+            continue
+        except urllib3.exceptions.ReadTimeoutError as e:
+            print(f'ReadTimeoutError: {e}')
             continue
         if res.status_code == 200: 
             print('GET api success')

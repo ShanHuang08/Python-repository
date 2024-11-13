@@ -89,7 +89,7 @@ class SMCIPMITool():
         print(f"Execute ipmi raw 30 48 1")
         output = self.raw('30 48 1')
         if "Can't login to" in output:
-            print(f"{output}\n{self.Auth}\nWait for 30s")
+            print(f"{output}\nWait for 30s")
             sleep(30)
             output2 = self.raw('30 48 1')
             print(output2)
