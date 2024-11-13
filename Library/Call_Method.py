@@ -390,7 +390,9 @@ def Mount_isos(ip, uni_pwd, times:int, mount=True):
             setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
             sleep(3)
             insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": tar_isos[time],"Inserted":mount})
-            if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success\nPATCH:{setup[0]}\nPOST:{insert[0]}\nTask: https://{ip}{insert[-1]["@odata.id"]}')  
+            if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success
+                                                                  \nPATCH:{setup[0]}\nPOST:{insert[0]} \
+                                                                  \nTask: https://{ip}{insert[-1]["@odata.id"]}')  
             elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
             else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
         else:
@@ -411,7 +413,7 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
     devices = [devices[num-1] for num in selections if num in [1,2,3,4]]
     if len(selections) != len(devices): 
         err = [str(num) for num in selections if num not in [1,2,3,4]]
-        print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33")
+        print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.30.66")
         exit()
     for info in devices: 
         # print(info[0] + '\n' + info[1]) #Debug
@@ -421,13 +423,21 @@ def Set_Pre_Test_Pwd_to_ADMIN(*selections):
             if passwd != 'ADMIN':
                 output = SMCIPMITool(info[0], info[1]).raw_30_48_1()
                 if "Can't connect to" in output: print('SUT RMCP is not responding')
-<<<<<<< HEAD
-                elif "Can't login to" in output and '00' not in output: print(f'Password is not equal {passwd}')
-            else: print(f"Password is {passwd}")
-=======
                 elif "Can't login to" in output and '00' not in output: print('Password is ADMIN')
             else: 
                 SMCIPMITool(info[0], info[1]).check_rakp()
                 print(f"Password is {passwd}")
->>>>>>> dc84f54f86f0b343f6500fc341db1f6fe241aa7a
         else: print(f'{info[0]} is offline')
+
+def check_time_diff():
+    import time
+    def convert_web_time_to_seconds(text):
+        time_strt = time.strptime(text, "%Y-%m-%dT%H:%M:%S%z")
+        res = time.mktime(time_strt)
+        print(time_strt, res)
+        print(f'Converted {text} to {res} seconds')
+        return res
+    des_time = convert_web_time_to_seconds(text='2024-11-11T11:33:45Z')
+    cur_time = time.time()
+    #  print(cur_time, des_time)
+    print(f'Current time subtract destinated time = {int(cur_time) - int(des_time)} secs')

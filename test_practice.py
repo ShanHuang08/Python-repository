@@ -1,5 +1,5 @@
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import ASCII_to_raw, Get_Dict, Email_Format, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator, Set_Pre_Test_Pwd_to_ADMIN
+from Library.Call_Method import ASCII_to_raw, Get_Dict, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator, Set_Pre_Test_Pwd_to_ADMIN
 from ssh_connect import ssh_os
 from robot.libraries.BuiltIn import BuiltIn
 
@@ -26,19 +26,6 @@ def upload_certificate():
     res = requests.post(url, data=json.dumps(payload), auth=('ADMIN', 'ADMIN'), verify=False)
     print(f"Status Code: {res.status_code}\nResponse JSON: {json.dumps(res.json(), indent=4)}\nHeaders: {res.headers}")
 
-def check_time_diff():
-    import time
-    def convert_web_time_to_seconds(text):
-        time_strt = time.strptime(text, "%Y-%m-%dT%H:%M:%S%z")
-        res = time.mktime(time_strt)
-        print(time_strt, res)
-        print(f'Converted {text} to {res} seconds')
-        return res
-    des_time = convert_web_time_to_seconds(text='2024-11-11T11:33:45Z')
-    cur_time = time.time()
-    #  print(cur_time, des_time)
-    print(f'Current time subtract destinated time = {int(cur_time) - int(des_time)} secs')
-
 def SMC_tools():
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     print(f'Server IP: {ip}')
@@ -60,6 +47,4 @@ if __name__=='__main__':
     # ssh_os('10.184.12.210', 'X13SEI.txt')
     # Mount_isos(ip, uni_pwd, 1, mount=True)
     # StringGenerator(64)
-    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4) 
-    # from Library.Common_Func import Count_RunTime
-    # Count_RunTime(print('test'))
+    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)

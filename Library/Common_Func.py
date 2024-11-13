@@ -101,22 +101,20 @@ def is_only_dot(cmd:str):
         if s in cmd: no_err = False
     return no_err
 
-def Count_RunTime(method, timeout=5):
+def RunTime(method, timeout=5):
     """Count method running time"""
     import time
     Start_Time = time.time()
     try:
-        print(Start_Time)
-        method
+        method() # method as object, method() as function
         End_Time = time.time()
-        print(End_Time)
         elapsed_time = End_Time - Start_Time
         if elapsed_time == 0.000: elapsed_time = 0.001 
-        print(f'Spend {elapsed_time:.3f} secs')
+        print(f'Elapse {elapsed_time:.3f} secs')
     except Exception as e:
         End_Time = time.time()
         elapsed_time = End_Time - Start_Time
-        print(f'Method execution fail: {e}\nSpend {elapsed_time:.3f} secs')
+        AssertionError(f'Method execution fail: {e}\nElapse {elapsed_time:.3f} secs')
 
 class SMCIPMITool():
     def __init__(self, ip, Auth) -> None:
