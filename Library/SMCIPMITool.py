@@ -210,7 +210,7 @@ class SMCIPMITool_Internal():
     def Execute(self, cmd:str):
         if os.path.exists(self.Path):
             try:
-                execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, check=True, capture_output=True, 
+                execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + cmd, shell=True, capture_output=True, 
                                          universal_newlines=True, cwd=self.Path, timeout=120)
                 # print(self.ip, self.pwd, cmd)
                 if execute.returncode == 0:

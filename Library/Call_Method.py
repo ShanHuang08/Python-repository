@@ -390,7 +390,7 @@ def Mount_isos(ip, uni_pwd, times:int, mount=True):
             setup = PATCH(url, auth=Auth, body={"Oem":{"Supermicro":{"AcceptSelfSigned":False}},"VerifyCertificate":False})
             sleep(3)
             insert = POST(url=url + '/Actions/VirtualMedia.InsertMedia', auth=Auth, body={"Image": tar_isos[time],"Inserted":mount})
-            if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success
+            if setup[0] == 200 and insert[0] in [200, 202]: print(f'mount iso {num} success \
                                                                   \nPATCH:{setup[0]}\nPOST:{insert[0]} \
                                                                   \nTask: https://{ip}{insert[-1]["@odata.id"]}')  
             elif 'resource is in use' in setup[1]: print(f'PATCH:{setup[0]}\nMount failed! iso {num} has been mounted, please unmount first!')
