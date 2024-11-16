@@ -2,7 +2,7 @@ import sys
 sys.path.append('C:\\Users\\Stephenhuang\\Python')
 from Library.SMASH import ssh_reboot
 from Library.Redfish_requests import GET, POST
-from Library.Call_Method import Check_PWD
+from Library.Common_Func import Check_PWD
 from requests.exceptions import HTTPError, ConnectTimeout, ConnectionError
 import subprocess
 import unittest

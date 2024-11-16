@@ -1,7 +1,6 @@
 from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
-from Library.Call_Method import ASCII_to_raw, Get_Dict, hex_to_dec, hex_to_unicode, Modify_Frus, Search_FW_Num, Mount_isos, StringGenerator, Set_Pre_Test_Pwd_to_ADMIN
+from Library.Call_Method import call
 from ssh_connect import ssh_os
-from robot.libraries.BuiltIn import BuiltIn
 from SUT import GetFWInfo
 
 TagName = ['child8', 'child9']
@@ -35,18 +34,17 @@ def SMC_tools():
 if __name__=='__main__':
     ip = '10.140.175.132'
     uni_pwd = 'KZNPYBIACJ'
-    smc, smc_in = SMC_tools()
+    # smc, smc_in = SMC_tools()
 
-    # Search_FW_Num('', 'x13sew')
+    # call.Search_FW_Num('', 'x13sew')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
-    # Modify_Frus(ip, uni_pwd, 'PN')
+    # call.Modify_Frus(ip, uni_pwd, 'PN')
     # smc.smc_command('ipmi fruw PS PS241022')
     # smc.raw_30_68_28_00() #Check provision status
-    # ASCII_to_raw('1234')
     # ssh_os('10.184.12.210', 'X13SEI.txt')
-    # Mount_isos(ip, uni_pwd, 1, mount=False)
-    # StringGenerator(64)
-    # Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    call.Mount_isos(ip, uni_pwd, 1, mount=False)
+    # call.StringGenerator(64)
+    # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
     # GetFWInfo(ip, guid=False, OpenBMC=False)

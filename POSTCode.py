@@ -1,6 +1,6 @@
 from time import sleep
 from Library.Redfish_requests import *
-from Library.Call_Method import Check_PWD
+from Library.Common_Func import Check_PWD
 
 def Get_PostCode(ip, auth):
     # 寫個while loop, power state on = False. off = True
