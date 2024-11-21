@@ -188,6 +188,7 @@ def Get_OpenFWInfo(ip, Open):
 
 
 def GetFWInfo(ip:str, guid:bool, OpenBMC=False):
+    """GET /redfish/v1/UpdateService/FirmwareInventory/"""
     Get_OpenFWInfo(ip, OpenBMC) if OpenBMC else Get_LegacyFWInfo(ip, guid, OpenBMC)
 
 if __name__=='__main__':

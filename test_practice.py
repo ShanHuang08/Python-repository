@@ -1,4 +1,3 @@
-from Library.SMCIPMITool import SMCIPMITool, SUMTool, SMCIPMITool_Internal
 from Library.Call_Method import call
 from ssh_connect import ssh_os
 from SUT import GetFWInfo
@@ -27,24 +26,25 @@ def upload_certificate():
     print(f"Status Code: {res.status_code}\nResponse JSON: {json.dumps(res.json(), indent=4)}\nHeaders: {res.headers}")
 
 def SMC_tools():
+    from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
     smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
     print(f'Server IP: {ip}')
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.140.175.132'
-    uni_pwd = 'KZNPYBIACJ'
-    # smc, smc_in = SMC_tools()
+    ip = '10.184.23.61'
+    uni_pwd = 'MKQBSKZCNJ'
+    smc, smc_in = SMC_tools()
 
-    # call.Search_FW_Num('', 'x13sew')
+    # call.Search_FW_Num('', 'H13SVW')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'PN')
     # smc.smc_command('ipmi fruw PS PS241022')
     # smc.raw_30_68_28_00() #Check provision status
-    # ssh_os('10.184.12.210', 'X13SEI.txt')
-    call.Mount_isos(ip, uni_pwd, 1, mount=False)
+    # ssh_os('10.184.12.210', 'X13SEI.txt')s
+    # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
-    # GetFWInfo(ip, guid=False, OpenBMC=False)
+    # GetFWInfo('10.184.17.43', guid=False, OpenBMC=False)

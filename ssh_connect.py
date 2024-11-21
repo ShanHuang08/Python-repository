@@ -70,7 +70,7 @@ def ssh_os(OS_IP, SUT_Name):
     print(f"Server: {OS_IP}")
     account = 'root'
     pwd = '111111'
-    commands = ['cat /etc/system-release', 'lsscsi' ,'ipmitool lan print', './IPMICFG-Linux.x86_64 -tas info', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 
+    commands = ['cat /etc/system-release', 'lsscsi', 'ipmitool lan print', './IPMICFG-Linux.x86_64 -tas info', 'rpm -q tar', 'rpm -q unzip', 'rpm -q tcpdump', 
                 'rpm -q java', 'lsblk -o NAME,FSTYPE,LABEL,MOUNTPOINT,SIZE,MODEL,SERIAL,STATE,VENDOR', 'hdparm -I /dev/sda', 'hdparm -I /dev/nvme0n1', 'ip add']
     try:
         SUT_Name = SUT_Name[:-4] + '_OS_info.txt'
