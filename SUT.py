@@ -47,8 +47,11 @@ def Check_PWD(ip, Open):
         # print(Check_Network) #Debug
         if "00" in Check_Network: return Auth
         elif "Can't connect to" in Check_Network: 
-            print(f'SUT is disconnected\n{Check_Network}')
-            exit()
+            Check_Network = GET(url='https://'+ip+'/redfish/v1/Managers/1', auth=Auth)
+            if Check_Network[0] == 200: return Auth
+            else: 
+                uni_pwd = input('Unique Password: ')
+                return (Auth[0], uni_pwd)
         elif "Can't login to" in Check_Network:
             uni_pwd = input('Unique Password: ')
             return (Auth[0], uni_pwd)

@@ -32,19 +32,19 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '172.31.36.102'
-    uni_pwd = 'AVIZWBPQQV'
+    ip = '10.184.15.196'
+    uni_pwd = 'DSUQUBFEPJ'
     # smc, smc_in = SMC_tools()
-
+   
+    # GetFWInfo('172.31.35.48', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'H13SVW')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
-    # call.Modify_Frus(ip, uni_pwd, 'PN')
+    # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc.smc_command('ipmi fruw PS PS241022')
     # smc.raw_30_68_28_00() #Check provision status
-    # ssh_os('172.31.35.83', 'H13DSH.txt')
-    # call.Mount_isos(ip, uni_pwd, 1, mount=True)
+    # ssh_os('172.31.41.177', 'H13DSH.txt')
+    # call.Mount_isos(ip, uni_pwd, 1, mount=False)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3)
-    # GetFWInfo('10.184.26.161', guid=False, OpenBMC=False)
