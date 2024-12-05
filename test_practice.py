@@ -1,6 +1,7 @@
 from Library.Call_Method import call
 from ssh_connect import ssh_os
 from SUT import GetFWInfo
+from Tool.LDAP_setup import Redfish_setup
 
 TagName = ['child8', 'child9']
 TagValue = ['Newtest', 'test9']
@@ -32,19 +33,19 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.15.196'
-    uni_pwd = 'DSUQUBFEPJ'
+    ip = '10.184.13.94'
+    uni_pwd = 'AOTQPIYUMA'
     # smc, smc_in = SMC_tools()
    
-    # GetFWInfo('172.31.35.48', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'H13SVW')
+    # GetFWInfo('10.184.16.116', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('', 'H13SSF')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()
     # smc.Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc.smc_command('ipmi fruw PS PS241022')
-    # smc.raw_30_68_28_00() #Check provision status
-    # ssh_os('172.31.41.177', 'H13DSH.txt')
+    # Redfish_setup(ip)
+    # ssh_os('10.184.18.87', 'H13SSF.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=False)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3)

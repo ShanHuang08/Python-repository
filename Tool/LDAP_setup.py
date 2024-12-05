@@ -15,7 +15,7 @@ def Scrape(Account, Password):
     Ldap = call.GetPath('Account Services.Directory Services.LDAP')
 
     browser=webdriver.Chrome('chromedriver.exe')
-    browser.get('http://'+ BMC_ip)
+    browser.get('http://'+ ip)
     browser.find_element(By.ID,value=call.GetPath('Privacy.Advance')).click()
     browser.find_element(By.ID,value=call.GetPath('Privacy.Advance.Go ahead')).click()
     sleep(2)
@@ -41,9 +41,10 @@ def Scrape(Account, Password):
 
     browser.quit()
 
-def Redfish_setup():
-    print(f"Server: {BMC_ip}")
-    url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
+def Redfish_setup(ip):
+    print(f"Server IP: {ip}")
+    url = 'https://'+ip+'/redfish/v1/AccountService'
+    auth = ('ADMIN', 'ADMIN')
     setup = PATCH(url=url, auth=auth, body=redfish['LDAP Setup'])
     if setup[0] == 200:
         print('LDAP setup success')
@@ -52,7 +53,7 @@ def Redfish_setup():
 
 def Clear_setup():
     print('Clear LDAP setup')
-    url = 'https://'+BMC_ip+'/redfish/v1/AccountService'
+    url = 'https://'+ip+'/redfish/v1/AccountService'
     clear = PATCH(url=url, auth=auth, body=redfish['LDAP clear'])
     if clear[0] == 200:
         print('Setup has cleared')
@@ -60,8 +61,8 @@ def Clear_setup():
         print(f'Clear failed, Status code: {clear[0]}\n{clear[-1]}')
 
 if __name__=='__main__':
-    BMC_ip = '10.184.12.118'
-    auth = Check_PWD(BMC_ip, unique='DWDKCNBMVW')
-    Redfish_setup()
+    ip = '10.184.12.118'
+    auth = Check_PWD(ip, unique='DWDKCNBMVW')
+    Redfish_setup(ip)
     # SMASH(ip=BMC_ip)
     # Clear_setup()
