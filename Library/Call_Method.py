@@ -86,10 +86,36 @@ class Call_Methods():
         print(result)
 
     def StrReverse(self, Strin):
+        """str[::-1]"""
         return Strin[::-1]
 
-    def get_a_random_ip(self):
-        return ".".join(str(randint(173, 255)) for _ in range(4))
+    def get_a_random_ip(self, special=False):
+        """Generate valid IP address.
+        - special is `True` will return all range of IP.
+        - special is `False` will exclude IP for special usage."""
+        if special:
+            Gen_ip = ".".join(str(randint(1, 255)) for _ in range(4))
+        else:
+            while True:
+                Sample = ".".join(str(randint(1, 223)) for _ in range(4))
+                if Sample.split('.')[0] not in ['10', '127', '172', '192']:
+                    Gen_ip = Sample
+                    break
+        first = Gen_ip.split('.')[0]
+        second = Gen_ip.split('.')[1]
+        # print(Gen_ip)
+        if first in ['10', '172' , '192']:
+            if '172' in first and 15 < int(second) < 32: print(f'{Gen_ip} is Private ip')
+            elif '192' in first and '168' in second: print(f'{Gen_ip} is Private ip')
+            else: print(f'{Gen_ip} is Private ip')
+            return Gen_ip
+        elif first in ['127']:
+            print(f'{Gen_ip} is Loopback ip')
+            return Gen_ip
+        elif int(first) > 223:
+            print(f'{Gen_ip} is Muticast ip')
+            return Gen_ip
+        else: return Gen_ip
 
     def generate_special_char(self):
         return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
@@ -105,7 +131,7 @@ class Call_Methods():
         # result = ''
         # for i in ASCII_code:
         #     result+=f"0x{hex(int(i))[2:]}" + ' '   
-        return print(result)
+        print(result)
 
     def CN_Generator(self, num):
         num = int(num)

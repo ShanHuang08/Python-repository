@@ -33,11 +33,11 @@ def SMC_tools():
     return smc, smc_in
 
 if __name__=='__main__':
-    ip = '10.184.13.94'
-    uni_pwd = 'AOTQPIYUMA'
+    ip = '10.184.26.116'
+    uni_pwd = 'NUJUTXSBJF'
     # smc, smc_in = SMC_tools()
    
-    # GetFWInfo('10.184.16.116', guid=False, OpenBMC=False)
+    # GetFWInfo('10.184.15.135', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'H13SSF')
     # smc.raw_30_48_1()
     # smc_in.Check_BS()

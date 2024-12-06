@@ -55,7 +55,7 @@ class SMCIPMITool():
                 else: print(f'Disable failed\nStatus code: {off_rakp.status_code}\nContent: {off_rakp.text}')
             else: print('SMC RAKP is disabled')
         except KeyError as e:
-            print(f'KeyError {e}\nDo nothing')
+            print(f'KeyError {e} during RAKP check\nDo nothing')
             return
 
     def raw_06_01(self):
