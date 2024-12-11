@@ -108,14 +108,11 @@ class Call_Methods():
             if '172' in first and 15 < int(second) < 32: print(f'{Gen_ip} is Private ip')
             elif '192' in first and '168' in second: print(f'{Gen_ip} is Private ip')
             else: print(f'{Gen_ip} is Private ip')
-            return Gen_ip
         elif first in ['127']:
             print(f'{Gen_ip} is Loopback ip')
-            return Gen_ip
         elif int(first) > 223:
             print(f'{Gen_ip} is Muticast ip')
-            return Gen_ip
-        else: return Gen_ip
+        return Gen_ip
 
     def generate_special_char(self):
         return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]
