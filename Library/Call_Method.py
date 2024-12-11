@@ -435,11 +435,11 @@ class Call_Methods():
         - 1 : 10.184.21.204
         - 2 : 10.184.17.92
         - 3 : 172.31.51.33"""
-        devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM')]
-        # print(selections) #(1,2)
-        devices = [devices[num-1] for num in selections if num in [1,2,3]]
+        devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM'), ('10.184.17.88', 'TSEDWYJMKS')]
+        # print(','.join(str(sel) for sel in selections)) #(1,2,3)
+        devices = [devices[num-1] for num in selections if num in selections]
         if len(selections) != len(devices): 
-            err = [str(num) for num in selections if num not in [1,2,3]]
+            err = [str(num) for num in selections if num not in selections]
             print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.30.66")
             exit()
         for info in devices: 
