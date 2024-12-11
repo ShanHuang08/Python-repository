@@ -26,24 +26,29 @@ def upload_certificate():
     res = requests.post(url, data=json.dumps(payload), auth=('ADMIN', 'ADMIN'), verify=False)
     print(f"Status Code: {res.status_code}\nResponse JSON: {json.dumps(res.json(), indent=4)}\nHeaders: {res.headers}")
 
-def SMC_tools():
-    from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
-    smc, smc_in = SMCIPMITool(ip, uni_pwd), SMCIPMITool_Internal(ip, uni_pwd)
+def smc():
+    from Library.SMCIPMITool import SMCIPMITool
+    smc = SMCIPMITool(ip, uni_pwd)
     print(f'Server IP: {ip}')
-    return smc, smc_in
+    return smc
+
+def smc_in():
+    from Library.SMCIPMITool import SMCIPMITool_Internal
+    smc_in = SMCIPMITool_Internal(ip, uni_pwd)
+    print(f'Server IP: {ip}')
+    return smc_in
 
 if __name__=='__main__':
-    ip = '10.184.26.116'
-    uni_pwd = 'NUJUTXSBJF'
-    # smc, smc_in = SMC_tools()
-   
-    # GetFWInfo('10.184.15.135', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'H13SSF')
-    # smc.raw_30_48_1()
-    # smc_in.Check_BS()
-    # smc.Raw_Factory_Default()
+    ip = '172.31.51.33'
+    uni_pwd = 'PFVRIDZNBJ'
+
+    # GetFWInfo('172.31.34.128', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('', 'X13scl')
+    # smc().raw_30_48_1()
+    # smc_in().Check_BS()
+    # smc().Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
-    # smc.smc_command('ipmi fruw PS PS241022')
+    # smc().smc_command('ipmi fruw PS PS241022')
     # Redfish_setup(ip)
     # ssh_os('10.184.18.87', 'H13SSF.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=False)
