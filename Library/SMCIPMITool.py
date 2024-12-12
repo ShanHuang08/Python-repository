@@ -57,7 +57,9 @@ class SMCIPMITool():
         except KeyError as e:
             print(f'KeyError {e} during RAKP check\nDo nothing')
             return
-
+        except requests.exceptions.JSONDecodeError as e:
+            print(f'Json decode error!\nDo nothing')
+            
     def raw_06_01(self):
         """Get Device ID"""
         print(self.raw('06 01'))

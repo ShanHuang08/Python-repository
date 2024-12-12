@@ -12,7 +12,16 @@ class Call_Methods():
         self.al='abcdefghijklmnopqrstuvwxyz'
         self.digit='1234567890'
         self.al_digit = self.al + self.digit
-        
+        self.__hide = 'hided variable'
+
+    def hide_check(self):
+        """Python cannot call `self.__hide` directly. """
+        print(f'self.__hide is {self.__hide}')
+
+    def __hided_method(self):
+        """Python cannot call `__hided_method` directly."""
+        print(f'self.__hide is {self.__hide}')
+
     def KeyGenerator(self):
         result=''
         for i in range(2):
@@ -437,10 +446,18 @@ class Call_Methods():
         - 3 : 172.31.51.33"""
         devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM'), ('10.184.17.88', 'TSEDWYJMKS')]
         # print(','.join(str(sel) for sel in selections)) #(1,2,3)
-        devices = [devices[num-1] for num in selections if num in selections]
-        if len(selections) != len(devices): 
-            err = [str(num) for num in selections if num not in selections]
-            print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.30.66")
+        devices_num = [num for num in range(1, len(devices)+1)]
+        def is_valid_args_num():
+            for num in selections:
+                if int(num) > len(devices):
+                    print(f'{num} > Total {len(devices)} SUTs') 
+                    return False
+                else: continue
+            return True
+
+        if not is_valid_args_num() or len(selections) > len(devices): 
+            err = [str(num) for num in selections if num not in devices_num]
+            print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.17.88")
             exit()
         for info in devices: 
             # print(info[0] + '\n' + info[1]) #Debug
