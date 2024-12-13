@@ -22,6 +22,11 @@ class Call_Methods():
         """Python cannot call `__hided_method` directly."""
         print(f'self.__hide is {self.__hide}')
 
+    @property
+    def read_only(self):
+        """Add `@property` will show TypeError: 'NoneType' object is not callable"""
+        print('This function is read-only')
+
     def KeyGenerator(self):
         result=''
         for i in range(2):
