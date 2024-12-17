@@ -6,6 +6,7 @@ from Library.Common_Func import Check_ipaddr, Check_PWD
 from time import sleep
 import requests
 from subprocess import CalledProcessError
+import urllib3
 
 class SMCIPMITool():
     def __init__(self, ip, uni_pwd) -> None:
@@ -33,6 +34,10 @@ class SMCIPMITool():
                     return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
             except CalledProcessError as e:
                 print(f'CalledProcessError: {e}')
+            except urllib3.exceptions.ConnectTimeoutError:
+                print(f"ConnectTimeoutError: {e}")
+            except requests.exceptions.ConnectTimeout as e:
+                print(f"ConnectTimeout: {e}")
             except FileNotFoundError as e:
                 print(f'FileNotFoundError: {e}\nSuggest to add arg Shell=True in subprocess.run()')
         else:
@@ -59,6 +64,10 @@ class SMCIPMITool():
             return
         except requests.exceptions.JSONDecodeError as e:
             print(f'Json decode error!\nDo nothing')
+        except urllib3.exceptions.ConnectTimeoutError as e:
+                print(f"ConnectTimeoutError: {e}")
+        except requests.exceptions.ConnectTimeout as e:
+                print(f"ConnectTimeout: {e}")
             
     def raw_06_01(self):
         """Get Device ID"""
@@ -204,6 +213,7 @@ class SMCIPMITool():
 class SMCIPMITool_Internal():
     def __init__(self, ip, uni_pwd) -> None:
         self.Path = 'D:\\SMCIPMITool_2.27.3_(internal)_build.230727_bundleJRE_Windows'
+        self.__smc_in_pwd = ' Supermicro82265990'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
         self.accout = f' {Auth[0]} '
@@ -221,6 +231,12 @@ class SMCIPMITool_Internal():
                     return f'{execute.stdout}\nError: {execute.stderr}\nReturn code: {execute.returncode}'
             except CalledProcessError as e:
                 print(f'CalledProcessError: {e}')
+            except urllib3.exceptions.ConnectTimeoutError:
+                print(f"ConnectTimeoutError: {e}")
+            except requests.exceptions.ConnectTimeout as e:
+                print(f"ConnectTimeout: {e}")
+            except FileNotFoundError as e:
+                print(f'FileNotFoundError: {e}\nSuggest to add arg Shell=True in subprocess.run()')
         else:
             print(SMCError(f'{self.Path} is not found'))
             exit()    
@@ -235,7 +251,7 @@ class SMCIPMITool_Internal():
                 SN_number = output.split('=')[-1]
                 if len(SN_number) < 10:
                     text = input('Input BS: ')
-                    bs1 = self.Execute('ipmi fru1w BS '+ text + ' Supermicro82265990')
+                    bs1 = self.Execute('ipmi fru1w BS '+ text + self.__smc_in_pwd)
                     bs = self.Execute('ipmi fruw BS ' + text)
                     print(f'Fru1 BS modify success\nFru1: {bs1}') if 'Error' not in bs1 else print(f'Fru1 BS modify failed')
                     print(f'Fru BS modify success\nFru: {bs}') if 'Error' not in bs else print(f'Fru BS modify failed')
@@ -246,7 +262,7 @@ class SMCIPMITool_Internal():
             if 'BM' in output:
                 if 'Supermicro' != output.split('=')[-1].lstrip():
                     print(f"BM doesn't match\nStart override")
-                    bm1 = self.Execute('ipmi fru1w BM Supermicro Supermicro82265990')
+                    bm1 = self.Execute('ipmi fru1w BM Supermicro' + self.__smc_in_pwd)
                     bm = self.Execute('ipmi fruw BM Supermicro')
                     print(f'Fru1 BM modify success') if 'Error' not in bm1 else print(f'Fru1 BM modify failed')
                     print(f'Fru BM modify success') if 'Error' not in bm else print(f'Fru BM modify failed')
@@ -254,7 +270,7 @@ class SMCIPMITool_Internal():
 
     def smc_command(self, cmd:str): 
         if 'fru1w' in cmd:
-            output = self.Execute(cmd + ' Supermicro82265990')
+            output = self.Execute(cmd + self.__smc_in_pwd)
         else:
             output = self.Execute(cmd)
         print(output)
@@ -270,7 +286,7 @@ class SMCIPMITool_Internal():
         for cmd in cmds_list:
             print(f"Execute {cmd}")
             if 'fru1w' in cmd:
-                output = self.Execute(cmd + ' Supermicro82265990')
+                output = self.Execute(cmd + self.__smc_in_pwd)
             else:
                 output = self.Execute(cmd)
             print(output)

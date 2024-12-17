@@ -40,11 +40,11 @@ def smc_in():
 
 
 if __name__=='__main__':
-    ip = '172.31.34.128'
-    uni_pwd = 'labadmin'
+    ip = '10.184.15.135'
+    uni_pwd = 'RSOREAQRTA'
 
-    # GetFWInfo('172.31.34.128', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'X12dpt-pt')
+    # GetFWInfo('10.184.15.135', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('', 'h13svw')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
     # smc().Raw_Factory_Default()
@@ -52,6 +52,6 @@ if __name__=='__main__':
     # smc().smc_command('ipmi fruw PS PS241022')
     # Redfish_setup(ip)
     # ssh_os('10.184.28.199', 'X12DPT-PT.txt')
-    # call.Mount_isos(ip, uni_pwd, 1, mount=False)
+    # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
