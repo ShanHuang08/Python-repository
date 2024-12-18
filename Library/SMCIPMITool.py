@@ -20,10 +20,10 @@ class SMCIPMITool():
         self.smc_rakp = f'https://{self.ip}/redfish/v1/Managers/1/Oem/Supermicro/SMCRAKP/'
         # print(Auth)
     
-    def Execute(self, cmd:str):
+    def Execute(self, cmd:str, rakp=True):
         if self.account is None:
             exit()
-        self.check_rakp()
+        if rakp: self.check_rakp()
         if os.path.exists(self.Path):
             try:
                 execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, 
@@ -205,7 +205,7 @@ class SMCIPMITool():
 
     def is_Snmpuser_exist(self):
         # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'user list') #Debug
-        output = self.Execute('user list')
+        output = self.Execute('user list', rakp=False)
         # print('SnmpUser' in output) #Debug
         return 'SnmpUser' in output
 

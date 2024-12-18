@@ -13,6 +13,7 @@ class Call_Methods():
         self.digit='1234567890'
         self.al_digit = self.al + self.digit
         self.__hide = 'hided variable'
+        self.__passwd = 'Supermicro82265990'
 
     def hide_check(self):
         """Python cannot call `self.__hide` directly. """
@@ -316,6 +317,9 @@ class Call_Methods():
                     print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!\nActual value: {Actual_value}\nInput value: {value}')
                         
     def Modify_Frus(self, ip, uni_pwd, input_type):
+        """
+        `input_type` is str that include comma. ex: aa,bb
+        """
         print(f'Server IP: {ip}')
         SMC_Tool = SMCIPMITool_Internal(ip, uni_pwd)
         Types = self.String_Split(input_type)
@@ -323,7 +327,7 @@ class Call_Methods():
 
         for typ, value in zip(Types, Values):
             if value != '':
-                output1 = SMC_Tool.Execute(f'ipmi fru1w {typ} {value} Supermicro82265990')
+                output1 = SMC_Tool.Execute(f'ipmi fru1w {typ} {value} {self.__passwd}')
                 output = SMC_Tool.Execute(f'ipmi fruw {typ} {value}')
                 print(f'Fru1 {typ} modify success') if 'Error' not in output1 else print(f'Fru1 {typ} modify failed\n{output1}')
                 print(f'Fru {typ} modify success') if 'Error' not in output else print(f'Fru {typ} modify failed\n{output}')         
@@ -436,11 +440,16 @@ class Call_Methods():
                 else: print(f'Mount iso {num} failed\nPATCH:{setup[0]}\n{setup[1]}\nPOST:{insert[0]}\n{insert[1]}')
             else:
                 print(f'Unmounting iso {num}')
-                if GET(url, auth=Auth)[-1].json()["Inserted"]:
-                    uninsert = PATCH(url, auth=Auth, body={"Inserted":mount})
-                    if uninsert[0] in [200, 202]:print(f'Unmount iso {num} success\nPATCH:{uninsert[0]}')
-                else: print(f'VM{num} has been unmounted')
-
+                check_inserted = GET(url, auth=Auth)
+                if check_inserted[0] == 200: #api response dict
+                    if check_inserted[-1].json()["Inserted"]:
+                        uninsert = PATCH(url, auth=Auth, body={"Inserted":mount})
+                        if uninsert[0] in [200, 202]: print(f'Unmount iso {num} success\nPATCH:{uninsert[0]}')
+                    else: print(f'VM{num} has been unmounted')
+                elif check_inserted[0] == 401: 
+                    print(f'Status code: {check_inserted[0]}\nPlease check uniquw password.')
+                    break
+                
     def Set_Pre_Test_Pwd_to_ADMIN(self, *selections):
         """- Input integers, ex: `1,2,3`
         - 1 : 10.184.21.204

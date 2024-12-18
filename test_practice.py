@@ -40,8 +40,8 @@ def smc_in():
 
 
 if __name__=='__main__':
-    ip = '10.184.15.135'
-    uni_pwd = 'RSOREAQRTA'
+    ip = '10.184.25.118'
+    uni_pwd = 'PHYHDTSXUM'
 
     # GetFWInfo('10.184.15.135', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'h13svw')
@@ -54,4 +54,4 @@ if __name__=='__main__':
     # ssh_os('10.184.28.199', 'X12DPT-PT.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
-    # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3)

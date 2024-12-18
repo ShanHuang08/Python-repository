@@ -189,7 +189,7 @@ class snmp():
             exit()
 
 if __name__ == '__main__':
-    ip = '10.184.26.116'
+    ip = '10.184.17.92'
     pwd = Check_PWD(ip, unique='HFECFUXZKR')
     # pwd = ('root', 'kingsoft')
     # Cre_List = ['MD5_DES', 'MD5_AES', 'MD5_None', 'SHA1_DES', 'SHA1_AES', 'SHA1_None']
