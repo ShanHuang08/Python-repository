@@ -457,7 +457,6 @@ class Call_Methods():
         - 3 : 172.31.51.33"""
         devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM'), ('10.184.28.13', 'TSEDWYJMKS')]
         # print(','.join(str(sel) for sel in selections)) #(1,2,3)
-        devices_num = [num for num in range(1, len(devices)+1)]
         def is_valid_args_num():
             for num in selections:
                 if int(num) > len(devices):
@@ -466,21 +465,25 @@ class Call_Methods():
                 else: continue
             return True
 
-        if not is_valid_args_num() or len(selections) > len(devices): 
+        if not is_valid_args_num() or len(selections) > len(devices):
+            devices_num = [num for num in range(1, len(devices)+1)] 
             err = [str(num) for num in selections if num not in devices_num]
             print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.17.88")
             exit()
+        else:
+            devices = [devices[num-1] for num in selections]
+
         for info in devices: 
-            # print(info[0] + '\n' + info[1]) #Debug
+            smc = SMCIPMITool(info[0], info[1])
             if Check_ipaddr(info[0]):
                 print(f'Server IP: {info[0]}')
-                passwd = SMCIPMITool(info[0], info[1]).pwd.strip()
+                passwd = smc.pwd.strip()
                 if passwd != 'ADMIN':
-                    output = SMCIPMITool(info[0], info[1]).raw_30_48_1()
+                    output = smc.raw_30_48_1()
                     if "Can't connect to" in output: print('SUT RMCP is not responding')
                     elif "Can't login to" in output and '00' not in output: print('Password is ADMIN')
                 else: 
-                    SMCIPMITool(info[0], info[1]).check_rakp()
+                    smc.check_rakp()
                     print(f"Password is {passwd}")
             else: print(f'{info[0]} is offline')
 
