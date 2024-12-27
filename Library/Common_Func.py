@@ -18,13 +18,10 @@ def Check_ipaddr(ip):
 
 def Check_ip_is_stable(ip, counts=10):
     print(f'Server IP: {ip}')
-    success = []
     command = f'ping -n {counts} {ip}' 
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     # print(Ping.stdout) #Debug
-    for line in Ping.stdout.splitlines():
-        if 'TTL=' in line:
-            success.append(line)
+    success = [line for line in Ping.stdout.splitlines() if 'TTL' in line]
     err = counts - len(success) #10 - 8
     if err == 0: print('SUT ping is stable')
     elif err == counts:
@@ -77,7 +74,7 @@ def Check_PWD(ip, unique):
     if Check_ipaddr(ip):
         return Check_Pwd_via_Redfish(ip, unique)
     else: 
-        print('Ping SUT failed\nWaiting for 10s')
+        print(f'Ping SUT {ip} failed\nWaiting for 10s')
         sleep(10)
         if Check_ipaddr(ip):
             return Check_Pwd_via_Redfish(ip, unique)

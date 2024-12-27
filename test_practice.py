@@ -38,13 +38,26 @@ def smc_in():
     print(f'Server IP: {ip}')
     return smc_in
 
+def try_except_else():
+    try:
+        print('A')
+        answer = 1+'1'
+    except:
+        print('B')
+        answer = 1+2
+    else:
+        raise AssertionError('C')
+
+def send_args_from_cmd_line():
+    import argparse
+
 
 if __name__=='__main__':
     ip = '10.184.15.135'
     uni_pwd = 'RSOREAQRTA'
 
-    GetFWInfo('10.184.30.180', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'h13svw')
+    # GetFWInfo('10.184.17.92', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
     # smc().Raw_Factory_Default()
@@ -54,4 +67,4 @@ if __name__=='__main__':
     # ssh_os('10.184.18.77', 'H13SVW-NT.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
-    # call.Set_Pre_Test_Pwd_to_ADMIN(1,4)
+    call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
