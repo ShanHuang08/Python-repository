@@ -48,10 +48,6 @@ def try_except_else():
     else:
         raise AssertionError('C')
 
-def send_args_from_cmd_line():
-    import argparse
-
-
 if __name__=='__main__':
     ip = '10.184.15.135'
     uni_pwd = 'RSOREAQRTA'
@@ -67,4 +63,4 @@ if __name__=='__main__':
     # ssh_os('10.184.18.77', 'H13SVW-NT.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
-    call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
