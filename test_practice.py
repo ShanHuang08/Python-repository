@@ -53,13 +53,13 @@ def send_args_from_cmd_line():
 
 
 if __name__=='__main__':
-    ip = '10.184.15.135'
-    uni_pwd = 'RSOREAQRTA'
+    ip = '10.184.20.174'
+    uni_pwd = 'RZZNACJOSW'
 
-    # GetFWInfo('10.184.17.92', guid=False, OpenBMC=False)
+    # GetFWInfo('172.31.48.76', guid=True, OpenBMC=False)
     # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
-    # smc_in().Check_BS()
+    # smc_in().Check_BS()s
     # smc().Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc().smc_command('ipmi fruw PS PS241022')
@@ -67,4 +67,4 @@ if __name__=='__main__':
     # ssh_os('10.184.18.77', 'H13SVW-NT.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
-    call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
