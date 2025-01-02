@@ -9,7 +9,7 @@ from subprocess import CalledProcessError
 import urllib3
 
 class SMCIPMITool():
-    def __init__(self, ip, uni_pwd) -> None:
+    def __init__(self, ip, uni_pwd, rakp=True) -> None:
         self.Path = 'C:\\Users\\Stephenhuang\\SMCIPMITool_2.28.0_build.240703_bundleJRE_Windows'
         self.ip = ip
         Auth = Check_PWD(ip, uni_pwd)
@@ -18,12 +18,13 @@ class SMCIPMITool():
         self.uni_pwd = f'{uni_pwd} '
         self.Auth = Auth
         self.smc_rakp = f'https://{self.ip}/redfish/v1/Managers/1/Oem/Supermicro/SMCRAKP/'
+        self.rakp_enable = rakp
         # print(Auth)
     
-    def Execute(self, cmd:str, rakp=True):
+    def Execute(self, cmd:str):
         if self.account is None:
             exit()
-        if rakp: self.check_rakp()
+        if self.rakp_enable: self.check_rakp()
         if os.path.exists(self.Path):
             try:
                 execute = subprocess.run('SMCIPMITool.exe '+ self.ip + self.account + self.pwd + cmd, shell=True, capture_output=True, 
@@ -205,7 +206,7 @@ class SMCIPMITool():
 
     def is_Snmpuser_exist(self):
         # print('SMCIPMITool.exe '+ self.ip + self.accout + self.pwd + 'user list') #Debug
-        output = self.Execute('user list', rakp=False)
+        output = self.Execute('user list')
         # print('SnmpUser' in output) #Debug
         return 'SnmpUser' in output
 

@@ -17,7 +17,7 @@ def Check_Mel(SMC_Tool):
         print('Wait 30s and try again')
         sleep(30)
         pwd2 = Check_PWD(ip, Uni_pwd)[1]
-        response = SMCIPMITool(ip, pwd2).Execute('mel list')
+        response = SMCIPMITool(ip, pwd2, rakp=False).Execute('mel list')
     elif 'Cannot connect to' in response:
         print('Wait 30s and try again')
         sleep(30)
@@ -36,18 +36,13 @@ def FactoryDefault(ip, Uni_pwd):
             error = []
             pwd = Check_PWD(ip, Uni_pwd)[1] 
             # print(pwd) #Debug
-            SMC_Tool = SMCIPMITool(ip, pwd)
+            SMC_Tool = SMCIPMITool(ip, pwd, rakp=False)
             print('Start executing '+cmd)
-            if 'ipmi' in cmd:
-                exe = SMC_Tool.Execute(cmd)
-                print(exe)
-                if 'Error' in exe: error.append(exe)
-                elif "Can't login" in exe: error.append(exe)
-            else:
-                raw = SMC_Tool.raw(cmd)
-                print(raw)
-                if 'Error' in raw: error.append(raw)
-                elif "Can't login" in raw: error.append(raw)
+            exe = SMC_Tool.Execute(cmd) if 'ipmi' in cmd else SMC_Tool.raw(cmd)
+            print(exe)
+            if 'Error' in exe: error.append(exe)
+            elif "Can't login" in exe: error.append(exe)
+
             print('Execute PASS') if not error else print('Execute FAIL')
             sleep(timeout(ip))
             print('MEL PASS') if Check_Mel(SMC_Tool) else print('MEL FAIL')
