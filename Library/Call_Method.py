@@ -108,26 +108,26 @@ class Call_Methods():
         """Generate valid IP address.
         - special is `True` will return all range of IP.
         - special is `False` will exclude IP for special usage."""
-        if special:
+        def is_invalid_ip():
+            judge_list = [int(first) == 10, '172' in first and 15 < int(second) < 32, '192' in first and '168' in second,
+                          first in ['127'], int(first) > 223]
+            return True in judge_list
+        def is_valid_ip():
+            judge_list = [int(first) != 10, '172' in first and int(second) < 15 and int(second) > 32, 
+                          '192' in first and '168' not in second, first not in ['127'], int(first) < 223]
+            return True in judge_list
+        
+        while True:
             Gen_ip = ".".join(str(randint(1, 255)) for _ in range(4))
-        else:
-            while True:
-                Sample = ".".join(str(randint(1, 223)) for _ in range(4))
-                if Sample.split('.')[0] not in ['10', '127', '172', '192']:
-                    Gen_ip = Sample
-                    break
-        first = Gen_ip.split('.')[0]
-        second = Gen_ip.split('.')[1]
-        # print(Gen_ip)
-        if first in ['10', '172' , '192']:
-            if '172' in first and 15 < int(second) < 32: print(f'{Gen_ip} is Private ip')
-            elif '192' in first and '168' in second: print(f'{Gen_ip} is Private ip')
-            else: print(f'{Gen_ip} is Private ip')
-        elif first in ['127']:
-            print(f'{Gen_ip} is Loopback ip')
-        elif int(first) > 223:
-            print(f'{Gen_ip} is Muticast ip')
-        return Gen_ip
+            first = Gen_ip.split('.')[0]
+            second = Gen_ip.split('.')[1]
+            if special:   
+                if is_invalid_ip(): 
+                    if first in ['127']: print(f'Generate Loopback ip')
+                    elif int(first) > 223: print(f'Generate Muticast ip')
+                    else: print(f'Generate Private ip')
+                    return Gen_ip
+            elif is_valid_ip(): return Gen_ip              
 
     def generate_special_char(self):
         return sample(',;&*!(){[}]#%+\'"<>=$|^?', 1)[0]

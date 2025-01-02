@@ -48,10 +48,6 @@ def try_except_else():
     else:
         raise AssertionError('C')
 
-def send_args_from_cmd_line():
-    import argparse
-
-
 if __name__=='__main__':
     ip = '10.184.20.174'
     uni_pwd = 'RZZNACJOSW'
