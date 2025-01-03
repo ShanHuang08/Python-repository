@@ -43,24 +43,23 @@ def try_except_else():
         print('A')
         answer = 1+'1'
     except:
-        print('B')
-        answer = 1+2
-    else:
         raise AssertionError('C')
+    else:
+        print('C')
 
 if __name__=='__main__':
-    ip = '10.184.20.174'
+    ip = '10.184.29.185'
     uni_pwd = 'RZZNACJOSW'
 
-    # GetFWInfo('10.184.25.118', guid=False, OpenBMC=False)
+    # GetFWInfo('10.184.26.116', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
-    # smc_in().Check_BS()s
+    # smc_in().Check_BS()
     # smc().Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc().smc_command('ipmi fruw PS PS241022')
     # Redfish_setup(ip)
-    # ssh_os('10.184.18.77', 'H13SVW-NT.txt')
+    # ssh_os('10.184.14.2', 'X14DBI.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)

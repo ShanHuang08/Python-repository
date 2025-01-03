@@ -3,7 +3,7 @@ from Library.Redfish_requests import *
 from Library.dictionary import *
 from Library.SMCIPMITool import SMCIPMITool, SMCIPMITool_Internal
 from Library.Common_Func import Check_PWD, Check_ipaddr
-from paramiko import SSHClient, ssh_exception, AutoAddPolicy
+from paramiko import SSHClient, ssh_exception, AutoAddPolicy, AuthenticationException, SSHException
 from time import sleep
 from SUT_IP import FW_Type
 
@@ -14,6 +14,7 @@ class Call_Methods():
         self.al_digit = self.al + self.digit
         self.__hide = 'hided variable'
         self.__passwd = 'Supermicro82265990'
+        self.IPMICFG_Path = 'C:\\Users\\Stephenhuang\\Desktop\\Tools\\IPMICFG-Linux.x86_64'
 
     def hide_check(self):
         """Python cannot call `self.__hide` directly. """
@@ -449,7 +450,60 @@ class Call_Methods():
                 elif check_inserted[0] == 401: 
                     print(f'Status code: {check_inserted[0]}\nPlease check uniquw password.')
                     break
+
+    def use_sftp_upload_file(self, ssh_func, localpath, remotepath):
+        """- Utilize `open_sftp()` to upload file to remote path
+        - `return True if upload sucessiful`"""
+        try:
+            print(f'Unable to execute inband cmd\nUpload file')
+            sftp = ssh_func.open_sftp()
+            sftp.put(localpath, remotepath, confirm=True) #Upload file
+            sftp.chmod(remotepath+'/'+localpath.split('\\')[-1], 0o777) #Change file permission
+            sftp.close()
+            return True
+        except SSHException as e:
+            print(f'{e}\nOS connection failed!')
+        except IOError as e:
+            print(f"IOError: {e}")
+        except Exception as e:
+            print(f'Error: {e}')         
+
+    def Inband_tool_check(self, bmc_ip, os_ip):
+        """`BMC IP` ,`os_ip:` OS IP"""
+        print(f'OS IP: {os_ip}')
+        OS_Auth = ('root', '111111')
+        try:
+            ssh = SSHClient()
+            ssh.set_missing_host_key_policy(AutoAddPolicy())
+            ssh.connect(os_ip, 22, OS_Auth[0], OS_Auth[1])
+
+            has_ip = []
+            for cmd in ['./IPMICFG-Linux.x86_64 -m', 'ipmitool lan print']:
+                stdin, stdout, stderr = ssh.exec_command(cmd)
+                response = [res for res in stdout.readlines() if bmc_ip in res]
+                # print(response)
+                get_ip = ''.join(res for res in response if bmc_ip in res)
+                print(f'Get BMC IP from {cmd}:\n{get_ip}')
+                if bmc_ip in get_ip: has_ip.append(get_ip)
+
+            # print(has_ip)
+            if not has_ip:
+                upload = self.use_sftp_upload_file(ssh_func=ssh, localpath=self.IPMICFG_Path, remotepath='/root')
+                print('upload sucessiful') if upload else print('Upload failed!')
                 
+                stdin, stdout, stderr = ssh.exec_command('./IPMICFG-Linux.x86_64 -m')
+                response = [res for res in stdout.readlines() if bmc_ip in res]
+                get_ip = ''.join(res for res in response if bmc_ip in res)
+                print(f'Get BMC IP from IPMICFG:\n{get_ip}')
+            ssh.close()
+
+        except AuthenticationException as e:
+            print(f'{e}\nLogin Authentication failed!')
+        except SSHException as e:
+            print(f'{e}\nOS connection failed!')
+        except Exception as e:
+            print(f'Error: {e}')
+
     def Set_Pre_Test_Pwd_to_ADMIN(self, *selections):
         """- Input integers, ex: `1,2,3`
         - 1 : 10.184.21.204
@@ -478,6 +532,13 @@ class Call_Methods():
             smc = SMCIPMITool(info[0], info[1])
             if Check_ipaddr(info[0]):
                 print(f'Server IP: {info[0]}')
+
+                if Check_ipaddr(info[2]) and info[2]:
+                    self.Inband_tool_check(info[0], info[2])
+                else: 
+                    if info[2]: print(f'{info[2]} connection failed')
+                    else: print('SUT does not have OS IP')
+
                 passwd = smc.pwd.strip()
                 if passwd != 'ADMIN':
                     output = smc.raw_30_48_1()
