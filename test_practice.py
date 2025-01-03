@@ -52,7 +52,7 @@ if __name__=='__main__':
     ip = '10.184.20.174'
     uni_pwd = 'RZZNACJOSW'
 
-    # GetFWInfo('172.31.48.76', guid=True, OpenBMC=False)
+    # GetFWInfo('10.184.25.118', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()s

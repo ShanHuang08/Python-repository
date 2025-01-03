@@ -455,7 +455,8 @@ class Call_Methods():
         - 1 : 10.184.21.204
         - 2 : 10.184.17.92
         - 3 : 172.31.51.33"""
-        devices = [('10.184.21.204', 'NLTAFRJLHJ'), ('10.184.17.92', '2wsx#EDC'), ('172.31.51.33', 'PHYHDTSXUM'), ('10.184.28.13', 'TSEDWYJMKS')]
+        devices = [('10.184.21.204', 'NLTAFRJLHJ', '10.184.12.175'), ('10.184.17.92', '2wsx#EDC', ''), ('172.31.51.33', 'PHYHDTSXUM', '172.31.42.10'), 
+                   ('10.184.28.13', 'TSEDWYJMKS', '10.184.17.49')]
         # print(','.join(str(sel) for sel in selections)) #(1,2,3)
         def is_valid_args_num():
             for num in selections:
