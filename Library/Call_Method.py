@@ -315,7 +315,8 @@ class Call_Methods():
                 if Type in output:
                     Actual_value = output.split('=')[-1].lstrip() # Remove left side space
                     print(f"{Type} output: {Actual_value}")
-                    print(f'{Type} value match!') if Actual_value == value else print(f'{Type} value mismatch!\nActual value: {Actual_value}\nInput value: {value}')
+                    if Actual_value == value: print(f'{Type} value match!')
+                    else: print(f'{Type} value mismatch!\nActual value: {Actual_value}\nInput value: {value}')
                         
     def Modify_Frus(self, ip, uni_pwd, input_type):
         """
@@ -392,7 +393,8 @@ class Call_Methods():
                             if match: 
                                 matches = True
                                 PairList.append(match)
-                                PairList.append(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
+                                PairList.append(f"{key}\nFW num: {FW_Type[key][num]['info'][0]} \
+                                                \n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
                             
                         if matches:
                             print(f"{key}\nFW num: {FW_Type[key][num]['info'][0]}\n{FW_Type[key][num]['info'][-1]}\n{FW_Type[key][num]['MBDs']}")
@@ -454,11 +456,13 @@ class Call_Methods():
     def use_sftp_upload_file(self, ssh_func, localpath, remotepath):
         """- Utilize `open_sftp()` to upload file to remote path
         - `return True if upload sucessiful`"""
+        import os
         try:
-            print(f'Unable to execute inband cmd\nUpload file')
+            FileName = os.path.basename(localpath)
+            print(f'Unable to execute inband cmd\nUpload {FileName} file')
             sftp = ssh_func.open_sftp()
             sftp.put(localpath, remotepath, confirm=True) #Upload file
-            sftp.chmod(remotepath+'/'+localpath.split('\\')[-1], 0o777) #Change file permission
+            sftp.chmod(remotepath+'/'+FileName, 0o777) #Change file permission
             sftp.close()
             return True
         except SSHException as e:
@@ -480,21 +484,23 @@ class Call_Methods():
             has_ip = []
             for cmd in ['./IPMICFG-Linux.x86_64 -m', 'ipmitool lan print']:
                 stdin, stdout, stderr = ssh.exec_command(cmd)
-                response = [res for res in stdout.readlines() if bmc_ip in res]
-                # print(response)
+                response = [res for res in stdout.readlines()]
+                # print(response) #Debug
                 get_ip = ''.join(res for res in response if bmc_ip in res)
-                print(f'Get BMC IP from {cmd}:\n{get_ip}')
-                if bmc_ip in get_ip: has_ip.append(get_ip)
+                if get_ip:
+                    print(f'Get BMC IP from {cmd}:\n{get_ip}')
+                    has_ip.append(get_ip)
+                else: print(f'BMC info is not match\n{response}')
 
             # print(has_ip)
             if not has_ip:
                 upload = self.use_sftp_upload_file(ssh_func=ssh, localpath=self.IPMICFG_Path, remotepath='/root')
-                print('upload sucessiful') if upload else print('Upload failed!')
+                print('Upload sucessiful') if upload else print('Upload failed!')
                 
                 stdin, stdout, stderr = ssh.exec_command('./IPMICFG-Linux.x86_64 -m')
-                response = [res for res in stdout.readlines() if bmc_ip in res]
+                response = [res for res in stdout.readlines()]
                 get_ip = ''.join(res for res in response if bmc_ip in res)
-                print(f'Get BMC IP from IPMICFG:\n{get_ip}')
+                print(f'Get BMC IP from IPMICFG:\n{get_ip}') if get_ip else print(f'BMC info is not match\n{response}')
             ssh.close()
 
         except AuthenticationException as e:
@@ -504,7 +510,7 @@ class Call_Methods():
         except Exception as e:
             print(f'Error: {e}')
 
-    def Set_Pre_Test_Pwd_to_ADMIN(self, *selections):
+    def Set_Pre_Test_Pwd_to_ADMIN(self, *selections, os_check=False):
         """- Input integers, ex: `1,2,3`
         - 1 : 10.184.21.204
         - 2 : 10.184.17.92
@@ -513,23 +519,21 @@ class Call_Methods():
                    ('10.184.28.13', 'TSEDWYJMKS', '10.184.17.49')]
         # print(','.join(str(sel) for sel in selections)) #(1,2,3)
         def is_valid_args_num():
-            for num in selections:
-                if int(num) > len(devices):
-                    print(f'{num} > Total {len(devices)} SUTs') 
-                    return False
-                else: continue
-            return True
+            invalid_check = [len(selections) == 0, 0 in selections, len(selections) > len(devices),  
+                *[int(num) > len(devices) for num in selections]]
+            return True not in invalid_check
 
-        if not is_valid_args_num() or len(selections) > len(devices):
+        if is_valid_args_num():
+            devices = [devices[num-1] for num in selections]
+        else:
             devices_num = [num for num in range(1, len(devices)+1)] 
             err = [str(num) for num in selections if num not in devices_num]
-            print(f"Invalid values: {','.join(err)} in {selections}\n1 : 10.184.21.204\n2 : 10.184.17.92\n3 : 172.31.51.33\n4 : 10.184.17.88")
+            print(f"Invalid values: {','.join(err)} in {selections}")
             exit()
-        else:
-            devices = [devices[num-1] for num in selections]
 
         for info in devices: 
             smc = SMCIPMITool(info[0], info[1])
+            if not os_check: info[2] = False
             if Check_ipaddr(info[0]):
                 print(f'Server IP: {info[0]}')
 
