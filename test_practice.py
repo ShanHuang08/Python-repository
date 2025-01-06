@@ -28,7 +28,7 @@ def upload_certificate():
 
 def smc():
     from Library.SMCIPMITool import SMCIPMITool
-    smc = SMCIPMITool(ip, uni_pwd)
+    smc = SMCIPMITool(ip, uni_pwd, rakp=False)
     print(f'Server IP: {ip}')
     return smc
 
@@ -49,9 +49,9 @@ def try_except_else():
 
 if __name__=='__main__':
     ip = '10.184.29.185'
-    uni_pwd = 'RZZNACJOSW'
+    uni_pwd = 'YURQEROTVY'
 
-    # GetFWInfo('10.184.26.116', guid=False, OpenBMC=False)
+    # GetFWInfo('10.184.22.116', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
