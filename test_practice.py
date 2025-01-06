@@ -41,9 +41,9 @@ def smc_in():
 def try_except_else():
     try:
         print('A')
-        answer = 1+'1'
-    except:
-        raise AssertionError('C')
+        answer = 1+2
+    except Exception as e:
+        raise AssertionError(f'Run B\nError: {e}')
     else:
         print('C')
 
@@ -63,3 +63,4 @@ if __name__=='__main__':
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    try_except_else()
