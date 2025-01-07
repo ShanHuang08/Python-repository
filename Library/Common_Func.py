@@ -8,16 +8,18 @@ import requests
 from urllib3.exceptions import NewConnectionError
 from requests.exceptions import ConnectionError
 
-def Check_ipaddr(ip):
-    """ping -n 2 ip address"""
+def Check_ipaddr(ip:str):
+    """ping -n 2 ip address or url"""
+    if ip.startswith('http'): ip = ip.split('//')[-1]
+    if ip.endswith('/'): ip = ip[:-1]
     command = 'ping -n 2 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
-    List = Ping.stdout.splitlines()
-    Text =''.join(line for line in List if "TTL=" in line)
-    return len(Text) > 0
+    return 'TTL=' in Ping.stdout.splitlines()
 
-def Check_ip_is_stable(ip, counts=10):
+def Check_ip_is_stable(ip:str, counts=10):
     print(f'Server IP: {ip}')
+    if ip.startswith('http'): ip = ip.split('//')[-1]
+    if ip.endswith('/'): ip = ip[:-1]
     command = f'ping -n {counts} {ip}' 
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
     # print(Ping.stdout) #Debug
