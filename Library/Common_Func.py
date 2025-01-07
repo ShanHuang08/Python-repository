@@ -14,7 +14,7 @@ def Check_ipaddr(ip:str):
     if ip.endswith('/'): ip = ip[:-1]
     command = 'ping -n 2 ' + ip
     Ping = subprocess.run(command, shell=True, capture_output=True, universal_newlines=True)
-    return 'TTL=' in Ping.stdout.splitlines()
+    return True in ['TTL=' in line for line in Ping.stdout.splitlines()]
 
 def Check_ip_is_stable(ip:str, counts=10):
     print(f'Server IP: {ip}')
