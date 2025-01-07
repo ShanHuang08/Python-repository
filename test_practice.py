@@ -48,10 +48,10 @@ def try_except_else():
         print('C')
 
 if __name__=='__main__':
-    ip = '10.184.29.185'
+    ip = '10.135.177.130'
     uni_pwd = 'YURQEROTVY'
 
-    # GetFWInfo('10.184.22.116', guid=False, OpenBMC=False)
+    # GetFWInfo('172.31.41.183', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'X13dai')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()

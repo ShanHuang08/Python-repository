@@ -515,8 +515,8 @@ class Call_Methods():
         - 1 : 10.184.21.204
         - 2 : 10.184.17.92
         - 3 : 172.31.51.33"""
-        devices = [('10.184.21.204', 'NLTAFRJLHJ', '10.184.12.175'), ('10.184.22.116', 'UEIDSZIHBV', ''), 
-                   ('172.31.51.33', 'PHYHDTSXUM', '172.31.42.10'), ('10.184.28.13', 'TSEDWYJMKS', '10.184.17.49')]
+        devices = [['10.184.21.204', 'NLTAFRJLHJ', '10.184.12.175'], ['10.184.22.116', 'UEIDSZIHBV', ''], 
+                   ['172.31.51.33', 'PHYHDTSXUM', '172.31.42.10'], ['10.184.28.13', 'TSEDWYJMKS', '10.184.17.49']]
         # print(','.join(str(sel) for sel in selections)) #(1,2,3)
         def is_valid_args_num():
             invalid_check = [len(selections) == 0, 0 in selections, len(selections) > len(devices),  
@@ -533,7 +533,7 @@ class Call_Methods():
 
         for info in devices: 
             smc = SMCIPMITool(info[0], info[1])
-            if not os_check: info[2] = False
+            if not os_check: info[2] = ''
             if Check_ipaddr(info[0]):
                 print(f'Server IP: {info[0]}')
 
@@ -541,6 +541,7 @@ class Call_Methods():
                     self.Inband_tool_check(info[0], info[2])
                 else: 
                     if info[2]: print(f'{info[2]} connection failed')
+                    elif not os_check: print('SUT does not check OS IP')
                     else: print('SUT does not have OS IP')
 
                 passwd = smc.pwd.strip()
