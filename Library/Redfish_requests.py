@@ -138,3 +138,27 @@ def Retry_api(url, auth, retries:int):
     if not success: 
         fail_list_str = '\n'.join(Fail_List)
         print(f"Retry api failed after {retries} times\n{fail_list_str}")
+
+def GET_Request(url, params=None, auth=None, timeout=20, retries=3, exp_code=None):
+    """
+    `params=None`, Default auth = `None`, timeout `20 secs`, retries `3 times`.
+    """
+    try:
+        Get_data = requests.get(url=url, params=params, auth=auth, verify=False, timeout=timeout)
+        print(f"making GET request {url}, params is {params} and expeted return {exp_code}")
+    except requests.exceptions.ConnectTimeout as e:
+        print(f'ConnectTimeout: {e}')
+        Retry_api(url, auth, retries)
+    except requests.exceptions.Timeout as e:
+        print(f'Timeout: {e}')
+        Retry_api(url, auth, retries)
+    except requests.exceptions.HTTPError as e:
+        raise Exception(f'HTTPError: {e}')
+    except requests.exceptions.ConnectionError as e:
+        raise Exception(f'ConnectionError: {e}')
+    except urllib3.exceptions.ReadTimeoutError as e:
+        raise Exception(f'ReadTimeoutError: {e}')
+    
+    if exp_code and (Get_data.status_code != int(exp_code)):
+        raise Exception(f"Status code should be {exp_code} but it is {Get_data.status_code}\nResponse body:")
+    return Get_data

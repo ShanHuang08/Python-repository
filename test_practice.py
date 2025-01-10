@@ -48,19 +48,18 @@ def try_except_else():
         print('C')
 
 if __name__=='__main__':
-    ip = '10.135.177.130'
-    uni_pwd = 'YURQEROTVY'
+    ip = '172.31.41.251'
+    uni_pwd = 'MDOMYTYBJG'
 
-    # GetFWInfo('172.31.41.183', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'X13dai')
+    # GetFWInfo('10.184.29.185', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('', 'X13SEFR')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
     # smc().Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc().smc_command('ipmi fruw PS PS241022')
     # Redfish_setup(ip)
-    # ssh_os('10.184.14.2', 'X14DBI.txt')
+    # ssh_os('172.31.37.193', 'X13SEFR.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
-    try_except_else()
