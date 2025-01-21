@@ -160,5 +160,5 @@ def GET_Request(url, params=None, auth=None, timeout=20, retries=3, exp_code=Non
         raise Exception(f'ReadTimeoutError: {e}')
     
     if exp_code and (Get_data.status_code != int(exp_code)):
-        raise Exception(f"Status code should be {exp_code} but it is {Get_data.status_code}\nResponse body:")
+        raise Exception(f"Status code should be {exp_code} but it is {Get_data.status_code}\nResponse body:{Get_data.json()}")
     return Get_data

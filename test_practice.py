@@ -39,19 +39,25 @@ def smc_in():
     return smc_in
 
 def try_except_else():
+    def gen_list():
+        import random
+        return random.choice(['', [1,2,3], True, '123'], 1)
     try:
-        print('A')
-        answer = 1+2
+        zones = gen_list()
+        for zone in zones:
+            multi = zone * 2
     except Exception as e:
-        raise AssertionError(f'Run B\nError: {e}')
+        raise AssertionError(f'Error: {e}')
     else:
-        print('C')
+        if zones:
+            print(multi)
+        else: print('Invalid zones')
 
 if __name__=='__main__':
     ip = '172.31.41.251'
     uni_pwd = 'MDOMYTYBJG'
 
-    # GetFWInfo('10.184.29.185', guid=False, OpenBMC=False)
+    # GetFWInfo('172.31.38.35', guid=False, OpenBMC=False)
     # call.Search_FW_Num('', 'X13SEFR')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
@@ -63,3 +69,4 @@ if __name__=='__main__':
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
+    # try_except_else()
