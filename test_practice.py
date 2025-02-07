@@ -53,20 +53,34 @@ def try_except_else():
             print(multi)
         else: print('Invalid zones')
 
-if __name__=='__main__':
-    ip = '172.31.41.251'
-    uni_pwd = 'MDOMYTYBJG'
+class Animal:
+    name = 'dogs'
+    def sleep(self):
+        print("Zzzzz")
+        print(self.name)
 
-    # GetFWInfo('172.31.38.35', guid=False, OpenBMC=False)
-    # call.Search_FW_Num('', 'X13SEFR')
+class Cat(Animal):
+    name = 'cats'
+    def sleep(self):
+        super(Cat, self).sleep() #是不是因為self是指本身的類別
+        super().sleep()
+        
+if __name__=='__main__':
+    ip = '172.31.41.126'
+    uni_pwd = 'GPOOIFPKGI'
+
+    # GetFWInfo('172.31.35.48', guid=False, OpenBMC=False)
+    # call.Search_FW_Num('2401MS', '')
     # smc().raw_30_48_1()
     # smc_in().Check_BS()
     # smc().Raw_Factory_Default()
     # call.Modify_Frus(ip, uni_pwd, 'BS')
     # smc().smc_command('ipmi fruw PS PS241022')
     # Redfish_setup(ip)
-    # ssh_os('172.31.37.193', 'X13SEFR.txt')
+    # ssh_os('172.31.42.204', 'X13OEI.txt')
     # call.Mount_isos(ip, uni_pwd, 1, mount=True)
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
     # try_except_else()
+    # cat = Cat()
+    # cat.sleep()
