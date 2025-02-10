@@ -82,5 +82,3 @@ if __name__=='__main__':
     # call.StringGenerator(64)
     # call.Set_Pre_Test_Pwd_to_ADMIN(1,2,3,4)
     # try_except_else()
-    # cat = Cat()
-    # cat.sleep()
