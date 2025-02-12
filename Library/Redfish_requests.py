@@ -128,6 +128,9 @@ def Retry_api(url, auth, retries:int):
         except urllib3.exceptions.ReadTimeoutError as e:
             print(f'ReadTimeoutError: {e}')
             continue
+        except Exception as e:
+            print(f"Exception: {e}")
+            continue
         if res.status_code == 200: 
             print('GET api success')
             success.append(res)
