@@ -58,6 +58,8 @@ class Animal:
     def sleep(self):
         print("Zzzzz")
         print(self.name)
+    def get_cmd_for_data():
+        return {'temp' : 20}
 
 class Cat(Animal):
     name = 'cats'
